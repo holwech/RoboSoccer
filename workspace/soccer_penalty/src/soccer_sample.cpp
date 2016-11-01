@@ -24,7 +24,7 @@ int main(void) {
 	 *	connections to the RTDB.
 	 *
 	 */
-        const int client_nr = 9;
+        const int client_nr = 7;
 
 	/** Type in the rfcomm number of the robot you want to connect to.
 	 *  The numbers of the robots you are connected to can be found on the
@@ -38,7 +38,7 @@ int main(void) {
 	 *  connected to rfcomm number 0 and number 1...
 	 *
 	 */
-        int rfcomm_nr = 1;
+        int rfcomm_nr = 5;
 
 /*
         //Activate the project option "Run in terminal" in Ctrl+5 (Ctrl+2 to come back here)
@@ -140,14 +140,17 @@ int main(void) {
 
 
 
-                        //cout << "Moving to " << pos2 << endl << endl;
-                        //robo.GotoXY(pos2.GetX(), pos2.GetY(), 160, true);
-                        //while (robo.GetPos().DistanceTo(pos2) > 0.1) usleep(50000);
+                         Position pos2(ball.GetX()-0.3,ball.GetY());
+                         cout << "Moving to " << pos2 << endl << endl;
+                         robo.GotoXY(pos2.GetX(), pos2.GetY(), 30, true);
+                         while (robo.GetPos().DistanceTo(pos2) > 0.1) usleep(50000); //sleep function in microseconds
+                         //Camera sampling rate is 30fps -> 33ms
+                         //which means that field info does not change within this time
 
 
                         Position pos3(ball.GetX()+0.5,ball.GetY());
                         cout << "Moving to " << pos3 << endl << endl;
-                        robo.GotoXY(pos3.GetX(), pos3.GetY(), 260, true);
+                        robo.GotoXY(pos3.GetX(), pos3.GetY(), 100, true);
                         while (robo.GetPos().DistanceTo(pos3) > 0.1) usleep(50000);
 
 

@@ -24,7 +24,7 @@ int main(void) {
 	 *	connections to the RTDB.
 	 *
 	 */
-        const int client_nr = 07;
+        const int client_nr = 7;
 
 	/** Type in the rfcomm number of the robot you want to connect to.
 	 *  The numbers of the robots you are connected to can be found on the
@@ -149,9 +149,9 @@ int main(void) {
 			 */
 
 			cout << "Moving to " << pos1 << endl << endl;
-                        robo0.GotoXY(start1.GetX(), start1.GetY(), 160, false);
-                        robo1.GotoXY(start2.GetX(), start2.GetY(), 160, false);
-                        robo2.GotoXY(start3.GetX(), start3.GetY(), 160, false);
+                        robo0.GotoXY(start1.GetX(), start1.GetY(), 100, false);
+                        robo1.GotoXY(start2.GetX(), start2.GetY(), 100, false);
+                        robo2.GotoXY(start3.GetX(), start3.GetY(), 100, false);
                         while (robo0.GetPos().DistanceTo(start1) > 0.10 ||
                                robo1.GetPos().DistanceTo(start2) > 0.10 ||
                                robo2.GetPos().DistanceTo(start3) > 0.10) {
