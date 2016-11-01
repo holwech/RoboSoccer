@@ -24,7 +24,7 @@ int main(void) {
 	 *	connections to the RTDB.
 	 *
 	 */
-	const int client_nr = 19;
+        const int client_nr = 07;
 
 	/** Type in the rfcomm number of the robot you want to connect to.
 	 *  The numbers of the robots you are connected to can be found on the

@@ -1,0 +1,130 @@
+/*! \file kogmo_rtdb_obj_playrec_c3.h
+ * \brief Recorder and Player Objects from C3
+ *
+ * Copyright (c) 2003-2006 Matthias Goebl <mg*tum.de>
+ *     Lehrstuhl fuer Realzeit-Computersysteme (RCS)
+ *     Technische Universitaet Muenchen (TUM)
+ */
+
+#ifndef KOGMO_RTDB_OBJ_C3_PLAYREC_H
+#define KOGMO_RTDB_OBJ_C3_PLAYREC_H
+
+#include "kogmo_rtdb_obj_packing.h"
+#include "kogmo_rtdb_obj_base.h"
+
+#ifdef __cplusplus
+ extern "C" {
+ namespace KogniMobil {
+#endif
+
+/*! \addtogroup kogmo_rtdb_objects */
+/*@{*/
+
+
+typedef enum
+{
+  KOGMO_RTDB_PLAYERCTRL_CMD_NONE = 0,
+  KOGMO_RTDB_PLAYERCTRL_CMD_GOTO = 1,
+  KOGMO_RTDB_PLAYERCTRL_CMD_GOFRAME = 2,
+  KOGMO_RTDB_PLAYERCTRL_CMD_FILTER = 10
+} kogmo_rtdb_playerctrl_cmd_t;
+
+typedef union
+{
+  struct {
+   kogmo_timestamp_t ts;
+  } goto;
+  struct {
+   kogmo_rtdb_objname_t objname;
+   int16_t count;
+  } goframe;
+  struct {
+   kogmo_rtdb_objid_t oid[20];
+  } filter;
+} kogmo_rtdb_playerctrl_arg_t;
+
+/*! \brief Control Object for the RTDB-Player
+ */
+typedef PACKED_struct
+{
+  struct
+  {
+    uint32_t log : 1;
+    uint32_t pause : 1;
+    uint32_t loop : 1;
+    uint32_t keepcreated : 1;
+  } flags;
+  float speed;
+  kogmo_timestamp_t begin_ts; // !=0 ==> begin playing here after loop
+  kogmo_timestamp_t end_ts;   // !=0 ==> end playing here (and loop if desired)
+  kogmo_rtdb_playerctrl_cmd_t cmd;
+  kogmo_rtdb_playerctrl_arg_t arg;
+} kogmo_rtdb_subobj_c3_playerctrl_t;
+
+typedef PACKED_struct
+{
+  kogmo_rtdb_subobj_base_t base;
+  kogmo_rtdb_subobj_c3_playerctrl_t playerctrl;
+} kogmo_rtdb_obj_c3_playerctrl_t;
+
+
+/*! \brief Status Object for the RTDB-Player
+ */
+typedef PACKED_struct
+{
+  kogmo_timestamp_t current_ts;
+  kogmo_timestamp_t first_ts;
+  kogmo_timestamp_t last_ts;
+} kogmo_rtdb_subobj_c3_playerstat_t;
+
+typedef PACKED_struct
+{
+  kogmo_rtdb_subobj_base_t base;
+  kogmo_rtdb_subobj_c3_playerstat_t playerstat;
+} kogmo_rtdb_obj_c3_playerstat_t;
+
+
+
+
+/*! \brief Control Object for the RTDB-Recorder
+ * ==> NOT IN USE YET!
+ */
+typedef PACKED_struct
+{
+#define C3_RECORDERCTRL_MAXLIST 50
+  // include those objects
+  kogmo_rtdb_objid_t     oid_list[C3_RECORDERCTRL_MAXLIST];
+  kogmo_rtdb_objtype_t   tid_list[C3_RECORDERCTRL_MAXLIST];
+  char                   name_list[C3_RECORDERCTRL_MAXLIST][KOGMO_RTDB_OBJMETA_NAME_MAXLEN];
+  // exclude those objects
+  kogmo_rtdb_objid_t     xoid_list[C3_RECORDERCTRL_MAXLIST];
+  kogmo_rtdb_objtype_t   xtid_list[C3_RECORDERCTRL_MAXLIST];
+  char                   xname_list[C3_RECORDERCTRL_MAXLIST][KOGMO_RTDB_OBJMETA_NAME_MAXLEN];
+  // diese werden als "richtige" bilder ins avi geschrieben (kann waehrend der aufnahme nicht geaendert werden)
+  kogmo_rtdb_objid_t     oid_stream[10];
+  struct
+  {
+    uint32_t select_all : 1;
+    uint32_t recorder_on : 1;
+//    uint32_t record_pause : 1; // gibt's noch nicht. wird das file nicht schliessen
+    uint32_t logging_on : 1;
+  } switches;
+} kogmo_rtdb_subobj_c3_recorderctrl_t;
+
+/*! \brief Full Object with RTDB-Recorder Control
+ */
+typedef PACKED_struct
+{
+  kogmo_rtdb_subobj_base_t base;
+  kogmo_rtdb_subobj_c3_recorderctrl_t recorderctrl;
+} kogmo_rtdb_obj_c3_recorderctrl_t;
+
+
+/*@}*/
+
+#ifdef __cplusplus
+ }; /* namespace KogniMobil */
+ }; /* extern "C" */
+#endif
+
+#endif /* KOGMO_RTDB_OBJ_C3_PLAYREC_H */
