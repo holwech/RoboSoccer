@@ -24,7 +24,7 @@ int main(void) {
          *	connections to the RTDB.
          *
          */
-        const int client_nr = 7;
+        const int client_nr = 8;
 
         /** Type in the rfcomm number of the robot you want to connect to.
          *  The numbers of the robots you are connected to can be found on the
@@ -90,28 +90,28 @@ int main(void) {
                 RoboControl robo2(DBC, rfcomm_nr_2);
 
                 /** Now let's print out some information about the robot... */
-                //uint8_t mac[6];
-                //robo.GetMac(mac);
-                cout << "Robo @ rfcomm" << rfcomm_nr_0 << endl; /*<<" with Mac: ";
+//                //uint8_t mac[6];
+//                //robo.GetMac(mac);
+//                cout << "Robo @ rfcomm" << rfcomm_nr_0 << endl; /*<<" with Mac: ";
 
-                for (int j = 0; j < 5; j++)
-                        cout << hex << (int) mac[j] << ":";
-                cout << hex << (int) mac[5] << endl;
-*/
-                cout << "\t Battery Voltage: " << dec << (int) robo0.GetAccuVoltage()
-                                << "mV" << endl;
-                cout << "\t initial position: " << robo0.GetPos() << endl;
-                cout << "\t initial rotation: " << robo0.GetPhi() << endl;
+//                for (int j = 0; j < 5; j++)
+//                        cout << hex << (int) mac[j] << ":";
+//                cout << hex << (int) mac[5] << endl;
+//*/
+//                cout << "\t Battery Voltage: " << dec << (int) robo0.GetAccuVoltage()
+//                                << "mV" << endl;
+//                cout << "\t initial position: " << robo0.GetPos() << endl;
+//                cout << "\t initial rotation: " << robo0.GetPhi() << endl;
 
-                cout << "\t Battery Voltage: " << dec << (int) robo1.GetAccuVoltage()
-                                << "mV" << endl;
-                cout << "\t initial position: " << robo1.GetPos() << endl;
-                cout << "\t initial rotation: " << robo1.GetPhi() << endl;
+//                cout << "\t Battery Voltage: " << dec << (int) robo1.GetAccuVoltage()
+//                                << "mV" << endl;
+//                cout << "\t initial position: " << robo1.GetPos() << endl;
+//                cout << "\t initial rotation: " << robo1.GetPhi() << endl;
 
-                cout << "\t Battery Voltage: " << dec << (int) robo2.GetAccuVoltage()
-                                << "mV" << endl;
-                cout << "\t initial position: " << robo2.GetPos() << endl;
-                cout << "\t initial rotation: " << robo2.GetPhi() << endl;
+//                cout << "\t Battery Voltage: " << dec << (int) robo2.GetAccuVoltage()
+//                                << "mV" << endl;
+//                cout << "\t initial position: " << robo2.GetPos() << endl;
+//                cout << "\t initial rotation: " << robo2.GetPhi() << endl;
 
                 /** Create a ball object
                  *
