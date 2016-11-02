@@ -16,33 +16,6 @@
 using namespace std;
 
 int main(void) {
-<<<<<<< HEAD:workspace/programs/soccer_starting_position/src/soccer_sample.cpp
-	//--------------------------------- Init --------------------------------------------------
-
-	/** Use client number according to your account number!
-	 *
-	 *	This is necessary in order to assure that there are unique
-	 *	connections to the RTDB.
-	 *
-	 */
-        const int client_nr = 7;
-
-	/** Type in the rfcomm number of the robot you want to connect to.
-	 *  The numbers of the robots you are connected to can be found on the
-	 *  screen when you connected to them.
-	 *
-	 *  The red robots' number will be in the range of 3 to 5
-	 *  The blue robots' number will be in the range from 0 to 2
-	 *
-	 *  The robots are always connected to the lowest free rfcomm device.
-	 *  Therefore if you have two blue robots connected the will be
-	 *  connected to rfcomm number 0 and number 1...
-	 *
-	 */
-        int rfcomm_nr_0 = 3;
-        int rfcomm_nr_1 = 4;
-        int rfcomm_nr_2 = 5;
-=======
         //--------------------------------- Init --------------------------------------------------
 
         /** Use client number according to your account number!
@@ -51,7 +24,7 @@ int main(void) {
          *	connections to the RTDB.
          *
          */
-        const int client_nr = 8;
+        const int client_nr = 07;
 
         /** Type in the rfcomm number of the robot you want to connect to.
          *  The numbers of the robots you are connected to can be found on the
@@ -68,7 +41,6 @@ int main(void) {
         int rfcomm_nr_0 = 0;
         int rfcomm_nr_1 = 1;
         int rfcomm_nr_2 = 2;
->>>>>>> 8de11ceaada8463cf34138c3e16ab27b914f5e17:workspace/soccer_starting_position/src/soccer_sample.cpp
 
 /*
         //Activate the project option "Run in terminal" in Ctrl+5 (Ctrl+2 to come back here)
@@ -118,28 +90,28 @@ int main(void) {
                 RoboControl robo2(DBC, rfcomm_nr_2);
 
                 /** Now let's print out some information about the robot... */
-//                //uint8_t mac[6];
-//                //robo.GetMac(mac);
-//                cout << "Robo @ rfcomm" << rfcomm_nr_0 << endl; /*<<" with Mac: ";
+                //uint8_t mac[6];
+                //robo.GetMac(mac);
+                cout << "Robo @ rfcomm" << rfcomm_nr_0 << endl; /*<<" with Mac: ";
 
-//                for (int j = 0; j < 5; j++)
-//                        cout << hex << (int) mac[j] << ":";
-//                cout << hex << (int) mac[5] << endl;
-//*/
-//                cout << "\t Battery Voltage: " << dec << (int) robo0.GetAccuVoltage()
-//                                << "mV" << endl;
-//                cout << "\t initial position: " << robo0.GetPos() << endl;
-//                cout << "\t initial rotation: " << robo0.GetPhi() << endl;
+                for (int j = 0; j < 5; j++)
+                        cout << hex << (int) mac[j] << ":";
+                cout << hex << (int) mac[5] << endl;
+*/
+                cout << "\t Battery Voltage: " << dec << (int) robo0.GetAccuVoltage()
+                                << "mV" << endl;
+                cout << "\t initial position: " << robo0.GetPos() << endl;
+                cout << "\t initial rotation: " << robo0.GetPhi() << endl;
 
-//                cout << "\t Battery Voltage: " << dec << (int) robo1.GetAccuVoltage()
-//                                << "mV" << endl;
-//                cout << "\t initial position: " << robo1.GetPos() << endl;
-//                cout << "\t initial rotation: " << robo1.GetPhi() << endl;
+                cout << "\t Battery Voltage: " << dec << (int) robo1.GetAccuVoltage()
+                                << "mV" << endl;
+                cout << "\t initial position: " << robo1.GetPos() << endl;
+                cout << "\t initial rotation: " << robo1.GetPhi() << endl;
 
-//                cout << "\t Battery Voltage: " << dec << (int) robo2.GetAccuVoltage()
-//                                << "mV" << endl;
-//                cout << "\t initial position: " << robo2.GetPos() << endl;
-//                cout << "\t initial rotation: " << robo2.GetPhi() << endl;
+                cout << "\t Battery Voltage: " << dec << (int) robo2.GetAccuVoltage()
+                                << "mV" << endl;
+                cout << "\t initial position: " << robo2.GetPos() << endl;
+                cout << "\t initial rotation: " << robo2.GetPhi() << endl;
 
                 /** Create a ball object
                  *
@@ -162,23 +134,32 @@ int main(void) {
                 /** Define four positions which form a rectangle...
                  *
                  */
-            Position ballPos(ball.GetPos());
+                Position pos1(-0.6, -0.6);
+                Position pos2(0.6, -0.6);
+                Position pos3(0.6, 0.6);
+                Position pos4(-0.6, 0.6);
 
-            while (1) {
+                Position start1(-0.4, -0.3);
+                Position start2(-1.0, 0.0);
+                Position start3(-0.4, 0.3);
+
+                while (1) {
                         /** Sequentially move to the four different positions.
                          *  The while is excited if the position is reached.
                          */
-            ballPos = ball.GetPos();
 
-            robo0.GotoXY(1.2 , ball.GetY(), 100, true);
-//            while (robo0.GetPos().DistanceTo(start1) > 0.10 ||
-//                   robo1.GetPos().DistanceTo(start2) > 0.10 ||
-//                   robo2.GetPos().DistanceTo(start3) > 0.10) {
-//                usleep(50000);
-//            }
-            //sleep function in microseconds
-            //Camera sampling rate is 30fps -> 33ms
-            //which means that field info does not change within this time
+                        cout << "Moving to " << pos1 << endl << endl;
+                        robo0.GotoXY(start1.GetX(), start1.GetY(), 100, false);
+                        robo1.GotoXY(start2.GetX(), start2.GetY(), 100, false);
+                        robo2.GotoXY(start3.GetX(), start3.GetY(), 100, false);
+                        while (robo0.GetPos().DistanceTo(start1) > 0.10 ||
+                               robo1.GetPos().DistanceTo(start2) > 0.10 ||
+                               robo2.GetPos().DistanceTo(start3) > 0.10) {
+                            usleep(50000);
+                        }
+                        //sleep function in microseconds
+                        //Camera sampling rate is 30fps -> 33ms
+                        //which means that field info does not change within this time
 
                 }
 
