@@ -20,4 +20,4 @@ This updates the code, incase someone else have been working on it since you las
 This uploads your changes to github
 
 #### Git is doing/saying things I don't understand
-Do not try to fix anything or do random stuff, just ask Joachim or Andreas (The Norwegian Andreas) for help.
+Do not try to fix anything or do random stuff, just ask Joachim or Emil Andreas for help.
