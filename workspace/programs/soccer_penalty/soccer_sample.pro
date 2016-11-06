@@ -1,8 +1,8 @@
 TEMPLATE = app
 TARGET = soccer_sample
 
-#include(/DIST/lehre/lab_roso/tech/usr/include/settings.pri)
-include(/DIST/lehre/lab_roso/tech/usr_sim/include/settings.pri)
+include(/DIST/lehre/lab_roso/tech/usr/include/settings.pri)
+#include(/DIST/lehre/lab_roso/tech/usr_sim/include/settings.pri)
 
 DEPENDPATH += src
 INCLUDEPATH += src
