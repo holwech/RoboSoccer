@@ -4,11 +4,12 @@
 Run `git clone https://github.com/holwech/RoboSoccer`
 
 #### ALWAYS do this BEFORE starting to work on code
-Run `git pull`
+`cd` in the console to the RoboSoccer folder and run `git pull`
+
 This updates the code, incase someone else have been working on it since you last were at the lab.
 
 #### ALWAYS do this AFTER you are done working on code
-Run
+`cd` in the console to the RoboSoccer folder and run
 
 1.`git add .`
 
