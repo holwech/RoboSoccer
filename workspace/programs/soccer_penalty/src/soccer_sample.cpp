@@ -26,7 +26,7 @@ int main(void) {
 	 *
 	 */
 
-        const int client_nr = 6;
+        const int client_nr = 9;
 
 
 	/** Type in the rfcomm number of the robot you want to connect to.
@@ -41,7 +41,13 @@ int main(void) {
 	 *  connected to rfcomm number 0 and number 1...
 	 *
 	 */
-        int rfcomm_nr = 0;
+
+        //ePlayMode
+        int rfcomm_nr_attacker = 0;
+        int rfcomm_nr_1 = 1;
+        int rfcomm_nr_2 = 2;
+
+
 
 /*
         //Activate the project option "Run in terminal" in Ctrl+5 (Ctrl+2 to come back here)
@@ -86,22 +92,24 @@ int main(void) {
 		 *  We need to hand over the RTDB connection (DBC) and the rfcomm
 		 *  number of the robot we want to control.
 		 */
-		RoboControl robo(DBC, rfcomm_nr);
 
+                RoboControl robo_attacker(DBC, rfcomm_nr_attacker);
+                RoboControl robo1(DBC, rfcomm_nr_1);
+                RoboControl robo2(DBC, rfcomm_nr_2);
 		/** Now let's print out some information about the robot... */
                 //uint8_t mac[6];
                 //robo.GetMac(mac);
-                cout << "Robo @ rfcomm" << rfcomm_nr << endl; /*<<" with Mac: ";
+                cout << "Robo @ rfcomm" << rfcomm_nr_attacker << endl; /*<<" with Mac: ";
 
 
 		for (int j = 0; j < 5; j++)
 			cout << hex << (int) mac[j] << ":";
 		cout << hex << (int) mac[5] << endl;
 */
-                cout << "\t Battery Voltage: " << dec << (int) robo.GetAccuVoltage()
+                cout << "\t Battery Voltage: " << dec << (int) robo_attacker.GetAccuVoltage()
                                 << "mV" << endl;
-		cout << "\t initial position: " << robo.GetPos() << endl;
-		cout << "\t initial rotation: " << robo.GetPhi() << endl;
+                cout << "\t initial position: " << robo_attacker.GetPos() << endl;
+                cout << "\t initial rotation: " << robo_attacker.GetPhi() << endl;
 
 		/** Create a ball object
 		 *
@@ -118,59 +126,67 @@ int main(void) {
 		 */
 		cout << "\t initial direction: " << ball.GetPhi() << endl;
 		cout << "\t initial velocity: " << ball.GetVelocity() << endl;
+                Referee myreferee(DBC);
+                myreferee.Init();
+                myreferee.GetPlayMode();
+
 		//-------------------------------------- Ende Init ---------------------------------
 
 		/** Define four positions which form a rectangle...
 		 *
 		 */
 
-               // Position pos2(-0.1, 0);
+                Position corner1(1.2,-0.8);
 
-                //Position pos4(0.8, 0);
+                Position corner2(1.2,0.8);
 
 
-              // Referee myreferee(class RTDBConn & DBC, const char * name = "rtdb_referee", const int & otype = KOGMO_RTDB_OBJTYPE_POLOLU, const int32_t & child_size = 0,char ** child_dataptr = NULL);
-                Referee myreferee(DBC);
-                myreferee.Init();
-                myreferee.GetPlayMode();
+                // Referee myreferee(class RTDBConn & DBC, const char * name = "rtdb_referee", const int & otype = KOGMO_RTDB_OBJTYPE_POLOLU, const int32_t & child_size = 0,char ** child_dataptr = NULL);
+                //eSide kickside=myreferee.GetSide();
+                //cout << myreferee.GetPlayMode() << "blabla" << endl;
+                while (myreferee.GetPlayMode()== BEFORE_PENALTY){
 
-                if(myreferee.GetPlayMode()==REFEREE_INIT){
-                   cout << "Referee works" << endl;
-                }
+                    Position pos1(0.0,0.0);
+                    cout << "Moving to " << pos1 << endl << endl;
+                    robo_attacker.GotoXY(pos1.GetX(), pos1.GetY(), 60, true);
+                    robo1.GotoXY(1.2, -0.8, 100, false);
+                    robo2.GotoXY(1.2, 0.8, 100, false);
+                    while (robo1.GetPos().DistanceTo(corner1) > 0.10 ||
+                           robo2.GetPos().DistanceTo(corner2) > 0.10 ||
+                           robo_attacker.GetPos().DistanceTo(pos1) > 0.05)
+                           {usleep(50000);}
+                    }
+                if (myreferee.GetPlayMode()== PENALTY){
+                     cout << "Referee works" << endl;
 
-			/** Sequentially move to the four different positions.
-
-			 *  The while is excited if the position is reached.
-			 */
-
-                         Position pos1(ball.GetX()-0.5,ball.GetY());
+                         Position pos1(ball.GetX()+0.5,ball.GetY());
                          cout << "Moving to " << pos1 << endl << endl;
-                         robo.GotoXY(pos1.GetX(), pos1.GetY(), 50, true);
-                         while (robo.GetPos().DistanceTo(pos1) > 0.05) usleep(50000); //sleep function in microseconds
+                         robo_attacker.GotoXY(pos1.GetX(), pos1.GetY(), 50, true);
+                         while (robo_attacker.GetPos().DistanceTo(pos1) > 0.05) usleep(50000); //sleep function in microseconds
                          //Camera sampling rate is 30fps -> 33ms
                          //which means that field info does not change within this time
 
 
-                         Position pos2(ball.GetX()-0.3,ball.GetY());
+                         Position pos2(ball.GetX()+0.3,ball.GetY());
                          cout << "Moving to " << pos2 << endl << endl;
-                         robo.GotoXY(pos2.GetX(), pos2.GetY(), 80, true);
-                         while (robo.GetPos().DistanceTo(pos2) > 0.1) usleep(50000); //sleep function in microseconds
+                         robo_attacker.GotoXY(pos2.GetX(), pos2.GetY(), 80, true);
+                         while (robo_attacker.GetPos().DistanceTo(pos2) > 0.1) usleep(50000); //sleep function in microseconds
                          //Camera sampling rate is 30fps -> 33ms
                          //which means that field info does not change within this time
 
 
                          Position pos3(ball.GetX(),ball.GetY());
                          cout << "Moving to " << pos3 << endl << endl;
-                         robo.GotoXY(pos3.GetX(), pos3.GetY(), 100, true);
-                         while (robo.GetPos().DistanceTo(pos3) > 0.1) usleep(50000); //sleep function in microseconds
+                         robo_attacker.GotoXY(pos3.GetX(), pos3.GetY(), 100, true);
+                         while (robo_attacker.GetPos().DistanceTo(pos3) > 0.1) usleep(50000); //sleep function in microseconds
                          //Camera sampling rate is 30fps -> 33ms
                          //which means that field info does not change within this time
 
 
-                         Position pos4(ball.GetX() + 0.3,ball.GetY());
+                         Position pos4(ball.GetX() - 0.3,ball.GetY());
                          cout << "Moving to " << pos4 << endl << endl;
-                         robo.GotoXY(pos4.GetX(), pos4.GetY(), 160, true);
-                         while (robo.GetPos().DistanceTo(pos4) > 0.1) usleep(50000); //sleep function in microseconds
+                         robo_attacker.GotoXY(pos4.GetX(), pos4.GetY(), 160, true);
+                         while (robo_attacker.GetPos().DistanceTo(pos4) > 0.1) usleep(50000); //sleep function in microseconds
                          //Camera sampling rate is 30fps -> 33ms
                          //which means that field info does not change within this time
 
@@ -186,8 +202,9 @@ int main(void) {
                         //while (robo.GetPos().DistanceTo(pos4) > 0.10) usleep(50000);
 
 
-                robo.Kick(100,0.0);
+                robo_attacker.Kick(100,0.0);
 
+              }
 
 	} catch (DBError err) {
 		cout << "Client died on Error: " << err.what() << endl;

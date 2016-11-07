@@ -26,7 +26,7 @@ int main(void) {
          *	connections to the RTDB.
          *
          */
-        const int client_nr = 06;
+        const int client_nr = 9;
 
         /** Type in the rfcomm number of the robot you want to connect to.
          *  The numbers of the robots you are connected to can be found on the
@@ -130,18 +130,19 @@ int main(void) {
                  */
                 cout << "\t initial direction: " << ball.GetPhi() << endl;
                 cout << "\t initial velocity: " << ball.GetVelocity() << endl;
-
+                Referee myreferee(DBC);
+                myreferee.Init();
+                myreferee.GetPlayMode();
                 //-------------------------------------- Ende Init ---------------------------------
 
                 /** Define four positions which form a rectangle...
                  *
                  */
-                Position pos1(-0.6, -0.6);
-                Position pos2(0.6, -0.6);
-                Position pos3(0.6, 0.6);
-                Position pos4(-0.6, 0.6);
-
-                //Referee myreferee (class RTDBConn & DBC, const char*name = "rtdb_referee", const int & otype = KOGMO_RTDB_OBJTYPE_POLOLU, const int32_t & child_size = 0);
+                //cout << myreferee.GetPlayMode() << endl;
+                while (myreferee.GetPlayMode()==REFEREE_INIT){
+                }
+                if (myreferee.GetPlayMode()==BEFORE_KICK_OFF)
+                {
 
                 //ePlayMode myplaymode = myreferee.GetPlayMode();
                 // myreferee.Init();
@@ -152,14 +153,12 @@ int main(void) {
 
                 Position start1(-0.4, -0.3);
                 Position start2(-1.0, 0.0);
-                Position start3(-0.4, 0.3);
+                Position start3(-0.15, 0);
 
                 while (1) {
                         /** Sequentially move to the four different positions.
                          *  Thec while is excited if the position is reached.
                          */
-
-                        cout << "Moving to " << pos1 << endl << endl;
                         robo0.GotoXY(start1.GetX(), start1.GetY(), 100, false);
                         robo1.GotoXY(start2.GetX(), start2.GetY(), 100, false);
                         robo2.GotoXY(start3.GetX(), start3.GetY(), 100, false);
@@ -194,7 +193,7 @@ int main(void) {
 
                 //}
 
-
+               }
 
         } catch (DBError err) {
                 cout << "Client died on Error: " << err.what() << endl;
