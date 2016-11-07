@@ -11,8 +11,8 @@
 #include <iostream>
 #include "kogmo_rtdb.hxx"
 #include "robo_control.h"
-
-
+#include "share.h"
+#include "referee.h"
 using namespace std;
 
 int main(void) {
@@ -24,7 +24,9 @@ int main(void) {
 	 *	connections to the RTDB.
 	 *
 	 */
+
         const int client_nr = 6;
+
 
 	/** Type in the rfcomm number of the robot you want to connect to.
 	 *  The numbers of the robots you are connected to can be found on the
@@ -109,13 +111,12 @@ int main(void) {
 		RawBall ball(DBC);
 		/** lets print this information: */
 		cout << "Ball informations:" << endl;
-		cout << "\t initial position: " << ball.GetPos() << endl;
+                cout << "\t initial position: " << ball.GetPos() << endl;
 		/** Notice that the rotation here refers to the moving direction of the ball.
 		 *  Therefore if the ball does not move the rotation is not defined.
 		 */
 		cout << "\t initial direction: " << ball.GetPhi() << endl;
 		cout << "\t initial velocity: " << ball.GetVelocity() << endl;
-
 		//-------------------------------------- Ende Init ---------------------------------
 
 		/** Define four positions which form a rectangle...
@@ -128,21 +129,21 @@ int main(void) {
 
 
 			/** Sequentially move to the four different positions.
+
 			 *  The while is excited if the position is reached.
 			 */
 
                          Position pos1(ball.GetX()-0.5,ball.GetY());
                          cout << "Moving to " << pos1 << endl << endl;
-                         robo.GotoXY(pos1.GetX(), pos1.GetY(), 30, true);
+                         robo.GotoXY(pos1.GetX(), pos1.GetY(), 50, true);
                          while (robo.GetPos().DistanceTo(pos1) > 0.05) usleep(50000); //sleep function in microseconds
                          //Camera sampling rate is 30fps -> 33ms
                          //which means that field info does not change within this time
 
 
-
                          Position pos2(ball.GetX()-0.3,ball.GetY());
                          cout << "Moving to " << pos2 << endl << endl;
-                         robo.GotoXY(pos2.GetX(), pos2.GetY(), 60, true);
+                         robo.GotoXY(pos2.GetX(), pos2.GetY(), 80, true);
                          while (robo.GetPos().DistanceTo(pos2) > 0.1) usleep(50000); //sleep function in microseconds
                          //Camera sampling rate is 30fps -> 33ms
                          //which means that field info does not change within this time
@@ -169,6 +170,7 @@ int main(void) {
                          //while (robo.GetPos().DistanceTo(pos3) > 0.1) usleep(50000);
 
 
+
                         //cout << "Moving to " << pos4 << endl << endl;
                         //roboball.GetPos().GotoXY(pos4.GetX(), pos4.GetY(), 60, true);
                         //while (robo.GetPos().DistanceTo(pos4) > 0.10) usleep(50000);
@@ -176,11 +178,11 @@ int main(void) {
 
                 robo.Kick(100,0.0);
 
+
 	} catch (DBError err) {
 		cout << "Client died on Error: " << err.what() << endl;
 	}
         cout << "End" << endl;
 	return 0;
 }
-
 

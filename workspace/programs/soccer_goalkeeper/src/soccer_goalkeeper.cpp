@@ -27,7 +27,9 @@ int main(void) {
          *	connections to the RTDB.
          *
          */
+
         const int client_nr = 6;
+
 
         /** Type in the rfcomm number of the robot you want to connect to.
          *  The numbers of the robots you are connected to can be found on the
@@ -41,9 +43,9 @@ int main(void) {
          *  connected to rfcomm number 0 and number 1...
          *
          */
-        int rfcomm_nr_0 = 0;
-        int rfcomm_nr_1 = 1;
-        int rfcomm_nr_2 = 2;
+        int rfcomm_nr_0 = 3;
+        int rfcomm_nr_1 = 4;
+        int rfcomm_nr_2 = 5;
 
 /*
         //Activate the project option "Run in terminal" in Ctrl+5 (Ctrl+2 to come back here)
