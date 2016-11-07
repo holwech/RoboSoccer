@@ -11,6 +11,8 @@
 #include <iostream>
 #include "kogmo_rtdb.hxx"
 #include "robo_control.h"
+#include "referee.h"
+#include "share.h"
 
 
 using namespace std;
@@ -24,7 +26,7 @@ int main(void) {
          *	connections to the RTDB.
          *
          */
-        const int client_nr = 07;
+        const int client_nr = 06;
 
         /** Type in the rfcomm number of the robot you want to connect to.
          *  The numbers of the robots you are connected to can be found on the
@@ -139,13 +141,22 @@ int main(void) {
                 Position pos3(0.6, 0.6);
                 Position pos4(-0.6, 0.6);
 
+                //Referee myreferee (class RTDBConn & DBC, const char*name = "rtdb_referee", const int & otype = KOGMO_RTDB_OBJTYPE_POLOLU, const int32_t & child_size = 0);
+
+                //ePlayMode myplaymode = myreferee.GetPlayMode();
+                // myreferee.Init();
+                //int mygoals;
+                //mygoals = myreferee.GetLeftSideGoals();
+                //mygoals = myreferee.GetLeftSideGoals();
+                //myplaymode = myreferee.GetPlayMode();
+
                 Position start1(-0.4, -0.3);
                 Position start2(-1.0, 0.0);
                 Position start3(-0.4, 0.3);
 
                 while (1) {
                         /** Sequentially move to the four different positions.
-                         *  The while is excited if the position is reached.
+                         *  Thec while is excited if the position is reached.
                          */
 
                         cout << "Moving to " << pos1 << endl << endl;
@@ -155,13 +166,35 @@ int main(void) {
                         while (robo0.GetPos().DistanceTo(start1) > 0.10 ||
                                robo1.GetPos().DistanceTo(start2) > 0.10 ||
                                robo2.GetPos().DistanceTo(start3) > 0.10) {
-                            usleep(50000);
+                               usleep(50000);
                         }
                         //sleep function in microseconds
                         //Camera sampling rate is 30fps -> 33ms
                         //which means that field info does not change within this time
 
+                       // robo0.TurnAbs(90);//-robo0.GetPhi().Deg());
+                        //cout << "Moving to " << robo0.GetPhi().Deg() << endl << endl;
+
+                        //robo1.TurnAbs(robo0.GetPhi());
+                        //robo2.TurnAbs(robo0.GetPhi());
+
                 }
+
+                //while (1){
+
+
+                  //     robo0.TurnAbs(robo0.GetPhi());
+                    //   robo1.TurnAbs(robo0.GetPhi());
+                      // robo2.TurnAbs(robo0.GetPhi());
+                       //while (robo0.GetPhi().Deg() != 0.0 ||
+                         //     robo1.GetPhi().Deg() != 0.0 ||
+                           //   robo2.GetPhi().Deg() != 0.0) {
+                             // usleep(50000);
+                       //}
+
+                //}
+
+
 
         } catch (DBError err) {
                 cout << "Client died on Error: " << err.what() << endl;

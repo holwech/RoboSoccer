@@ -11,6 +11,9 @@
 #include <iostream>
 #include "kogmo_rtdb.hxx"
 #include "robo_control.h"
+#include <stdlib.h>
+#include "share.h"
+#include <math.h>
 
 
 using namespace std;
@@ -24,7 +27,7 @@ int main(void) {
          *	connections to the RTDB.
          *
          */
-        const int client_nr = 7;
+        const int client_nr = 6;
 
         /** Type in the rfcomm number of the robot you want to connect to.
          *  The numbers of the robots you are connected to can be found on the
@@ -141,13 +144,13 @@ int main(void) {
                          *  The while is excited if the position is reached.
                          */
             ballPos = ball.GetPos();
+            double ballangle = ball.GetPhi().Deg();
+            double velocityy = sin(ballangle)*ball.GetVelocity();
+            robo0.GotoXY(1.3 , ball.GetY() + velocityy*100 , 150, true);
+            while (abs(robo0.GetY()-ball.GetY()) > 0.40 && abs(robo0.GetX()-0.4) > 0.40) {
+                    usleep(5000);
+               }
 
-            robo0.GotoXY(1.2 , ball.GetY(), 100, true);
-//            while (robo0.GetPos().DistanceTo(start1) > 0.10 ||
-//                   robo1.GetPos().DistanceTo(start2) > 0.10 ||
-//                   robo2.GetPos().DistanceTo(start3) > 0.10) {
-//                usleep(50000);
-//            }
             //sleep function in microseconds
             //Camera sampling rate is 30fps -> 33ms
             //which means that field info does not change within this time
