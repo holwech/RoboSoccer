@@ -28,7 +28,8 @@ int main(void) {
          *
          */
 
-        const int client_nr = 6;
+        const int client_nr = 7;
+
 
 
         /** Type in the rfcomm number of the robot you want to connect to.
@@ -65,6 +66,7 @@ int main(void) {
                 }
         }
 */
+
         try {
 
                 /** Establish connection to the RTDB.
@@ -94,29 +96,6 @@ int main(void) {
                 RoboControl robo1(DBC, rfcomm_nr_1);
                 RoboControl robo2(DBC, rfcomm_nr_2);
 
-                /** Now let's print out some information about the robot... */
-                //uint8_t mac[6];
-                //robo.GetMac(mac);
-                cout << "Robo @ rfcomm" << rfcomm_nr_0 << endl; /*<<" with Mac: ";
-
-                for (int j = 0; j < 5; j++)
-                        cout << hex << (int) mac[j] << ":";
-                cout << hex << (int) mac[5] << endl;
-*/
-                cout << "\t Battery Voltage: " << dec << (int) robo0.GetAccuVoltage()
-                                << "mV" << endl;
-                cout << "\t initial position: " << robo0.GetPos() << endl;
-                cout << "\t initial rotation: " << robo0.GetPhi() << endl;
-
-                cout << "\t Battery Voltage: " << dec << (int) robo1.GetAccuVoltage()
-                                << "mV" << endl;
-                cout << "\t initial position: " << robo1.GetPos() << endl;
-                cout << "\t initial rotation: " << robo1.GetPhi() << endl;
-
-                cout << "\t Battery Voltage: " << dec << (int) robo2.GetAccuVoltage()
-                                << "mV" << endl;
-                cout << "\t initial position: " << robo2.GetPos() << endl;
-                cout << "\t initial rotation: " << robo2.GetPhi() << endl;
 
                 /** Create a ball object
                  *
@@ -139,28 +118,35 @@ int main(void) {
                 /** Define four positions which form a rectangle...
                  *
                  */
-            Position ballPos(ball.GetPos());
+                Position ballPos(ball.GetPos());
 
-            while (1) {
-                        /** Sequentially move to the four different positions.
-                         *  The while is excited if the position is reached.
-                         */
-            ballPos = ball.GetPos();
-            double ballangle = ball.GetPhi().Deg();
-            double velocityy = sin(ballangle)*ball.GetVelocity();
-            robo0.GotoXY(1.3 , ball.GetY() + velocityy*100 , 150, true);
-            while (abs(robo0.GetY()-ball.GetY()) > 0.40 && abs(robo0.GetX()-0.4) > 0.40) {
-                    usleep(5000);
-               }
+                cout << " WHAAAT" << endl;
+                while (1) {
+                    /** Sequentially move to the four different positions.
+                    *  The while is excited if the position is reached.
+                    */
+                    ballPos = ball.GetPos();
+                    double ballangle = ball.GetPhi().Deg();
+                    double velocityy = sin(ballangle)*ball.GetVelocity();
+                    double nextPos = ball.GetY() + velocityy * (33 / 1000);
+                    if (nextPos > 0.2) {
+                        nextPos = 0.2;
+                    } else if (nextPos < -0.2) {
+                        nextPos = -0.2;
+                    }
+                    robo0.GotoXY(1.3 , nextPos, 50, true);
+                    while (abs(robo0.GetY()-ball.GetY()) > 0.40 && abs(robo0.GetX()-0.4) > 0.40) {
+                        usleep(5000);
+                    }
 
-            //sleep function in microseconds
-            //Camera sampling rate is 30fps -> 33ms
-            //which means that field info does not change within this time
+                    //sleep function in microseconds
+                    //Camera sampling rate is 30fps -> 33ms
+                    //which means that field info does not change within this time
 
                 }
 
         } catch (DBError err) {
-                cout << "Client died on Error: " << err.what() << endl;
+            cout << "Client died on Error: " << err.what() << endl;
         }
         cout << "End" << endl;
         return 0;
