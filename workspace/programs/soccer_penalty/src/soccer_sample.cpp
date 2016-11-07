@@ -13,6 +13,7 @@
 #include "robo_control.h"
 #include "share.h"
 #include "referee.h"
+#include "raw_ball.h"
 using namespace std;
 
 int main(void) {
@@ -127,6 +128,15 @@ int main(void) {
 
                 //Position pos4(0.8, 0);
 
+
+              // Referee myreferee(class RTDBConn & DBC, const char * name = "rtdb_referee", const int & otype = KOGMO_RTDB_OBJTYPE_POLOLU, const int32_t & child_size = 0,char ** child_dataptr = NULL);
+                Referee myreferee(DBC);
+                myreferee.Init();
+                myreferee.GetPlayMode();
+
+                if(myreferee.GetPlayMode()==REFEREE_INIT){
+                   cout << "Referee works" << endl;
+                }
 
 			/** Sequentially move to the four different positions.
 
