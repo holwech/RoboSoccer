@@ -19,18 +19,18 @@ Master::Master(string& team,
 }
 
 void Master::run() {
-    string answer;
+    string state;
     bool cont = true;
     while(cont) {
         cout << "Choose programs penalty, goalkeeper, or starting position (p/g/s/stop): ";
-        cin >> answer;
-        if (answer == "p") {
+        cin >> state;
+        if (state == "p") {
             runPenalty();
-        } else if (answer == "g") {
+        } else if (state == "g") {
             runGoalkeeper();
-        } else if (answer == "s") {
+        } else if (state == "s") {
             runStartPos();
-        } else if (answer == "stop") {
+        } else if (state == "stop") {
             cont = false;
         } else {
             cout << "Not an alternative, try again." << endl;
