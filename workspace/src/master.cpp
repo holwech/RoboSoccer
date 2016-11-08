@@ -66,27 +66,23 @@ void Master::runGoalkeeper() {
     cout << "Starting goalkeeper program." << endl;
     Position ballPos(ball.GetPos());
 
-    while (1) {
-        ballPos = ball.GetPos();
-        double ballangle = ball.GetPhi().Deg();
-        double velocityy = sin(ballangle)*ball.GetVelocity();
+    ballPos = ball.GetPos();
+    double ballangle = ball.GetPhi().Deg();
+    double velocityy = sin(ballangle)*ball.GetVelocity();
 
-        /** sleep function in microseconds
-         *  Camera sampling rate is 30fps -> 33ms
-         *  which means that field info does not change within this time
-         */
-        double nextPos = ball.GetY() + velocityy * (33 / 1000);
-        if (nextPos > 0.2) {
-            nextPos = 0.2;
-        } else if (nextPos < -0.2) {
-            nextPos = -0.2;
-        }
-        robo0.GotoXY(1.3 , nextPos, 50, true);
-        while (abs(robo0.GetY() - ball.GetY()) > 0.40 && abs(robo0.GetX() - 0.4) > 0.40) {
-            usleep(5000);
-        }
-
-
+    /** sleep function in microseconds
+     *  Camera sampling rate is 30fps -> 33ms
+     *  which means that field info does not change within this time
+     */
+    double nextPos = ball.GetY() + velocityy * (33 / 1000);
+    if (nextPos > 0.2) {
+        nextPos = 0.2;
+    } else if (nextPos < -0.2) {
+        nextPos = -0.2;
+    }
+    robo0.GotoXY(1.3 , nextPos, 50, true);
+    while (abs(robo0.GetY() - ball.GetY()) > 0.40 && abs(robo0.GetX() - 0.4) > 0.40) {
+        usleep(5000);
     }
 }
 
@@ -94,24 +90,8 @@ void Master::runGoalkeeper() {
   * This program needs to be fixed as it is not following the specs given on Moodle.
   * PLEASE FIX!!
   */
-void Master::runPenalty() {
-    cout << "Starting penalty program." << endl;
-    Position corner1(1.2,-0.8);
-    Position corner2(1.2,0.8);
 
-    while (referee.GetPlayMode()== BEFORE_PENALTY){
-        Position pos1(0.0,0.0);
-        cout << "Moving to " << pos1 << endl << endl;
-        robo0.GotoXY(pos1.GetX(), pos1.GetY(), 60, true);
-        robo1.GotoXY(1.2, -0.8, 100, false);
-        robo2.GotoXY(1.2, 0.8, 100, false);
-        while (robo1.GetPos().DistanceTo(corner1) > 0.10 ||
-               robo2.GetPos().DistanceTo(corner2) > 0.10 ||
-               robo0.GetPos().DistanceTo(pos1) > 0.05) {
-            usleep(50000);
-        }
-    }
-
+void Master::penaltyShoot(){
     if (referee.GetPlayMode()== PENALTY){
          cout << "Starting penalty." << endl;
 
@@ -148,6 +128,49 @@ void Master::runPenalty() {
 
         robo0.Kick(100,0.0);
     }
+}
+
+void Master::runPenalty() {
+    cout << "Starting penalty program." << endl;
+    Position corner1(1.2,-0.8);
+    Position corner2(1.2,0.8);
+    string turn;
+    while (true){
+        cout << referee.GetSide() << endl;
+        usleep(100000);
+    }
+    do{
+    cout << "Penalty! \nShooting or defending?(shoot/defend): ";
+    cin >> turn;
+    }while ( !(turn == "shoot" || turn == "defend") );
+
+
+    while(true){
+
+        while (referee.GetPlayMode()== BEFORE_PENALTY){
+            Position pos1(0.0,0.0);
+            cout << "Moving to " << pos1 << endl << endl;
+            robo0.GotoXY(pos1.GetX(), pos1.GetY(), 60, true);
+            robo1.GotoXY(1.2, -0.8, 100, false);
+            robo2.GotoXY(1.2, 0.8, 100, false);
+            while (robo1.GetPos().DistanceTo(corner1) > 0.10 ||
+                   robo2.GetPos().DistanceTo(corner2) > 0.10 ||
+                   robo0.GetPos().DistanceTo(pos1) > 0.05) {
+                usleep(50000);
+            }
+        }
+        if(turn == "shoot"){
+            penaltyShoot();
+            turn = "defend";
+        }else{
+            while(referee.GetPlayMode() == PENALTY){
+                runGoalkeeper();
+            }
+            turn == "shoot";
+        }
+
+    }
+
 }
 
 /**

@@ -38,6 +38,7 @@ private:
     Referee referee;
     void menu();
     void runPenalty();
+    void penaltyShoot();
     void runGoalkeeper();
     void runStartPos();
     enum State state;
