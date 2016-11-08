@@ -15,6 +15,12 @@ Master::Master(string& team,
                 ball(ball),
                 referee(referee)
 {
+    if(team == "blue"){
+        side = BLUE;
+    }
+    else{
+        side = RED;
+    }
     referee.Init();
     state = STATE_MENU;
 }
@@ -76,19 +82,22 @@ void Master::runGoalkeeper() {
 
     ballPos = ball.GetPos();
     double ballangle = ball.GetPhi().Deg();
-    double velocityy = sin(ballangle)*ball.GetVelocity();
+    double velocityY = sin(ballangle)*ball.GetVelocity();
 
     /** sleep function in microseconds
      *  Camera sampling rate is 30fps -> 33ms
      *  which means that field info does not change within this time
      */
-    double nextPos = ball.GetY() + velocityy * (33 / 1000);
+    double nextPos = ball.GetY() + velocityY * (33 / 1000);
     if (nextPos > 0.2) {
         nextPos = 0.2;
     } else if (nextPos < -0.2) {
         nextPos = -0.2;
     }
-    double side = (team == "blue") ? -1.3 : 1.3;
+
+
+
+    double side = (team == "blue" || referee.GetPlayMode() == PENALTY || referee.GetPlayMode() == BEFORE_PENALTY) ? -1.3 : 1.3;
     robo0.GotoXY(side , nextPos, 50, true);
     while (abs(robo0.GetY() - ball.GetY()) > 0.40 && abs(robo0.GetX() - 0.4) > 0.40) {
         usleep(5000);
@@ -104,15 +113,15 @@ void Master::penaltyShoot(){
     if (referee.GetPlayMode()== PENALTY){
          cout << "Starting penalty." << endl;
 
-         Position pos1(ball.GetX()+0.5, ball.GetY());
-         cout << "Moving to " << pos1 << endl << endl;
-         robo0.GotoXY(pos1.GetX(), pos1.GetY(), 50, true);
-         while (robo0.GetPos().DistanceTo(pos1) > 0.05) usleep(50000); //sleep function in microseconds
+//         Position pos1(ball.GetX()+0.5, ball.GetY());
+//         cout << "Moving to " << pos1 << endl << endl;
+//         robo0.GotoXY(pos1.GetX(), pos1.GetY(), 50, true);
+//         while (robo0.GetPos().DistanceTo(pos1) > 0.05) usleep(50000); //sleep function in microseconds
 
-         Position pos2(ball.GetX()+0.3, ball.GetY());
-         cout << "Moving to " << pos2 << endl << endl;
-         robo0.GotoXY(pos2.GetX(), pos2.GetY(), 80, true);
-         while (robo0.GetPos().DistanceTo(pos2) > 0.1) usleep(50000); //sleep function in microseconds
+//         Position pos2(ball.GetX()+0.3, ball.GetY());
+//         cout << "Moving to " << pos2 << endl << endl;
+//         robo0.GotoXY(pos2.GetX(), pos2.GetY(), 80, true);
+//         while (robo0.GetPos().DistanceTo(pos2) > 0.1) usleep(50000); //sleep function in microseconds
 
          Position pos3(ball.GetX(), ball.GetY());
          cout << "Moving to " << pos3 << endl << endl;
@@ -142,20 +151,21 @@ void Master::penaltyShoot(){
 void Master::runPenalty() {
     Position corner1(1.2,-0.8);
     Position corner2(1.2,0.8);
-    string turn;
-    while (true){
-        cout << referee.GetSide() << endl;
-        usleep(100000);
-    }
-    do{
-    cout << "Penalty! \nShooting or defending?(shoot/defend): ";
-    cin >> turn;
-    }while ( !(turn == "shoot" || turn == "defend") );
+    Side SideToShoot;
+    SideToShoot = (Side)referee.GetSide(); // 0 = BLUE , 1 = RED
+//    while(true){
+//        cout << referee.GetSide() << endl;
+//        usleep(500000);
+//    }
+
+    static bool beforeShootingInit;
 
 
-    while(true){
 
-        while (referee.GetPlayMode()== BEFORE_PENALTY){
+
+    switch(referee.GetPlayMode()){
+    case BEFORE_PENALTY:
+        if( this->side == SideToShoot){
             Position pos1(0.0,0.0);
             cout << "Moving to " << pos1 << endl << endl;
             robo0.GotoXY(pos1.GetX(), pos1.GetY(), 60, true);
@@ -166,17 +176,30 @@ void Master::runPenalty() {
                    robo0.GetPos().DistanceTo(pos1) > 0.05) {
                 usleep(50000);
             }
+            pos1 = Position(ball.GetX() + 0.1 , ball.GetY());
+            robo0.GotoXY(pos1.GetX(), pos1.GetY() , 60, true);
+            while(robo0.GetPos().DistanceTo(pos1) > 0.05){
+                usleep(50000);
+            }
+
         }
-        if(turn == "shoot"){
+        else{
+            if(robo0.GetPos().DistanceTo(Position(-1.3,0.0)) > 0.05){
+                robo0.GotoXY(-1.3, 0, 100, true);
+            }
+        }
+        break;
+    case PENALTY:
+        cout << "Exiting before_penalty" << endl;
+        if(this->side == SideToShoot){
             penaltyShoot();
-            turn = "defend";
         }else{
-                state = STATE_GOALKEEPER;
-            turn == "shoot";
+            runGoalkeeper();
         }
-
+        break;
+    default:
+        break;
     }
-
 }
 
 /**

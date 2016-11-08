@@ -15,6 +15,10 @@ enum State {
     STATE_STARTPOS
 };
 
+enum Side{
+    BLUE = 0,
+    RED = 1
+};
 
 class Master
 {
@@ -30,6 +34,7 @@ public:
 private:
     int client_nr;
     string team;
+    Side side;
     RTDBConn DBC;
     RoboControl robo0;
     RoboControl robo1;
