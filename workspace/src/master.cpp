@@ -1,5 +1,7 @@
 #include "master.h"
 
+
+
 Master::Master(string& team,
                RTDBConn& DBC,
                RoboControl& robo0,
@@ -15,18 +17,17 @@ Master::Master(string& team,
                 ball(ball),
                 referee(referee)
 {
-    if(team == "blue"){
-        side = BLUE;
-    }
-    else{
-        side = RED;
-    }
+//    if( (team == "blue" && referee.GetPlayMode() == BLUE_LEFT) || (team == "read" && referee.GetPlayMode() == READ_LEFT)){
+//        side = LEFT_SIDE;
+//    }else{
+//        side = RIGHT_SIDE;
+//    }
     referee.Init();
+    side = RIGHT_SIDE;
     state = STATE_MENU;
 }
 
 void Master::run() {
-    string input;
     while(1) {
         switch(state) {
         case STATE_MENU:
@@ -98,7 +99,7 @@ void Master::runGoalkeeper() {
 
 
     double side = (team == "blue" || referee.GetPlayMode() == PENALTY || referee.GetPlayMode() == BEFORE_PENALTY) ? -1.3 : 1.3;
-    robo0.GotoXY(side , nextPos, 50, true);
+    robo0.GotoXY(side , nextPos, 60, true);
     while (abs(robo0.GetY() - ball.GetY()) > 0.40 && abs(robo0.GetX() - 0.4) > 0.40) {
         usleep(5000);
     }
@@ -151,48 +152,68 @@ void Master::penaltyShoot(){
 void Master::runPenalty() {
     Position corner1(1.2,-0.8);
     Position corner2(1.2,0.8);
-    Side SideToShoot;
-    SideToShoot = (Side)referee.GetSide(); // 0 = BLUE , 1 = RED
+
+    //SideToShoot = referee.GetSide(); // 0 = left , 1 = right
 //    while(true){
 //        cout << referee.GetSide() << endl;
 //        usleep(500000);
 //    }
 
-    static bool beforeShootingInit;
-
-
-
+    static bool shotCompleted = false;
+    static bool shooterInitFirstStepDone = false;
+    cout << referee.GetPlayMode() << " " << shooterInitFirstStepDone << endl;
 
     switch(referee.GetPlayMode()){
     case BEFORE_PENALTY:
-        if( this->side == SideToShoot){
-            Position pos1(0.0,0.0);
-            cout << "Moving to " << pos1 << endl << endl;
-            robo0.GotoXY(pos1.GetX(), pos1.GetY(), 60, true);
-            robo1.GotoXY(1.2, -0.8, 100, false);
-            robo2.GotoXY(1.2, 0.8, 100, false);
-            while (robo1.GetPos().DistanceTo(corner1) > 0.10 ||
+        if( team == "blue"){        // our turn to shoot
+            shotCompleted = false;
+            Position pos1;
+            if(!shooterInitFirstStepDone){
+                pos1 = Position(0.0,ball.GetY());
+                if(robo0.GetPos().DistanceTo(pos1) < 0.05 ){
+                    shooterInitFirstStepDone = true;
+                }
+            }
+            else{
+                pos1 = Position(ball.GetX() + 0.1 , ball.GetY());
+            }
+
+
+            if (robo1.GetPos().DistanceTo(corner1) > 0.10 ||
                    robo2.GetPos().DistanceTo(corner2) > 0.10 ||
                    robo0.GetPos().DistanceTo(pos1) > 0.05) {
-                usleep(50000);
-            }
-            pos1 = Position(ball.GetX() + 0.1 , ball.GetY());
-            robo0.GotoXY(pos1.GetX(), pos1.GetY() , 60, true);
-            while(robo0.GetPos().DistanceTo(pos1) > 0.05){
+
+                robo0.GotoXY(pos1.GetX(), pos1.GetY(), 60, true);
+                robo1.GotoXY(1.2, -0.8, 100, false);
+                robo2.GotoXY(1.2, 0.8, 100, false);
                 usleep(50000);
             }
 
+
+
+
         }
-        else{
-            if(robo0.GetPos().DistanceTo(Position(-1.3,0.0)) > 0.05){
-                robo0.GotoXY(-1.3, 0, 100, true);
+        else{                         // our turn to defend
+            Position pos1(-1.3,0.0);
+            cout << "Moving to " << pos1 << endl << endl;
+            if (robo1.GetPos().DistanceTo(corner1) > 0.10 ||
+                   robo2.GetPos().DistanceTo(corner2) > 0.10 ||
+                   robo0.GetPos().DistanceTo(pos1) > 0.05) {
+                usleep(50000);
+                robo0.GotoXY(pos1.GetX(), pos1.GetY(), 60, true);
+                robo1.GotoXY(1.2, -0.8, 100, false);
+                robo2.GotoXY(1.2, 0.8, 100, false);
             }
         }
         break;
+
     case PENALTY:
-        cout << "Exiting before_penalty" << endl;
-        if(this->side == SideToShoot){
-            penaltyShoot();
+        shooterInitFirstStepDone = false;
+        if(team == "blue"){
+            if(!shotCompleted){
+                penaltyShoot();
+            }
+            shotCompleted = true;
         }else{
             runGoalkeeper();
         }
@@ -201,18 +222,25 @@ void Master::runPenalty() {
         break;
     }
 }
-
+//void Master::updateFieldSide(){
+//    ePlayMode mode = referee.GetPlayMode();
+//    if( (team == "blue" && mode == BLUE_LEFT) || (team == "read" && mode == READ_LEFT)){
+//        side = LEFT_SIDE;
+//    }else{
+//        side = RIGHT_SIDE;
+//    }
+//}
 /**
   * This program is maybe complete (I think?). Test and reread specs again to make sure.
   *
   */
 void Master::runStartPos() {
 
-    cout << referee.GetSide() << endl;
+    cout << referee.GetSide() << "Inside runStartPos()" << endl;
 
-    if (referee.GetPlayMode() == BEFORE_KICK_OFF &&
-        ((referee.GetSide() == 0 && team == "blue") ||
-        (referee.GetSide() == 1 && team == "red"))) {
+    //if (referee.GetPlayMode() == BEFORE_KICK_OFF &&
+    //   ((referee.GetSide() == 0 && team == "blue") ||
+    //    (referee.GetSide() == 1 && team == "red"))) {
         Position start1;
         Position start2;
         Position start3;
@@ -226,15 +254,16 @@ void Master::runStartPos() {
             start3 = Position(0.15, 0);
         }
 
-        robo0.GotoXY(start1.GetX(), start1.GetY(), 100, false);
-        robo1.GotoXY(start2.GetX(), start2.GetY(), 100, false);
-        robo2.GotoXY(start3.GetX(), start3.GetY(), 100, false);
-        while (robo0.GetPos().DistanceTo(start1) > 0.10 ||
+
+        if (robo0.GetPos().DistanceTo(start1) > 0.10 ||
                robo1.GetPos().DistanceTo(start2) > 0.10 ||
                robo2.GetPos().DistanceTo(start3) > 0.10) {
                usleep(50000);
+               robo0.GotoXY(start1.GetX(), start1.GetY(), 100, false);
+               robo1.GotoXY(start2.GetX(), start2.GetY(), 100, false);
+               robo2.GotoXY(start3.GetX(), start3.GetY(), 100, false);
         }
-    }
+    //}
 }
 
 

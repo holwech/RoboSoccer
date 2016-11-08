@@ -15,10 +15,6 @@ enum State {
     STATE_STARTPOS
 };
 
-enum Side{
-    BLUE = 0,
-    RED = 1
-};
 
 class Master
 {
@@ -34,19 +30,20 @@ public:
 private:
     int client_nr;
     string team;
-    Side side;
+    eSide side;
     RTDBConn DBC;
     RoboControl robo0;
     RoboControl robo1;
     RoboControl robo2;
     RawBall ball;
     Referee referee;
+    void updateFieldSide();
     void menu();
     void runPenalty();
     void penaltyShoot();
     void runGoalkeeper();
     void runStartPos();
-    enum State state;
+    State state;
 };
 
 #endif // MASTER_H
