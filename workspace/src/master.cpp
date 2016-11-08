@@ -208,25 +208,33 @@ void Master::runPenalty() {
   */
 void Master::runStartPos() {
 
-    while (referee.GetPlayMode()==REFEREE_INIT){ }
+    cout << referee.GetSide() << endl;
 
-    if (referee.GetPlayMode()==BEFORE_KICK_OFF) {
-        Position start1(-0.4, -0.3);
-        Position start2(-1.0, 0.0);
-        Position start3(-0.15, 0);
+    if (referee.GetPlayMode() == BEFORE_KICK_OFF &&
+        ((referee.GetSide() == 0 && team == "blue") ||
+        (referee.GetSide() == 1 && team == "red"))) {
+        Position start1;
+        Position start2;
+        Position start3;
+        if (team == "blue") {
+            start1 = Position(-0.4, -0.3);
+            start2 = Position(-1.0, 0.0);
+            start3 = Position(-0.15, 0);
+        } else if (team == "red") {
+            start1 = Position(0.4, -0.3);
+            start2 = Position(1.0, 0.0);
+            start3 = Position(0.15, 0);
+        }
 
-        while (1) {
-            robo0.GotoXY(start1.GetX(), start1.GetY(), 100, false);
-            robo1.GotoXY(start2.GetX(), start2.GetY(), 100, false);
-            robo2.GotoXY(start3.GetX(), start3.GetY(), 100, false);
-            while (robo0.GetPos().DistanceTo(start1) > 0.10 ||
-                   robo1.GetPos().DistanceTo(start2) > 0.10 ||
-                   robo2.GetPos().DistanceTo(start3) > 0.10) {
-                   usleep(50000);
-            }
+        robo0.GotoXY(start1.GetX(), start1.GetY(), 100, false);
+        robo1.GotoXY(start2.GetX(), start2.GetY(), 100, false);
+        robo2.GotoXY(start3.GetX(), start3.GetY(), 100, false);
+        while (robo0.GetPos().DistanceTo(start1) > 0.10 ||
+               robo1.GetPos().DistanceTo(start2) > 0.10 ||
+               robo2.GetPos().DistanceTo(start3) > 0.10) {
+               usleep(50000);
         }
     }
-    cout << "Leaving starting position program." << endl;
 }
 
 
