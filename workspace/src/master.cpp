@@ -25,12 +25,16 @@ void Master::run() {
         switch(state) {
         case STATE_MENU:
             menu();
+            break;
         case STATE_GOALKEEPER:
             runGoalkeeper();
+            break;
         case STATE_PENALTY:
             runPenalty();
+            break;
         case STATE_STARTPOS:
             runStartPos();
+            break;
         default:
             break;
         }
@@ -38,20 +42,25 @@ void Master::run() {
 }
 
 void Master::menu() {
-    string state;
     bool cont = true;
+    string input;
     while(cont) {
+        cont = false;
         cout << "Choose programs penalty, goalkeeper, or starting position (p/g/s/stop): ";
-        cin >> state;
-        if (state == "p") {
-            runPenalty();
-        } else if (state == "g") {
-            runGoalkeeper();
-        } else if (state == "s") {
-            runStartPos();
-        } else if (state == "stop") {
+        cin >> input;
+        if (input == "p") {
+            cout << "Starting penalty program." << endl;
+            state = STATE_PENALTY;
+        } else if (input == "g") {
+            cout << "Starting goalkeeper program." << endl;
+            state = STATE_GOALKEEPER;
+        } else if (input == "s") {
+            cout << "Starting starting position program." << endl;
+            state = STATE_STARTPOS;
+        } else if (input == "stop") {
             cont = false;
         } else {
+            cont = true;
             cout << "Not an alternative, try again." << endl;
         }
     }
@@ -63,7 +72,6 @@ void Master::menu() {
  * This function is missing a way to exit the program.
  */
 void Master::runGoalkeeper() {
-    cout << "Starting goalkeeper program." << endl;
     Position ballPos(ball.GetPos());
 
     ballPos = ball.GetPos();
@@ -80,7 +88,8 @@ void Master::runGoalkeeper() {
     } else if (nextPos < -0.2) {
         nextPos = -0.2;
     }
-    robo0.GotoXY(1.3 , nextPos, 50, true);
+    double side = (team == "blue") ? -1.3 : 1.3;
+    robo0.GotoXY(side , nextPos, 50, true);
     while (abs(robo0.GetY() - ball.GetY()) > 0.40 && abs(robo0.GetX() - 0.4) > 0.40) {
         usleep(5000);
     }
@@ -131,7 +140,6 @@ void Master::penaltyShoot(){
 }
 
 void Master::runPenalty() {
-    cout << "Starting penalty program." << endl;
     Position corner1(1.2,-0.8);
     Position corner2(1.2,0.8);
     string turn;
@@ -163,9 +171,7 @@ void Master::runPenalty() {
             penaltyShoot();
             turn = "defend";
         }else{
-            while(referee.GetPlayMode() == PENALTY){
-                runGoalkeeper();
-            }
+                state = STATE_GOALKEEPER;
             turn == "shoot";
         }
 
@@ -179,7 +185,6 @@ void Master::runPenalty() {
   */
 void Master::runStartPos() {
 
-    cout << "Starting starting position program." << endl;
     while (referee.GetPlayMode()==REFEREE_INIT){ }
 
     if (referee.GetPlayMode()==BEFORE_KICK_OFF) {
