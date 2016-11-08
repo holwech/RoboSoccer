@@ -17,11 +17,6 @@ Master::Master(string& team,
                 ball(ball),
                 referee(referee)
 {
-//    if( (team == "blue" && referee.GetPlayMode() == BLUE_LEFT) || (team == "read" && referee.GetPlayMode() == READ_LEFT)){
-//        side = LEFT_SIDE;
-//    }else{
-//        side = RIGHT_SIDE;
-//    }
     referee.Init();
     side = RIGHT_SIDE;
     state = STATE_MENU;
@@ -238,9 +233,9 @@ void Master::runStartPos() {
 
     cout << referee.GetSide() << "Inside runStartPos()" << endl;
 
-    //if (referee.GetPlayMode() == BEFORE_KICK_OFF &&
-    //   ((referee.GetSide() == 0 && team == "blue") ||
-    //    (referee.GetSide() == 1 && team == "red"))) {
+    if (referee.GetPlayMode() == BEFORE_KICK_OFF &&
+       ((referee.GetSide() == 0 && team == "blue") ||
+        (referee.GetSide() == 1 && team == "red"))) {
         Position start1;
         Position start2;
         Position start3;
@@ -263,7 +258,7 @@ void Master::runStartPos() {
                robo1.GotoXY(start2.GetX(), start2.GetY(), 100, false);
                robo2.GotoXY(start3.GetX(), start3.GetY(), 100, false);
         }
-    //}
+    }
 }
 
 
