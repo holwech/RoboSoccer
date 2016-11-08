@@ -6,6 +6,7 @@
 #include <vector>
 #include "kogmo_rtdb.hxx"
 #include "robo_control.h"
+#include "referee.h"
 
 class Master
 {
@@ -15,7 +16,9 @@ public:
            RoboControl& robo0,
            RoboControl& robo1,
            RoboControl& robo2,
-           RawBall& ball);
+           RawBall& ball,
+           Referee& referee);
+    void run();
 private:
     int client_nr;
     string team;
@@ -24,6 +27,10 @@ private:
     RoboControl robo1;
     RoboControl robo2;
     RawBall ball;
+    Referee referee;
+    void runPenalty();
+    void runGoalkeeper();
+    void runStartPos();
 };
 
 #endif // MASTER_H

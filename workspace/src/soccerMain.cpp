@@ -13,6 +13,7 @@
 #include "kogmo_rtdb.hxx"
 #include "robo_control.h"
 #include "master.h"
+#include "referee.h"
 
 using namespace std;
 
@@ -78,16 +79,24 @@ int main(void) {
         RoboControl robo0(DBC, rfNumber0);
         RoboControl robo1(DBC, rfNumber1);
         RoboControl robo2(DBC, rfNumber2);
-        cout << "Robots are ready" << endl;
+        cout << "Robots are ready..." << endl;
+
 
         /** Create a ball object */
         RawBall ball(DBC);
-
-        Master master(answer, DBC, robo0, robo1, robo2, ball);
-
+        cout << "Ball ready..." << endl;
 
 
+        Referee referee(DBC);
+        cout << "Referee ready..." << endl;
+
+        Master master(answer, DBC, robo0, robo1, robo2, ball, referee);
+        cout << "Master ready..." << endl;
         cout << "Program starting..." << endl;
+
+        master.run();
+
+
 
     } catch (DBError err) {
             cout << "Client died on Error: " << err.what() << endl;
