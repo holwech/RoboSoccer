@@ -8,6 +8,14 @@
 #include "robo_control.h"
 #include "referee.h"
 
+enum State {
+    STATE_MENU,
+    STATE_GOALKEEPER,
+    STATE_PENALTY,
+    STATE_STARTPOS
+};
+
+
 class Master
 {
 public:
@@ -28,9 +36,11 @@ private:
     RoboControl robo2;
     RawBall ball;
     Referee referee;
+    void menu();
     void runPenalty();
     void runGoalkeeper();
     void runStartPos();
+    enum State state;
 };
 
 #endif // MASTER_H

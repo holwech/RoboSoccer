@@ -16,9 +16,28 @@ Master::Master(string& team,
                 referee(referee)
 {
     referee.Init();
+    state = STATE_MENU;
 }
 
 void Master::run() {
+    string input;
+    while(1) {
+        switch(state) {
+        case STATE_MENU:
+            menu();
+        case STATE_GOALKEEPER:
+            runGoalkeeper();
+        case STATE_PENALTY:
+            runPenalty();
+        case STATE_STARTPOS:
+            runStartPos();
+        default:
+            break;
+        }
+    }
+}
+
+void Master::menu() {
     string state;
     bool cont = true;
     while(cont) {
@@ -136,6 +155,7 @@ void Master::runPenalty() {
   *
   */
 void Master::runStartPos() {
+
     cout << "Starting starting position program." << endl;
     while (referee.GetPlayMode()==REFEREE_INIT){ }
 
@@ -155,4 +175,8 @@ void Master::runStartPos() {
             }
         }
     }
+    cout << "Leaving starting position program." << endl;
 }
+
+
+
