@@ -29,6 +29,7 @@ private:
     RawBall ball;
     Referee referee;
     void runPenalty();
+    void penaltyShoot();
     void runGoalkeeper();
     void runStartPos();
 };
