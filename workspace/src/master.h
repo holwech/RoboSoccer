@@ -16,8 +16,8 @@ enum State {
 };
 
 
-class Master
-{
+
+class Master {
 public:
     Master(string& team,
            RTDBConn& DBC,

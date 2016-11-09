@@ -156,16 +156,17 @@ void Master::runPenalty() {
 
     static bool shotCompleted = false;
     static bool shooterInitFirstStepDone = false;
-    cout << referee.GetPlayMode() << " " << shooterInitFirstStepDone << endl;
+    cout << referee.GetPlayMode() << " " << shooterInitFirstStepDone << " " << referee.GetSide() << endl;
 
     switch(referee.GetPlayMode()){
     case BEFORE_PENALTY:
-        if( team == "blue"){        // our turn to shoot
+        if((referee.GetSide() == 0 && team == "blue") ||
+            (referee.GetSide() == 1 && team == "red")){        // our turn to shoot
             shotCompleted = false;
             Position pos1;
             if(!shooterInitFirstStepDone){
                 pos1 = Position(0.0,ball.GetY());
-                if(robo0.GetPos().DistanceTo(pos1) < 0.05 ){
+                if(robo0.GetPos().DistanceTo(pos1) < 0.2 ){
                     shooterInitFirstStepDone = true;
                 }
             }
@@ -174,13 +175,13 @@ void Master::runPenalty() {
             }
 
 
-            if (robo1.GetPos().DistanceTo(corner1) > 0.10 ||
-                   robo2.GetPos().DistanceTo(corner2) > 0.10 ||
-                   robo0.GetPos().DistanceTo(pos1) > 0.05) {
+            if (robo1.GetPos().DistanceTo(corner1) > 0.20 ||
+                   robo2.GetPos().DistanceTo(corner2) > 0.20 ||
+                   robo0.GetPos().DistanceTo(pos1) > 0.20) {
 
-                robo0.GotoXY(pos1.GetX(), pos1.GetY(), 60, true);
-                robo1.GotoXY(1.2, -0.8, 100, false);
-                robo2.GotoXY(1.2, 0.8, 100, false);
+                robo0.GotoXY(pos1.GetX(), pos1.GetY(), 30, true);
+                robo1.GotoXY(1.0, -0.8, 30, true);
+                robo2.GotoXY(1.0, 0.8, 30, true);
                 usleep(50000);
             }
 
@@ -191,20 +192,21 @@ void Master::runPenalty() {
         else{                         // our turn to defend
             Position pos1(-1.3,0.0);
             cout << "Moving to " << pos1 << endl << endl;
-            if (robo1.GetPos().DistanceTo(corner1) > 0.10 ||
-                   robo2.GetPos().DistanceTo(corner2) > 0.10 ||
-                   robo0.GetPos().DistanceTo(pos1) > 0.05) {
+            if (robo1.GetPos().DistanceTo(corner1) > 0.20 ||
+                   robo2.GetPos().DistanceTo(corner2) > 0.20 ||
+                   robo0.GetPos().DistanceTo(pos1) > 0.20) {
                 usleep(50000);
-                robo0.GotoXY(pos1.GetX(), pos1.GetY(), 60, true);
-                robo1.GotoXY(1.2, -0.8, 100, false);
-                robo2.GotoXY(1.2, 0.8, 100, false);
+                robo0.GotoXY(pos1.GetX(), pos1.GetY(), 30, true);
+                robo1.GotoXY(1.2, -0.8, 30, true);
+                robo2.GotoXY(1.2, 0.8, 30, true);
             }
         }
         break;
 
     case PENALTY:
         shooterInitFirstStepDone = false;
-        if(team == "blue"){
+        if((referee.GetSide() == 0 && team == "blue") ||
+           (referee.GetSide() == 1 && team == "red")){
             if(!shotCompleted){
                 penaltyShoot();
             }
@@ -213,6 +215,8 @@ void Master::runPenalty() {
             runGoalkeeper();
         }
         break;
+    case REFEREE_INIT:
+        state = STATE_MENU;
     default:
         break;
     }
@@ -250,14 +254,15 @@ void Master::runStartPos() {
         }
 
 
-        if (robo0.GetPos().DistanceTo(start1) > 0.10 ||
-               robo1.GetPos().DistanceTo(start2) > 0.10 ||
-               robo2.GetPos().DistanceTo(start3) > 0.10) {
+        if (robo0.GetPos().DistanceTo(start1) > 0.20 ||
+               robo1.GetPos().DistanceTo(start2) > 0.20 ||
+               robo2.GetPos().DistanceTo(start3) > 0.20) {
                usleep(50000);
-               robo0.GotoXY(start1.GetX(), start1.GetY(), 100, false);
-               robo1.GotoXY(start2.GetX(), start2.GetY(), 100, false);
-               robo2.GotoXY(start3.GetX(), start3.GetY(), 100, false);
+               robo0.GotoXY(start1.GetX(), start1.GetY(), 60, true);
+               robo1.GotoXY(start2.GetX(), start2.GetY(), 60, true);
+               robo2.GotoXY(start3.GetX(), start3.GetY(), 60, true);
         }
+        state = STATE_MENU;
     }
 }
 
