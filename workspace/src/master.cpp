@@ -1,7 +1,5 @@
 #include "master.h"
 
-
-
 Master::Master(string& team,
                RTDBConn& DBC,
                RoboControl& robo0,
@@ -206,8 +204,8 @@ void Master::runPenalty() {
 
     case PENALTY:
         shooterInitFirstStepDone = false;
-        if((referee.GetSide() == 0 && team == "blue") ||
-           (referee.GetSide() == 1 && team == "red")){
+        if( (referee.GetSide() == 0 && team == "blue") ||
+            (referee.GetSide() == 1 && team == "red" ) ){
             if(!shotCompleted){
                 penaltyShoot();
             }
@@ -247,21 +245,23 @@ void Master::runStartPos() {
             start1 = Position(-0.4, -0.3);
             start2 = Position(-1.0, 0.0);
             start3 = Position(-0.15, 0);
-        } else{
+        } else {
             start1 = Position(0.4, -0.3);
             start2 = Position(1.0, 0.0);
             start3 = Position(0.15, 0);
         }
 
         if (robo0.GetPos().DistanceTo(start1) > 0.20 ||
-               robo1.GetPos().DistanceTo(start2) > 0.20 ||
-               robo2.GetPos().DistanceTo(start3) > 0.20) {
-               usleep(50000);
-               robo0.GotoXY(start1.GetX(), start1.GetY(), 60, true);
-               robo1.GotoXY(start2.GetX(), start2.GetY(), 60, true);
-               robo2.GotoXY(start3.GetX(), start3.GetY(), 60, true);
+            robo1.GetPos().DistanceTo(start2) > 0.20 ||
+            robo2.GetPos().DistanceTo(start3) > 0.20) {
+
+           usleep(50000);
+           robo0.GotoXY(start1.GetX(), start1.GetY(), 80, true);
+           robo1.GotoXY(start2.GetX(), start2.GetY(), 80, true);
+           robo2.GotoXY(start3.GetX(), start3.GetY(), 80, true);
+        } else {
+            state = STATE_MENU;
         }
-        state = STATE_MENU;
     }
 }
 
