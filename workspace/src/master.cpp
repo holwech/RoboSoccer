@@ -19,54 +19,61 @@ Master::Master(string& team,
 {
     referee.Init();
     side = RIGHT_SIDE;
-    state = STATE_MENU;
 }
 
 void Master::run() {
     while(1) {
+        state = referee.GetPlayMode();
         switch(state) {
-        case STATE_MENU:
-            menu();
-            break;
-        case STATE_GOALKEEPER:
-            runGoalkeeper();
-            break;
-        case STATE_PENALTY:
-            runPenalty();
-            break;
-        case STATE_STARTPOS:
+        case REFEREE_INIT:
+            cout << "Referee init" << endl;
+        case BEFORE_KICK_OFF:
+            cout << "Before kick-off" << endl;
             runStartPos();
-            break;
+        case KICK_OFF:
+            cout << "Kick-off" << endl;
+        case BEFORE_PENALTY:
+            cout << "Before penalty" << endl;
+            beforePenalty();
+        case PENALTY:
+            cout << "Penalty" << endl;
+            penalty();
+        case PLAY_ON:
+            cout << "Play on" << endl;
+        case PAUSE:
+            cout << "Pause" << endl;
+        case TIME_OVER:
+            cout << "Time over" << endl;
         default:
-            break;
+            cout << "No case for state" << state << endl;
         }
     }
 }
 
-void Master::menu() {
-    bool cont = true;
-    string input;
-    while(cont) {
-        cont = false;
-        cout << "Choose programs penalty, goalkeeper, or starting position (p/g/s/stop): ";
-        cin >> input;
-        if (input == "p") {
-            cout << "Starting penalty program." << endl;
-            state = STATE_PENALTY;
-        } else if (input == "g") {
-            cout << "Starting goalkeeper program." << endl;
-            state = STATE_GOALKEEPER;
-        } else if (input == "s") {
-            cout << "Starting starting position program." << endl;
-            state = STATE_STARTPOS;
-        } else if (input == "stop") {
-            cont = false;
-        } else {
-            cont = true;
-            cout << "Not an alternative, try again." << endl;
-        }
-    }
-}
+//void Master::menu() {
+//    bool cont = true;
+//    string input;
+//    while(cont) {
+//        cont = false;
+//        cout << "Choose programs penalty, goalkeeper, or starting position (p/g/s/stop): ";
+//        cin >> input;
+//        if (input == "p") {
+//            cout << "Starting penalty program." << endl;
+//            state = STATE_PENALTY;
+//        } else if (input == "g") {
+//            cout << "Starting goalkeeper program." << endl;
+//            state = STATE_GOALKEEPER;
+//        } else if (input == "s") {
+//            cout << "Starting starting position program." << endl;
+//            state = STATE_STARTPOS;
+//        } else if (input == "stop") {
+//            cont = false;
+//        } else {
+//            cont = true;
+//            cout << "Not an alternative, try again." << endl;
+//        }
+//    }
+//}
 
 
 /** Runs the program for goalkeeper.
@@ -144,83 +151,62 @@ void Master::penaltyShoot(){
     }
 }
 
-void Master::runPenalty() {
+void Master::beforePenalty() {
     Position corner1(1.2,-0.8);
     Position corner2(1.2,0.8);
-
-    //SideToShoot = referee.GetSide(); // 0 = left , 1 = right
-//    while(true){
-//        cout << referee.GetSide() << endl;
-//        usleep(500000);
-//    }
-
-    static bool shotCompleted = false;
-    static bool shooterInitFirstStepDone = false;
-    cout << referee.GetPlayMode() << " " << shooterInitFirstStepDone << " " << referee.GetSide() << endl;
-
-    switch(referee.GetPlayMode()){
-    case BEFORE_PENALTY:
-        if((referee.GetSide() == 0 && team == "blue") ||
-            (referee.GetSide() == 1 && team == "red")){        // our turn to shoot
-            shotCompleted = false;
-            Position pos1;
-            if(!shooterInitFirstStepDone){
-                pos1 = Position(0.0,ball.GetY());
-                if(robo0.GetPos().DistanceTo(pos1) < 0.2 ){
-                    shooterInitFirstStepDone = true;
-                }
-            }
-            else{
-                pos1 = Position(ball.GetX() + 0.1 , ball.GetY());
-            }
-
-
-            if (robo1.GetPos().DistanceTo(corner1) > 0.20 ||
-                   robo2.GetPos().DistanceTo(corner2) > 0.20 ||
-                   robo0.GetPos().DistanceTo(pos1) > 0.20) {
-
-                robo0.GotoXY(pos1.GetX(), pos1.GetY(), 30, true);
-                robo1.GotoXY(1.0, -0.8, 30, true);
-                robo2.GotoXY(1.0, 0.8, 30, true);
-                usleep(50000);
-            }
-
-
-
-
-        }
-        else{                         // our turn to defend
-            Position pos1(-1.3,0.0);
-            cout << "Moving to " << pos1 << endl << endl;
-            if (robo1.GetPos().DistanceTo(corner1) > 0.20 ||
-                   robo2.GetPos().DistanceTo(corner2) > 0.20 ||
-                   robo0.GetPos().DistanceTo(pos1) > 0.20) {
-                usleep(50000);
-                robo0.GotoXY(pos1.GetX(), pos1.GetY(), 30, true);
-                robo1.GotoXY(1.2, -0.8, 30, true);
-                robo2.GotoXY(1.2, 0.8, 30, true);
+    shotCompleted = false;
+    shooterInitFirstStepDone = false;
+    if((referee.GetSide() == 0 && team == "blue") ||
+        (referee.GetSide() == 1 && team == "red")){        // our turn to shoot
+        shotCompleted = false;
+        Position pos1;
+        if(!shooterInitFirstStepDone){
+            pos1 = Position(0.0,ball.GetY());
+            if(robo0.GetPos().DistanceTo(pos1) < 0.2 ){
+                shooterInitFirstStepDone = true;
             }
         }
-        break;
-
-    case PENALTY:
-        shooterInitFirstStepDone = false;
-        if((referee.GetSide() == 0 && team == "blue") ||
-           (referee.GetSide() == 1 && team == "red")){
-            if(!shotCompleted){
-                penaltyShoot();
-            }
-            shotCompleted = true;
-        }else{
-            runGoalkeeper();
+        else{
+            pos1 = Position(ball.GetX() + 0.1 , ball.GetY());
         }
-        break;
-    case REFEREE_INIT:
-        state = STATE_MENU;
-    default:
-        break;
+
+
+        if (robo1.GetPos().DistanceTo(corner1) > 0.20 ||
+               robo2.GetPos().DistanceTo(corner2) > 0.20 ||
+               robo0.GetPos().DistanceTo(pos1) > 0.20) {
+
+            robo0.GotoXY(pos1.GetX(), pos1.GetY(), 30, true);
+            robo1.GotoXY(1.0, -0.8, 30, true);
+            robo2.GotoXY(1.0, 0.8, 30, true);
+            usleep(50000);
+        }
+    } else {                         // our turn to defend
+        Position pos1(-1.3,0.0);
+        cout << "Moving to " << pos1 << endl << endl;
+        if (robo1.GetPos().DistanceTo(corner1) > 0.20 ||
+               robo2.GetPos().DistanceTo(corner2) > 0.20 ||
+               robo0.GetPos().DistanceTo(pos1) > 0.20) {
+            usleep(50000);
+            robo0.GotoXY(pos1.GetX(), pos1.GetY(), 30, true);
+            robo1.GotoXY(1.2, -0.8, 30, true);
+            robo2.GotoXY(1.2, 0.8, 30, true);
+        }
     }
 }
+
+void Master::penalty() {
+    shooterInitFirstStepDone = false;
+    if((referee.GetSide() == 0 && team == "blue") ||
+       (referee.GetSide() == 1 && team == "red")){
+        if(!shotCompleted){
+            penaltyShoot();
+        }
+        shotCompleted = true;
+    }else{
+        runGoalkeeper();
+    }
+}
+
 //void Master::updateFieldSide(){
 //    ePlayMode mode = referee.GetPlayMode();
 //    if( (team == "blue" && mode == BLUE_LEFT) || (team == "read" && mode == READ_LEFT)){
@@ -237,9 +223,8 @@ void Master::runStartPos() {
 
     cout << referee.GetSide() << "Inside runStartPos()" << endl;
 
-    if (referee.GetPlayMode() == BEFORE_KICK_OFF &&
-       ((referee.GetSide() == 0 && team == "blue") ||
-        (referee.GetSide() == 1 && team == "red"))) {
+    if ((referee.GetSide() == 0 && team == "blue") ||
+        (referee.GetSide() == 1 && team == "red")) {
         Position start1;
         Position start2;
         Position start3;
@@ -262,7 +247,6 @@ void Master::runStartPos() {
                robo1.GotoXY(start2.GetX(), start2.GetY(), 60, true);
                robo2.GotoXY(start3.GetX(), start3.GetY(), 60, true);
         }
-        state = STATE_MENU;
     }
 }
 

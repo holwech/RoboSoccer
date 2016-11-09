@@ -37,13 +37,17 @@ private:
     RoboControl robo2;
     RawBall ball;
     Referee referee;
+    static bool shotCompleted;
+    static bool shooterInitFirstStepDone;
     void updateFieldSide();
     void menu();
     void runPenalty();
     void penaltyShoot();
     void runGoalkeeper();
     void runStartPos();
-    State state;
+    void beforePenalty();
+    void penalty();
+    ePlayMode state;
 };
 
 #endif // MASTER_H
