@@ -24,6 +24,7 @@ Master::Master(string& team,
 
 void Master::run() {
     while(1) {
+        updateFieldSide();
         switch(state) {
         case STATE_MENU:
             menu();
@@ -221,14 +222,15 @@ void Master::runPenalty() {
         break;
     }
 }
-//void Master::updateFieldSide(){
-//    ePlayMode mode = referee.GetPlayMode();
-//    if( (team == "blue" && mode == BLUE_LEFT) || (team == "read" && mode == READ_LEFT)){
-//        side = LEFT_SIDE;
-//    }else{
-//        side = RIGHT_SIDE;
-//    }
-//}
+void Master::updateFieldSide(){
+    eSide blueSide = referee.GetBlueSide();
+    if( (team == "blue" && blueSide == LEFT_SIDE) || (team == "red" && blueSide == RIGHT_SIDE)){
+        side = LEFT_SIDE;
+    }else{
+        side = RIGHT_SIDE;
+    }
+}
+
 /**
   * This program is maybe complete (I think?). Test and reread specs again to make sure.
   *
@@ -237,22 +239,19 @@ void Master::runStartPos() {
 
     cout << referee.GetSide() << "Inside runStartPos()" << endl;
 
-    if (referee.GetPlayMode() == BEFORE_KICK_OFF &&
-       ((referee.GetSide() == 0 && team == "blue") ||
-        (referee.GetSide() == 1 && team == "red"))) {
+    if (referee.GetPlayMode() == BEFORE_KICK_OFF) {
         Position start1;
         Position start2;
         Position start3;
-        if (team == "blue") {
+        if (side == LEFT_SIDE) {
             start1 = Position(-0.4, -0.3);
             start2 = Position(-1.0, 0.0);
             start3 = Position(-0.15, 0);
-        } else if (team == "red") {
+        } else{
             start1 = Position(0.4, -0.3);
             start2 = Position(1.0, 0.0);
             start3 = Position(0.15, 0);
         }
-
 
         if (robo0.GetPos().DistanceTo(start1) > 0.20 ||
                robo1.GetPos().DistanceTo(start2) > 0.20 ||
