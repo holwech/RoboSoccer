@@ -13,42 +13,45 @@ Master::Master(string& team,
                 robo1(robo1),
                 robo2(robo2),
                 ball(ball),
-                referee(referee)
+                referee(referee),
+                debugTimer()
 {
-    referee.Init();
+    state = REFEREE_INIT;
     side = RIGHT_SIDE;
 }
 
 void Master::run() {
+    cout << "Starting state machine" << endl;
+    debugTimer.start();
+    printInfo();
     while(1) {
+        /** Timer for printing info about the system, so that it doesn't spam the
+          * terminal.
+          */
+        if (debugTimer.getTime() > 2) {
+            printInfo();
+            debugTimer.reset();
+        }
         state = referee.GetPlayMode();
         switch(state) {
         case REFEREE_INIT:
-            cout << "Referee init" << endl;
             break;
         case BEFORE_KICK_OFF:
-            cout << "Before kick-off" << endl;
             runStartPos();
             break;
         case KICK_OFF:
-            cout << "Kick-off" << endl;
             break;
         case BEFORE_PENALTY:
-            cout << "Before penalty" << endl;
             beforePenalty();
             break;
         case PENALTY:
-            cout << "Penalty" << endl;
             penalty();
             break;
         case PLAY_ON:
-            cout << "Play on" << endl;
             break;
         case PAUSE:
-            cout << "Pause" << endl;
             break;
         case TIME_OVER:
-            cout << "Time over" << endl;
             break;
         default:
             cout << "No case for state" << state << endl;
@@ -56,32 +59,6 @@ void Master::run() {
         }
     }
 }
-
-//void Master::menu() {
-//    bool cont = true;
-//    string input;
-//    while(cont) {
-//        cont = false;
-//        cout << "Choose programs penalty, goalkeeper, or starting position (p/g/s/stop): ";
-//        cin >> input;
-//        if (input == "p") {
-//            cout << "Starting penalty program." << endl;
-//            state = STATE_PENALTY;
-//        } else if (input == "g") {
-//            cout << "Starting goalkeeper program." << endl;
-//            state = STATE_GOALKEEPER;
-//        } else if (input == "s") {
-//            cout << "Starting starting position program." << endl;
-//            state = STATE_STARTPOS;
-//        } else if (input == "stop") {
-//            cont = false;
-//        } else {
-//            cont = true;
-//            cout << "Not an alternative, try again." << endl;
-//        }
-//    }
-//}
-
 
 /** Runs the program for goalkeeper.
  * This program is complete and does not need further modifications.
@@ -177,12 +154,10 @@ void Master::penaltyShoot(){
 //         while (robo0.GetPos().DistanceTo(pos2) > 0.1) usleep(50000); //sleep function in microseconds
 
      Position pos3(ball.GetX(), ball.GetY());
-     cout << "Moving to " << pos3 << endl << endl;
      robo0.GotoXY(pos3.GetX(), pos3.GetY(), 100, true);
      while (robo0.GetPos().DistanceTo(pos3) > 0.1) usleep(50000); //sleep function in microseconds
 
      Position pos4(ball.GetX() - 0.3, ball.GetY());
-     cout << "Moving to " << pos4 << endl << endl;
      robo0.GotoXY(pos4.GetX(), pos4.GetY(), 160, true);
      while (robo0.GetPos().DistanceTo(pos4) > 0.1) usleep(50000); //sleep function in microseconds
 
@@ -231,7 +206,6 @@ void Master::beforePenalty() {
         }
     } else {                         // our turn to defend
         Position pos1(-1.3,0.0);
-        cout << "Moving to " << pos1 << endl << endl;
         if (robo1.GetPos().DistanceTo(corner1) > 0.20 ||
                robo2.GetPos().DistanceTo(corner2) > 0.20 ||
                robo0.GetPos().DistanceTo(pos1) > 0.20) {
@@ -255,7 +229,7 @@ void Master::penalty() {
         runGoalkeeper();
     }
 }
-<<<<<<< HEAD
+
 void Master::updateFieldSide(){
     eSide blueSide = referee.GetBlueSide();
     if( (team == "blue" && blueSide == LEFT_SIDE) || (team == "red" && blueSide == RIGHT_SIDE)){
@@ -265,13 +239,12 @@ void Master::updateFieldSide(){
     }
 }
 
+
 /**
   * This program is maybe complete (I think?). Test and reread specs again to make sure.
   *
   */
 void Master::runStartPos() {
-
-    cout << referee.GetSide() << "Inside runStartPos()" << endl;
 
     if ((referee.GetSide() == 0 && team == "blue") ||
         (referee.GetSide() == 1 && team == "red")) {
@@ -296,11 +269,15 @@ void Master::runStartPos() {
            robo0.GotoXY(start1.GetX(), start1.GetY(), 80, true);
            robo1.GotoXY(start2.GetX(), start2.GetY(), 80, true);
            robo2.GotoXY(start3.GetX(), start3.GetY(), 80, true);
-        } else {
-            state = STATE_MENU;
         }
     }
 }
 
-
+void Master::printInfo() {
+    string stateNames[8] = {"Referee init", "Before kick-off", "Kick-off", "Before penalty",
+                            "Penalty", "Play on", "Pause", "Time over"};
+    cout << "====================" << endl;
+    cout << "= State: " << stateNames[state] << endl;
+    cout << "====================" << endl;
+}
 
