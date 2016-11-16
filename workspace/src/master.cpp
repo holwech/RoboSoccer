@@ -28,7 +28,7 @@ void Master::run() {
             break;
         case BEFORE_KICK_OFF:
             cout << "Before kick-off" << endl;
-            runStartPos();
+
             break;
         case KICK_OFF:
             cout << "Kick-off" << endl;
@@ -189,7 +189,7 @@ void Master::penaltyShoot(){
      //Position pos3(ball.GetX()+0.5,ball.GetY());
      //cout << "Moving to " << pos3 << endl << endl;
      //robo.GotoXY(pos3.GetX(), pos3.GetY(), 100, true);
-     //while (robo.GetPos().DistanceTo(pos3) > 0.1) usleep(50000);
+     //while (ro<<<<<<< HEADbo.GetPos().DistanceTo(pos3) > 0.1) usleep(50000);
 
 
 
@@ -255,7 +255,7 @@ void Master::penalty() {
         runGoalkeeper();
     }
 }
-<<<<<<< HEAD
+
 void Master::updateFieldSide(){
     eSide blueSide = referee.GetBlueSide();
     if( (team == "blue" && blueSide == LEFT_SIDE) || (team == "red" && blueSide == RIGHT_SIDE)){
