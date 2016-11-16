@@ -73,17 +73,17 @@ void Master::menu() {
  * This function is missing a way to exit the program.
  */
 void Master::runGoalkeeper() {
-    Position ballPos(ball.GetPos());
+/*    Position ballPos(ball.GetPos());
 
     ballPos = ball.GetPos();
     double ballangle = ball.GetPhi().Deg();
     double velocityY = sin(ballangle)*ball.GetVelocity();
 
-    /** sleep function in microseconds
+    ** sleep function in microseconds
      *  Camera sampling rate is 30fps -> 33ms
      *  which means that field info does not change within this time
      */
-    double nextPos = ball.GetY() + velocityY * (33 / 1000);
+/*    double nextPos = ball.GetY() + velocityY * (33 / 1000);
     if (nextPos > 0.2) {
         nextPos = 0.2;
     } else if (nextPos < -0.2) {
@@ -97,6 +97,50 @@ void Master::runGoalkeeper() {
     while (abs(robo0.GetY() - ball.GetY()) > 0.40 && abs(robo0.GetX() - 0.4) > 0.40) {
         usleep(5000);
     }
+*/
+    int i= 0;
+    double ballangle = 0;
+    double ballx = 0;
+    double bally= 0;
+    double delta;
+
+    for(i=0;i<100;i++)
+    {
+    ballangle = ball.GetPhi().Deg()+ballangle;
+    }
+    ballangle =  ballangle/100;
+
+    for(i=0;i<100;i++)
+    {
+    ballx = ballx + ball.GetX();
+    bally = bally + ball.GetY();
+    }
+
+    ballx = ballx/100;
+    bally = bally/100;
+
+    double goalkeeperx = (team == "blue" || referee.GetPlayMode() == PENALTY || referee.GetPlayMode() == BEFORE_PENALTY) ? 1.36 : -1.36;
+    double goalkeepery;
+
+    goalkeepery = tan(ballangle*3.141593/180)*(goalkeeperx-ballx)+bally;
+
+    if (goalkeepery ==bally)
+        goalkeepery = 0;
+    if(goalkeepery>0.269)
+        goalkeepery = 0.269;
+    if(goalkeepery<-0.245)
+        goalkeepery = -0.245;
+
+     robo0.CruisetoXY(goalkeeperx,goalkeepery,150);
+
+     delta = sqrt((robo0.GetX()-goalkeeperx)*(robo0.GetX()-goalkeeperx)+(robo0.GetY()-goalkeepery)*(robo0.GetY()-goalkeepery));
+
+     if(delta<0.03)
+      robo0.StopAction();
+
+     while(robo0.GetPos().DistanceTo(ball.GetPos())<0.2)
+         robo0.GotoXY(ball.GetX(),ball.GetY(),160);
+
 }
 
 /**
