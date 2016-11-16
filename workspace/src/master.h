@@ -7,6 +7,7 @@
 #include "kogmo_rtdb.hxx"
 #include "robo_control.h"
 #include "referee.h"
+#include "timer.h"
 
 enum State {
     STATE_MENU,
@@ -46,7 +47,11 @@ private:
     void runStartPos();
     void beforePenalty();
     void penalty();
+    void printInfo();
     ePlayMode state;
+
+    //Debug stuff
+    timer debugTimer;
 };
 
 #endif // MASTER_H
