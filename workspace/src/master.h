@@ -16,7 +16,6 @@ enum State {
 };
 
 
-
 class Master {
 public:
     Master(string& team,
@@ -37,13 +36,17 @@ private:
     RoboControl robo2;
     RawBall ball;
     Referee referee;
+    bool shotCompleted;
+    bool shooterInitFirstStepDone;
     void updateFieldSide();
     void menu();
     void runPenalty();
     void penaltyShoot();
     void runGoalkeeper();
     void runStartPos();
-    State state;
+    void beforePenalty();
+    void penalty();
+    ePlayMode state;
 };
 
 #endif // MASTER_H
