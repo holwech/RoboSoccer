@@ -16,7 +16,6 @@ enum State {
 };
 
 
-
 class Master {
 public:
     Master(string& team,
@@ -37,8 +36,8 @@ private:
     RoboControl robo2;
     RawBall ball;
     Referee referee;
-    static bool shotCompleted;
-    static bool shooterInitFirstStepDone;
+    bool shotCompleted;
+    bool shooterInitFirstStepDone;
     void updateFieldSide();
     void menu();
     void runPenalty();

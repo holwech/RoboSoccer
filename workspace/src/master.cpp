@@ -27,25 +27,34 @@ void Master::run() {
         switch(state) {
         case REFEREE_INIT:
             cout << "Referee init" << endl;
+            break;
         case BEFORE_KICK_OFF:
             cout << "Before kick-off" << endl;
             runStartPos();
+            break;
         case KICK_OFF:
             cout << "Kick-off" << endl;
+            break;
         case BEFORE_PENALTY:
             cout << "Before penalty" << endl;
             beforePenalty();
+            break;
         case PENALTY:
             cout << "Penalty" << endl;
             penalty();
+            break;
         case PLAY_ON:
             cout << "Play on" << endl;
+            break;
         case PAUSE:
             cout << "Pause" << endl;
+            break;
         case TIME_OVER:
             cout << "Time over" << endl;
+            break;
         default:
             cout << "No case for state" << state << endl;
+            break;
         }
     }
 }
@@ -113,8 +122,7 @@ void Master::runGoalkeeper() {
   */
 
 void Master::penaltyShoot(){
-    if (referee.GetPlayMode()== PENALTY){
-         cout << "Starting penalty." << endl;
+     cout << "Starting penalty." << endl;
 
 //         Position pos1(ball.GetX()+0.5, ball.GetY());
 //         cout << "Moving to " << pos1 << endl << endl;
@@ -126,29 +134,28 @@ void Master::penaltyShoot(){
 //         robo0.GotoXY(pos2.GetX(), pos2.GetY(), 80, true);
 //         while (robo0.GetPos().DistanceTo(pos2) > 0.1) usleep(50000); //sleep function in microseconds
 
-         Position pos3(ball.GetX(), ball.GetY());
-         cout << "Moving to " << pos3 << endl << endl;
-         robo0.GotoXY(pos3.GetX(), pos3.GetY(), 100, true);
-         while (robo0.GetPos().DistanceTo(pos3) > 0.1) usleep(50000); //sleep function in microseconds
+     Position pos3(ball.GetX(), ball.GetY());
+     cout << "Moving to " << pos3 << endl << endl;
+     robo0.GotoXY(pos3.GetX(), pos3.GetY(), 100, true);
+     while (robo0.GetPos().DistanceTo(pos3) > 0.1) usleep(50000); //sleep function in microseconds
 
-         Position pos4(ball.GetX() - 0.3, ball.GetY());
-         cout << "Moving to " << pos4 << endl << endl;
-         robo0.GotoXY(pos4.GetX(), pos4.GetY(), 160, true);
-         while (robo0.GetPos().DistanceTo(pos4) > 0.1) usleep(50000); //sleep function in microseconds
+     Position pos4(ball.GetX() - 0.3, ball.GetY());
+     cout << "Moving to " << pos4 << endl << endl;
+     robo0.GotoXY(pos4.GetX(), pos4.GetY(), 160, true);
+     while (robo0.GetPos().DistanceTo(pos4) > 0.1) usleep(50000); //sleep function in microseconds
 
-         //Position pos3(ball.GetX()+0.5,ball.GetY());
-         //cout << "Moving to " << pos3 << endl << endl;
-         //robo.GotoXY(pos3.GetX(), pos3.GetY(), 100, true);
-         //while (robo.GetPos().DistanceTo(pos3) > 0.1) usleep(50000);
+     //Position pos3(ball.GetX()+0.5,ball.GetY());
+     //cout << "Moving to " << pos3 << endl << endl;
+     //robo.GotoXY(pos3.GetX(), pos3.GetY(), 100, true);
+     //while (robo.GetPos().DistanceTo(pos3) > 0.1) usleep(50000);
 
 
 
-        //cout << "Moving to " << pos4 << endl << endl;
-        //roboball.GetPos().GotoXY(pos4.GetX(), pos4.GetY(), 60, true);
-        //while (robo.GetPos().DistanceTo(pos4) > 0.10) usleep(50000);
+    //cout << "Moving to " << pos4 << endl << endl;
+    //roboball.GetPos().GotoXY(pos4.GetX(), pos4.GetY(), 60, true);
+    //while (robo.GetPos().DistanceTo(pos4) > 0.10) usleep(50000);
 
-        robo0.Kick(100,0.0);
-    }
+    robo0.Kick(100,0.0);
 }
 
 void Master::beforePenalty() {
