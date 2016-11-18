@@ -18,10 +18,12 @@ CONFIG +=  debug
 # Input
 HEADERS += \ 
     src/robo.h \
-    src/master.h
+    src/master.h \
+    src/pidController.h
 SOURCES += src/soccerMain.cpp \
     src/robo.cpp \
-    src/master.cpp
+    src/master.cpp \
+    src/pidController.cpp
 		
 		
 ##############
@@ -34,6 +36,10 @@ dox.depends = FORCE
 
 # somewhere else in the *.pro file
 QMAKE_EXTRA_TARGETS += dox
+
+
+
+
 
 
 
