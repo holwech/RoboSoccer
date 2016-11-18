@@ -1,5 +1,5 @@
 #include "master.h"
-
+#include "pidController.h"
 Master::Master(string& team,
                RTDBConn& DBC,
                RoboControl& robo0,
@@ -22,6 +22,34 @@ Master::Master(string& team,
 
 void Master::run() {
     cout << "Starting state machine" << endl;
+    // following while-loop is the testing environment
+    pidController pid(&robo1, 30,0, 0);
+    while(1){
+        usleep(10000);
+        //get the error
+        double ref_deg = robo1.GetPos().AngleOfLineToPos( ball.GetPos() ).Deg();
+        double myAngle_deg = robo1.GetPhi().Deg();
+        //and solving the angle gap-problem
+        cout << "ref before: " << ref_deg << endl;
+        cout << "angle before: " << myAngle_deg << endl;
+        double ajusted_ref_deg = ((int)ref_deg + 4*180) % (2*180);
+        double ajusted_myAngle_deg = ((int)myAngle_deg + 4*180) % (2*180);
+            cout << "ref after: " << ajusted_ref_deg << endl;
+            cout << "angle after: " << ajusted_myAngle_deg << endl;
+        double err_rad;
+        if (fabs(ajusted_ref_deg - ajusted_myAngle_deg) < fabs(ref_deg - myAngle_deg)){
+            err_rad = (ajusted_ref_deg - ajusted_myAngle_deg) *(M_PI/180);
+        }
+        else{
+            err_rad = (ref_deg - myAngle_deg) *(M_PI/180);
+        }
+        cout << "Err in rad: " << err_rad << endl;
+        pid.updateInput(err_rad);
+        //cout << "pid output: " <<  pid.getInput() << endl;
+        robo1.MoveMs(-pid.getInput(), pid.getInput(), 15, 50);
+        //out << endl <<robo1.GetPos().AngleOfLineToPos(ball.GetPos())-robo1.GetPhi() << endl;
+        //robo1.TurnAbs(robo1.GetPos().AngleOfLineToPos(ball.GetPos())-robo1.GetPhi());
+    }
     debugTimer.start();
     printInfo();
     while(1) {
