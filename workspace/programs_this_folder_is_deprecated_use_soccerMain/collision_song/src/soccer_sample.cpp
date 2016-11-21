@@ -163,15 +163,28 @@ int main(void) {
  //                    robo5.GotoPos(pos3);
                 }
 */
-
-
+                while(1)
+                {
+                    robo4.GotoPos(pos2);
+                    robo5.GotoPos(pos4);
+                    while(robo4.GetPos().DistanceTo(pos2)>0.1&&robo5.GetPos().DistanceTo(pos4)>0.1);
+                    usleep(50000);
+                    robo4.GotoPos(pos1);
+                    robo5.GotoPos(pos3);
+                    while(robo4.GetPos().DistanceTo(pos1)>0.1&&robo5.GetPos().DistanceTo(pos3)>0.1);
+                    usleep(50000);
+                }
+/*
        while(1)
 {
            while(1)
            {
     robo4.GotoPos(pos1);
+    usleep(1000);
     robo4.MoveMs(101,100,3);
+    usleep(1000);
     robo5.GotoPos(pos3);
+    usleep(1000);
     robo5.MoveMs(100,100,3);
     if(robo4.GetPos().DistanceTo(pos1)<0.1&&robo5.GetPos().DistanceTo(pos3)<0.1)
        {
@@ -183,14 +196,18 @@ int main(void) {
            while(1)
            {
     robo4.GotoPos(pos2);
+    usleep(1000);
     robo4.MoveMs(101,100,3);
+    usleep(1000);
     robo5.GotoPos(pos4);
+    usleep(1000);
     robo5.MoveMs(100,100,3);
+    usleep(1000);
     if(robo4.GetPos().DistanceTo(pos2)<0.1&&robo5.GetPos().DistanceTo(pos4)<0.1)
         break;
 }
 }
-
+*/
 /*    if(robo4.GetPos().DistanceTo(pos1)<0.1)
     {
         robo4.StopAction();
