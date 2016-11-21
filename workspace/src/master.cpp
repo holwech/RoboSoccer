@@ -23,19 +23,20 @@ Master::Master(string& team,
 void Master::run() {
     cout << "Starting state machine" << endl;
     // following while-loop is the testing environment
-    pidController pid(&robo1, 30,0, 0);
+    pidController pidAngle(&robo1, 35, 3, 1);
+    pidController pidDistance(&robo1, 150, 0,0);
     while(1){
-        usleep(10000);
+        usleep(1000);
         //get the error
         double ref_deg = robo1.GetPos().AngleOfLineToPos( ball.GetPos() ).Deg();
         double myAngle_deg = robo1.GetPhi().Deg();
         //and solving the angle gap-problem
-        cout << "ref before: " << ref_deg << endl;
-        cout << "angle before: " << myAngle_deg << endl;
+        //cout << "ref before: " << ref_deg << endl;
+        //cout << "angle before: " << myAngle_deg << endl;
         double ajusted_ref_deg = ((int)ref_deg + 4*180) % (2*180);
         double ajusted_myAngle_deg = ((int)myAngle_deg + 4*180) % (2*180);
-            cout << "ref after: " << ajusted_ref_deg << endl;
-            cout << "angle after: " << ajusted_myAngle_deg << endl;
+          //  cout << "ref after: " << ajusted_ref_deg << endl;
+           // cout << "angle after: " << ajusted_myAngle_deg << endl;
         double err_rad;
         if (fabs(ajusted_ref_deg - ajusted_myAngle_deg) < fabs(ref_deg - myAngle_deg)){
             err_rad = (ajusted_ref_deg - ajusted_myAngle_deg) *(M_PI/180);
@@ -43,10 +44,22 @@ void Master::run() {
         else{
             err_rad = (ref_deg - myAngle_deg) *(M_PI/180);
         }
-        cout << "Err in rad: " << err_rad << endl;
-        pid.updateInput(err_rad);
-        //cout << "pid output: " <<  pid.getInput() << endl;
-        robo1.MoveMs(-pid.getInput(), pid.getInput(), 15, 50);
+        //cout << "Err in rad: " << err_rad << endl;
+        double sin_err_rad = sin(err_rad/2);
+        pidAngle.updateInput(sin_err_rad);
+
+        double dist_error = robo1.GetPos().DistanceTo(ball.GetPos());
+        if (dist_error < 0.03){
+            pidDistance.updateInput(dist_error);
+        }
+        else{
+            pidDistance.updateInput(1);
+        }
+        double pidDist_input =pidDistance.getInput();
+        cout << "pidDist input: " <<  dist_error << endl;
+        double rightWheel =pidDist_input*cos(err_rad) + pidAngle.getInput();
+        double leftWheel = pidDist_input*cos(err_rad) -pidAngle.getInput();
+        robo1.MoveMs(leftWheel,rightWheel, 100, 10);
         //out << endl <<robo1.GetPos().AngleOfLineToPos(ball.GetPos())-robo1.GetPhi() << endl;
         //robo1.TurnAbs(robo1.GetPos().AngleOfLineToPos(ball.GetPos())-robo1.GetPhi());
     }
@@ -169,36 +182,14 @@ void Master::runGoalkeeper() {
   */
 
 void Master::penaltyShoot(){
-     cout << "Starting penalty." << endl;
 
-//         Position pos1(ball.GetX()+0.5, ball.GetY());
-//         cout << "Moving to " << pos1 << endl << endl;
-//         robo0.GotoXY(pos1.GetX(), pos1.GetY(), 50, true);
-//         while (robo0.GetPos().DistanceTo(pos1) > 0.05) usleep(50000); //sleep function in microseconds
+    Position pos3(ball.GetX(), ball.GetY());
+    robo0.GotoXY(pos3.GetX(), pos3.GetY(), 100, true);
+    while (robo0.GetPos().DistanceTo(pos3) > 0.1) usleep(50000); //sleep function in microseconds
 
-//         Position pos2(ball.GetX()+0.3, ball.GetY());
-//         cout << "Moving to " << pos2 << endl << endl;
-//         robo0.GotoXY(pos2.GetX(), pos2.GetY(), 80, true);
-//         while (robo0.GetPos().DistanceTo(pos2) > 0.1) usleep(50000); //sleep function in microseconds
-
-     Position pos3(ball.GetX(), ball.GetY());
-     robo0.GotoXY(pos3.GetX(), pos3.GetY(), 100, true);
-     while (robo0.GetPos().DistanceTo(pos3) > 0.1) usleep(50000); //sleep function in microseconds
-
-     Position pos4(ball.GetX() - 0.3, ball.GetY());
-     robo0.GotoXY(pos4.GetX(), pos4.GetY(), 160, true);
-     while (robo0.GetPos().DistanceTo(pos4) > 0.1) usleep(50000); //sleep function in microseconds
-
-     //Position pos3(ball.GetX()+0.5,ball.GetY());
-     //cout << "Moving to " << pos3 << endl << endl;
-     //robo.GotoXY(pos3.GetX(), pos3.GetY(), 100, true);
-     //while (ro<<<<<<< HEADbo.GetPos().DistanceTo(pos3) > 0.1) usleep(50000);
-
-
-
-    //cout << "Moving to " << pos4 << endl << endl;
-    //roboball.GetPos().GotoXY(pos4.GetX(), pos4.GetY(), 60, true);
-    //while (robo.GetPos().DistanceTo(pos4) > 0.10) usleep(50000);
+    Position pos4(ball.GetX() - 0.3, ball.GetY());
+    robo0.GotoXY(pos4.GetX(), pos4.GetY(), 160, true);
+    while (robo0.GetPos().DistanceTo(pos4) > 0.1) usleep(50000); //sleep function in microseconds
 
     robo0.Kick(100,0.0);
 }
