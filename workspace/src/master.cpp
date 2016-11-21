@@ -18,10 +18,20 @@ Master::Master(string& team,
 {
     state = REFEREE_INIT;
     side = RIGHT_SIDE;
+    firstStart = true;
 }
 
 void Master::run() {
     cout << "Starting state machine" << endl;
+    if (firstStart) {
+        cout << "Enter test mode? (y/write anything to skip) ";
+        string testMode;
+        cin >> testMode;
+        firstStart = false;
+        if (testMode == "y") {
+            testMenu();
+        }
+    }
     debugTimer.start();
     printInfo();
     while(1) {
@@ -56,6 +66,31 @@ void Master::run() {
         default:
             cout << "No case for state" << state << endl;
             break;
+        }
+    }
+}
+
+void Master::testMenu() {
+    cout << "Choose test program: \n 0: Return to program \n 1: Print to screen \n";
+    int program;
+    cin >> program;
+    bool stop = false;
+    while(1) {
+        switch(program) {
+        case 0:
+            stop = true;
+            break;
+        case 1:
+            cout << "Program 1 running" << endl;
+            break;
+        case 2:
+            robo0.GotoPos(Position(0, 0));
+        default:
+            stop = true;
+            break;
+        }
+        if (stop) {
+            return;
         }
     }
 }

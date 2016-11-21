@@ -8,8 +8,9 @@
 #include "robo_control.h"
 #include "referee.h"
 #include "timer.h"
+#include "collision_avoidance.h"
 
-enum State {
+enum ePlayModePlus {
     STATE_MENU,
     STATE_GOALKEEPER,
     STATE_PENALTY,
@@ -37,10 +38,11 @@ private:
     RoboControl robo2;
     RawBall ball;
     Referee referee;
+    bool firstStart;
     bool shotCompleted;
     bool shooterInitFirstStepDone;
     void updateFieldSide();
-    void menu();
+    void testMenu();
     void runPenalty();
     void penaltyShoot();
     void runGoalkeeper();
