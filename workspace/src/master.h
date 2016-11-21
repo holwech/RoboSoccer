@@ -7,6 +7,7 @@
 #include "kogmo_rtdb.hxx"
 #include "robo_control.h"
 #include "referee.h"
+#include "timer.h"
 
 enum State {
     STATE_MENU,
@@ -14,7 +15,6 @@ enum State {
     STATE_PENALTY,
     STATE_STARTPOS
 };
-
 
 
 class Master {
@@ -37,13 +37,21 @@ private:
     RoboControl robo2;
     RawBall ball;
     Referee referee;
+    bool shotCompleted;
+    bool shooterInitFirstStepDone;
     void updateFieldSide();
     void menu();
     void runPenalty();
     void penaltyShoot();
     void runGoalkeeper();
     void runStartPos();
-    State state;
+    void beforePenalty();
+    void penalty();
+    void printInfo();
+    ePlayMode state;
+
+    //Debug stuff
+    timer debugTimer;
 };
 
 #endif // MASTER_H

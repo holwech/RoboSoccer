@@ -43,6 +43,7 @@ int main(void) {
      *
      */
 
+
     string teamColorAnswer;
     bool teamChosen = false;
     while (!teamChosen) {
