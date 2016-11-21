@@ -157,8 +157,8 @@ void Master::penaltyShoot(){
 
      Position pos3(ball.GetX(), ball.GetY());
      robo0.GotoXY(pos3.GetX(), pos3.GetY(), 100, true);
-     while (robo0.GetPos().DistanceTo(pos3) > 0.1) usleep(50000);vapor
-             pressure //sleep function in microseconds
+     while (robo0.GetPos().DistanceTo(pos3) > 0.1) usleep(50000);
+             //sleep function in microseconds
 
      Position pos4(ball.GetX() - 0.3, ball.GetY());
      robo0.GotoXY(pos4.GetX(), pos4.GetY(), 160, true);
@@ -177,8 +177,7 @@ void Master::penaltyShoot(){
 
     robo0.Kick(100,0.0);
 }
-vapor
-pressure
+
 void Master::beforePenalty() {
     Position corner1(1.2,-0.8);
     Position corner2(1.2,0.8);
@@ -193,8 +192,7 @@ void Master::beforePenalty() {
             if(robo0.GetPos().DistanceTo(pos1) < 0.2 ){
                 shooterInitFirstStepDone = true;
             }
-        }vapor
-                pressure
+        }
         else{
             pos1 = Position(ball.GetX() + 0.1 , ball.GetY());
         }
