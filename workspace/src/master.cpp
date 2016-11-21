@@ -93,16 +93,18 @@ void Master::runGoalkeeper() {
 
 
 
-    double side = (team == "blue" || referee.GetPlayMode() == PENALTY || referee.GetPlayMode() == BEFORE_PENALTY) ? -1.3 : 1.3;
+    //double side = (team == "blue" || referee.GetPlayMode() == PENALTY || referee.GetPlayMode() == BEFORE_PENALTY) ? -1.3 : 1.3;
     //this part is use moveMs function, to let the robot move smoothly in a half circle route in the front of the goal.
     //the const of turning is to give the robot a different rotation speed between two wheel, so it will move in an certain turning angle.
     //the thing not sure is the value of turning const, and the connection between time, rotation speed and the distance it travel(I know it is a mutiply,
     //but its different in reality)
-    const turning=0.9;
-    robo0.moveMs();
-    while (abs(robo0.GetY() - ball.GetY()) > 0.40 && abs(robo0.GetX() - 0.4) > 0.40) {
-        usleep(5000);
-    }
+    //double turning=0.4;
+    //double gkspeed=100;
+    //double time
+    //robo0.moveMs(gkspeed,gkspeed*turning,);
+    //while (abs(robo0.GetY() - ball.GetY()) > 0.40 && abs(robo0.GetX() - 0.4) > 0.40) {
+        //usleep(5000);
+    //}
 }
 
 /**
