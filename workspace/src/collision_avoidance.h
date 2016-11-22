@@ -15,13 +15,14 @@ struct Force {
     double Y;
 };
 
+
 class CA {
 public:
     CA();
+    Force forceAtPoints(Position position, vector<Position> obstacles);
+    Force getForce(double X, double Y, double obstacleX, double obstacleY);
 private:
-    Force getForce(Position& point, Position& obstacle);
     void normalize(Force& force);
-    void forceAtPoint(Position position, vector<Position> obstacles);
     int obstacleWeight;
 };
 

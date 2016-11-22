@@ -14,10 +14,12 @@ Master::Master(string& team,
                 robo2(robo2),
                 ball(ball),
                 referee(referee),
-                debugTimer()
+                debugTimer(),
+                test()
 {
-    state = REFEREE_INIT;
+    cout << "Constructing Master variables" << endl;
     side = RIGHT_SIDE;
+    state = REFEREE_INIT;
     firstStart = true;
 }
 
@@ -64,35 +66,44 @@ void Master::run() {
         case TIME_OVER:
             break;
         default:
-            cout << "No case for state" << state << endl;
+            cout << "No case for state." << state << endl;
             break;
         }
     }
 }
 
 void Master::testMenu() {
-    cout << "Choose test program: \n 0: Return to program \n 1: Print to screen \n";
+    cout << "Choose test program: \n 0: Return to program \n 1: Print to screen \n 2: Go to position 0, 0 \n 3: Run collision avoidance \n";
     int program;
     cin >> program;
     bool stop = false;
+
     while(1) {
         switch(program) {
         case 0:
             stop = true;
             break;
         case 1:
-            cout << "Program 1 running" << endl;
+            cout << "Program 1 running..." << endl;
             break;
         case 2:
+            cout << "Going to position (0, 0)..." << endl;
             robo0.GotoPos(Position(0, 0));
+            stop = true;
+            break;
+        case 3:
+            cout << "Running collision avoidance..." << endl;
+            test.collisionAvoidance(robo0, robo1);
+            break;
         default:
             stop = true;
             break;
         }
         if (stop) {
-            return;
+            break;
         }
     }
+    cout << "Leaving test menu" << endl;
 }
 
 /** Runs the program for goalkeeper.

@@ -9,6 +9,7 @@
 #include "referee.h"
 #include "timer.h"
 #include "collision_avoidance.h"
+#include "test.h"
 
 enum ePlayModePlus {
     STATE_MENU,
@@ -54,6 +55,7 @@ private:
 
     //Debug stuff
     timer debugTimer;
+    Test test;
 };
 
 #endif // MASTER_H

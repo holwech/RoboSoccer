@@ -95,6 +95,9 @@ int main(void) {
         referee.Init();
         cout << "Referee ready..." << endl; 
 
+        // Give objects time to initialize or something.
+        // Don't know why this fixes things, but it does.
+        usleep(1000);
         Master master(teamColorAnswer, DBC, robo0, robo1, robo2, ball, referee);
         cout << "Master ready..." << endl;
         cout << "Program starting..." << endl;

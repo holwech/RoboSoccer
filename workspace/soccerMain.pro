@@ -21,12 +21,14 @@ HEADERS += \
     src/robo.h \
     src/master.h \
     src/timer.h \
-    src/collision_avoidance.h
+    src/collision_avoidance.h \
+    src/test.h
 SOURCES += src/soccerMain.cpp \
     src/robo.cpp \
     src/master.cpp \
     src/timer.cpp \
-    src/collision_avoidance.cpp
+    src/collision_avoidance.cpp \
+    src/test.cpp
 		
 		
 ##############
@@ -39,6 +41,8 @@ dox.depends = FORCE
 
 # somewhere else in the *.pro file
 QMAKE_EXTRA_TARGETS += dox
+
+
 
 
 
