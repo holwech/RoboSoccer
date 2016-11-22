@@ -9,6 +9,8 @@
 #include "referee.h"
 #include "timer.h"
 #include "collision_avoidance.h"
+#include "robo.h"
+#include "pidController.h"
 
 enum ePlayModePlus {
     STATE_MENU,

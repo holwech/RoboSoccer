@@ -1,5 +1,4 @@
 #include "master.h"
-
 Master::Master(string& team,
                RTDBConn& DBC,
                RoboControl& robo0,
@@ -20,6 +19,8 @@ Master::Master(string& team,
     side = RIGHT_SIDE;
     state = REFEREE_INIT;
 }
+
+
 
 void Master::run() {
     cout << "Starting state machine..." << endl;
@@ -149,6 +150,7 @@ void Master::penaltyShoot(){
      Position pos4(ball.GetX() - 0.3, ball.GetY());
      robo0.GotoXY(pos4.GetX(), pos4.GetY(), 160, true);
      while (robo0.GetPos().DistanceTo(pos4) > 0.1) usleep(50000); //sleep function in microseconds
+
 
     robo0.Kick(100,0.0);
 }
