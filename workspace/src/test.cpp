@@ -13,6 +13,7 @@ void Test::testMenu() {
         cout << "2: Go to (0, 0)" << endl;
         cout << "3: Test all" << endl;
         cout << "4: Goalkeeper" << endl;
+        cout << "5: Collision avoidance" << endl;
         int program;
         cin >> program;
         bool stop = false;
@@ -35,6 +36,10 @@ void Test::testMenu() {
         case 4:
             cout << "Running 4: Goalkeeper" << endl;
             goalkeeper();
+            break;
+        case 5:
+            cout << "Running 5: Collision avoidance" << endl;
+            collisionAvoidance(master.robo0, master.robo1);
             break;
         default:
             stop = true;
