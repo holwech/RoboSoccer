@@ -27,7 +27,6 @@ SOURCES += src/soccerMain.cpp \
     src/master.cpp \
     src/timer.cpp \
     src/pidController.cpp \
-    src/robo_control_impr.cpp
 		
 		
 ##############

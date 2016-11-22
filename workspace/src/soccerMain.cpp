@@ -94,7 +94,6 @@ int main(void) {
         Referee referee(DBC);
         referee.Init();
         cout << "Referee ready..." << endl; 
-
         Master master(teamColorAnswer, DBC, robo0, robo1, robo2, ball, referee);
         cout << "Master ready..." << endl;
         cout << "Program starting..." << endl;

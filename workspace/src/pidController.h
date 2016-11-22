@@ -16,7 +16,7 @@ class pidController{
     int error_sign;
 public:
     pidController();
-    pidController(RoboControl * robo_ptr, double input_Kp, double input_Ki, double input_Kd);
+    pidController(double input_Kp, double input_Ki, double input_Kd);
     void updateInput(double error);
     void saveNewErr(double diff);
     void saveNewInput(double input);

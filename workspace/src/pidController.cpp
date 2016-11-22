@@ -1,10 +1,10 @@
 #include "pidController.h"
 #define NUM_SAVED_ERR 3
-#define TIMESTEP 0.001
+#define TIMESTEP 0.01
 #define NUM_SAVED_INP 2
 
 class RoboControl;
-pidController::pidController(RoboControl * robo_ptr, double input_Kp, double input_Ki, double input_Kd)
+pidController::pidController(double input_Kp, double input_Ki, double input_Kd)
                             : Kp(input_Kp), Ki(input_Ki), Kd(input_Kd), error_sign(0){
     //Init error list
     for(int i = 0; i < NUM_SAVED_ERR; i++){
@@ -37,9 +37,9 @@ void pidController::saveNewErr(double diff){
     }
     error_sign = diff/abs(diff);
     for (int i = 0; i < NUM_SAVED_ERR; i++){
-        // cout << i << ": " << prevErr[i] << endl;
+         cout << i << ": " << prevErr[i] << endl;
     }
-    //cout << endl;
+    cout << endl;
 }
 void pidController::updateInput(double error){
     saveNewErr(error);

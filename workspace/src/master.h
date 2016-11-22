@@ -8,6 +8,8 @@
 #include "robo_control.h"
 #include "referee.h"
 #include "timer.h"
+#include "robo.h"
+#include "pidController.h"
 
 enum State {
     STATE_MENU,
