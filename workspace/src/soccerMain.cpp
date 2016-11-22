@@ -14,6 +14,7 @@
 #include "robo_control.h"
 #include "master.h"
 #include "referee.h"
+#include "test.h"
 
 using namespace std;
 
@@ -100,17 +101,27 @@ int main(void) {
         usleep(1000);
         Master master(teamColorAnswer, DBC, robo0, robo1, robo2, ball, referee);
         cout << "Master ready..." << endl;
-        cout << "Program starting..." << endl;
 
-        master.run();
+        cout << "----- ----- ----- -----" << endl;
+        cout << "Enter test mode? (y/write anything to skip) ";
+        string testMode;
+        cin >> testMode;
 
-
+        if (testMode == "y") {
+            Test test(master);
+            cout << "Test program starting..." << endl;
+            test.testMenu();
+        } else {
+            cout << "Main program starting..." << endl;
+            master.run();
+        }
+        cout << "Exiting..." << endl;
 
     } catch (DBError err) {
             cout << "Client died on Error: " << err.what() << endl;
     }
 
-    cout << "Exiting..." << endl;
+
     return 0;
 }
 

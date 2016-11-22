@@ -4,12 +4,19 @@
 #include "robo_control.h"
 #include "collision_avoidance.h"
 #include "timer.h"
+#include "master.h"
 
 class Test
 {
 public:
-    Test();
+    Test(Master& master);
+    void testMenu();
+private:
     void collisionAvoidance(RoboControl& roboMove, RoboControl& roboObs);
+    void testAll();
+    void beforePenalty();
+    void goalkeeper();
+    Master master;
 };
 
 

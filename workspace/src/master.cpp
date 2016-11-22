@@ -14,26 +14,15 @@ Master::Master(string& team,
                 robo2(robo2),
                 ball(ball),
                 referee(referee),
-                debugTimer(),
-                test()
+                debugTimer()
 {
-    cout << "Constructing Master variables" << endl;
+    cout << "Constructing Master variables..." << endl;
     side = RIGHT_SIDE;
     state = REFEREE_INIT;
-    firstStart = true;
 }
 
 void Master::run() {
-    cout << "Starting state machine" << endl;
-    if (firstStart) {
-        cout << "Enter test mode? (y/write anything to skip) ";
-        string testMode;
-        cin >> testMode;
-        firstStart = false;
-        if (testMode == "y") {
-            testMenu();
-        }
-    }
+    cout << "Starting state machine..." << endl;
     debugTimer.start();
     printInfo();
     while(1) {
@@ -72,39 +61,7 @@ void Master::run() {
     }
 }
 
-void Master::testMenu() {
-    cout << "Choose test program: \n 0: Return to program \n 1: Print to screen \n 2: Go to position 0, 0 \n 3: Run collision avoidance \n";
-    int program;
-    cin >> program;
-    bool stop = false;
 
-    while(1) {
-        switch(program) {
-        case 0:
-            stop = true;
-            break;
-        case 1:
-            cout << "Program 1 running..." << endl;
-            break;
-        case 2:
-            cout << "Going to position (0, 0)..." << endl;
-            robo0.GotoPos(Position(0, 0));
-            stop = true;
-            break;
-        case 3:
-            cout << "Running collision avoidance..." << endl;
-            test.collisionAvoidance(robo0, robo1);
-            break;
-        default:
-            stop = true;
-            break;
-        }
-        if (stop) {
-            break;
-        }
-    }
-    cout << "Leaving test menu" << endl;
-}
 
 /** Runs the program for goalkeeper.
  * This program is complete and does not need further modifications.
@@ -185,17 +142,6 @@ void Master::runGoalkeeper() {
 
 void Master::penaltyShoot(){
      cout << "Starting penalty." << endl;
-
-//         Position pos1(ball.GetX()+0.5, ball.GetY());
-//         cout << "Moving to " << pos1 << endl << endl;
-//         robo0.GotoXY(pos1.GetX(), pos1.GetY(), 50, true);
-//         while (robo0.GetPos().DistanceTo(pos1) > 0.05) usleep(50000); //sleep function in microseconds
-
-//         Position pos2(ball.GetX()+0.3, ball.GetY());
-//         cout << "Moving to " << pos2 << endl << endl;
-//         robo0.GotoXY(pos2.GetX(), pos2.GetY(), 80, true);
-//         while (robo0.GetPos().DistanceTo(pos2) > 0.1) usleep(50000); //sleep function in microseconds
-
      Position pos3(ball.GetX(), ball.GetY());
      robo0.GotoXY(pos3.GetX(), pos3.GetY(), 100, true);
      while (robo0.GetPos().DistanceTo(pos3) > 0.1) usleep(50000); //sleep function in microseconds
@@ -203,17 +149,6 @@ void Master::penaltyShoot(){
      Position pos4(ball.GetX() - 0.3, ball.GetY());
      robo0.GotoXY(pos4.GetX(), pos4.GetY(), 160, true);
      while (robo0.GetPos().DistanceTo(pos4) > 0.1) usleep(50000); //sleep function in microseconds
-
-     //Position pos3(ball.GetX()+0.5,ball.GetY());
-     //cout << "Moving to " << pos3 << endl << endl;
-     //robo.GotoXY(pos3.GetX(), pos3.GetY(), 100, true);
-     //while (ro<<<<<<< HEADbo.GetPos().DistanceTo(pos3) > 0.1) usleep(50000);
-
-
-
-    //cout << "Moving to " << pos4 << endl << endl;
-    //roboball.GetPos().GotoXY(pos4.GetX(), pos4.GetY(), 60, true);
-    //while (robo.GetPos().DistanceTo(pos4) > 0.10) usleep(50000);
 
     robo0.Kick(100,0.0);
 }

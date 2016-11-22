@@ -9,7 +9,6 @@
 #include "referee.h"
 #include "timer.h"
 #include "collision_avoidance.h"
-#include "test.h"
 
 enum ePlayModePlus {
     STATE_MENU,
@@ -21,6 +20,7 @@ enum ePlayModePlus {
 
 class Master {
 public:
+    friend class Test;
     Master(string& team,
            RTDBConn& DBC,
            RoboControl& robo0,
@@ -39,7 +39,6 @@ private:
     RoboControl robo2;
     RawBall ball;
     Referee referee;
-    bool firstStart;
     bool shotCompleted;
     bool shooterInitFirstStepDone;
     void updateFieldSide();
@@ -55,7 +54,6 @@ private:
 
     //Debug stuff
     timer debugTimer;
-    Test test;
 };
 
 #endif // MASTER_H
