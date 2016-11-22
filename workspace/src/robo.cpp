@@ -1,14 +1,9 @@
 #include "robo.h"
+#include "angle.h"
 
-//    pidController pidAngle(40.0, 1, 1.0);
-//    pidController pidDistance(150.0, 0.0, 0.0);
-//    while(1){
-//        driveSoFast(robo1, ball, pidAngle, pidDistance);
-//     }
 
-void driveSoFast(RoboControl& robo1, RawBall &ball, pidController &pidAngle, pidController &pidDistance){
-   //if timer is time, update pids()
-   usleep(10000);
+void driveSoFast(RoboControl& robo1, RawBall &ball, Position obstPos ,pidController &pidAngle, pidController &pidDistance){
+    usleep(10000);
     //get the error
     double ref_deg = robo1.GetPos().AngleOfLineToPos( ball.GetPos() ).Deg();
     double myAngle_deg = robo1.GetPhi().Deg();
@@ -28,7 +23,6 @@ void driveSoFast(RoboControl& robo1, RawBall &ball, pidController &pidAngle, pid
     }
     //cout << "Err in rad: " << err_rad << endl;
     double sin_err_rad = sin(err_rad/2);
-    pidAngle.updateInput(sin_err_rad);
 
     double dist_error = robo1.GetPos().DistanceTo(ball.GetPos());
     if (dist_error < 0.03){
@@ -37,8 +31,26 @@ void driveSoFast(RoboControl& robo1, RawBall &ball, pidController &pidAngle, pid
     else{
         pidDistance.updateInput(1);
     }
-    double pidDist_input =pidDistance.getInput();
-    cout << "dist_erro: " <<  dist_error << endl;
+
+    double roboAngleObstacle_deg = robo1.GetPos().AngleOfLineToPos(obstPos).Deg();
+    double ajusted_roboAngleObstacle_deg = ((int)roboAngleObstacle_deg + 4*180) % (2*180);
+    double diffRoboObstAngle_rad;
+    if(fabs(ajusted_roboAngleObstacle_deg - ajusted_myAngle_deg) < fabs(roboAngleObstacle_deg - myAngle_deg)){
+        diffRoboObstAngle_rad = (ajusted_roboAngleObstacle_deg - ajusted_myAngle_deg)*(M_PI/180);
+    }else{
+        diffRoboObstAngle_rad = (roboAngleObstacle_deg - myAngle_deg)*(M_PI/180);
+    }
+    cout << "robo2.pos: " << obstPos << endl;
+    cout << "RoboDiff: " << diffRoboObstAngle_rad << endl;
+    double distToObst = robo1.GetPos().DistanceTo(obstPos);
+
+    int obstAngleSign = diffRoboObstAngle_rad/fabs(diffRoboObstAngle_rad);
+
+    double total_update_angle_rad = sin_err_rad + (distToObst > 0.3 || diffRoboObstAngle_rad > M_PI/2 ? 0 : (-obstAngleSign*cos(diffRoboObstAngle_rad)/4)*0.3/(distToObst));
+    pidAngle.updateInput(total_update_angle_rad);
+    double pidDist_input = pidDistance.getInput();
+    cout << "angle_error: " << err_rad << endl;
+
     double rightWheel =pidDist_input*cos(err_rad) + pidAngle.getInput();
     double leftWheel = pidDist_input*cos(err_rad) -pidAngle.getInput();
     robo1.MoveMs(leftWheel,rightWheel, 100, 10);
@@ -46,3 +58,4 @@ void driveSoFast(RoboControl& robo1, RawBall &ball, pidController &pidAngle, pid
     //robo1.TurnAbs(robo1.GetPos().AngleOfLineToPos(ball.GetPos())-robo1.GetPhi());
 
 }
+

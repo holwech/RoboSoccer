@@ -24,6 +24,6 @@ public:
 
 };
 
-void driveSoFast(RoboControl& robo1, RawBall &ball, pidController &pidAngle, pidController &pidDistance);
+void driveSoFast(RoboControl& robo1, RawBall &ball, Position  obstPos,pidController &pidAngle, pidController &pidDistance);
 
 #endif // ROBO_H

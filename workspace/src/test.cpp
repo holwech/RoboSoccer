@@ -1,5 +1,6 @@
 #include "test.h"
 #include <limits>
+#include "robo.h"
 
 Test::Test(Master& master) : master(master)
 {
@@ -13,6 +14,7 @@ void Test::testMenu() {
         cout << "2: Go to (0, 0)" << endl;
         cout << "3: Test all" << endl;
         cout << "4: Goalkeeper" << endl;
+        cout << "6: Obstacle" << endl;
         int program;
         cin >> program;
         bool stop = false;
@@ -36,6 +38,10 @@ void Test::testMenu() {
             cout << "Running 4: Goalkeeper" << endl;
             goalkeeper();
             break;
+        case 6:
+            cout << "Running 6: Obstacle" << endl;
+            pidCollision(master.robo1, master.ball, master.robo2);
+            break;
         default:
             stop = true;
             break;
@@ -45,6 +51,14 @@ void Test::testMenu() {
         }
     }
     cout << "Leaving test menu" << endl;
+}
+void Test::pidCollision(RoboControl &robo, RawBall &ball, RoboControl &obstacle){
+    pidController pidAngle(40.0, 1, 1.0);
+    pidController pidDistance(150.0, 0.0, 0.0);
+    while(1){
+        driveSoFast(robo, ball, obstacle.GetPos(), pidAngle, pidDistance);
+    }
+
 }
 
 void Test::collisionAvoidance(RoboControl& roboMove, RoboControl& roboObs) {

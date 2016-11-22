@@ -5,6 +5,8 @@
 #include "collision_avoidance.h"
 #include "timer.h"
 #include "master.h"
+#include "pidController.h"
+#include "robo.h"
 
 class Test
 {
@@ -16,6 +18,7 @@ private:
     void testAll();
     void beforePenalty();
     void goalkeeper();
+    void pidCollision(RoboControl &robo, RawBall &ball, RoboControl& obstacle);
     Master master;
 };
 
