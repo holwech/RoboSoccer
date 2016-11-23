@@ -4,6 +4,7 @@ CA::CA() {
     obstacleWeight = 1;
 }
 
+/** Return the force from an obstacle */
 Force CA::getForce(double X, double Y, double obstacleX, double obstacleY) {
     bool debug = false;
     double magnitude = obstacleWeight / (pow(obstacleX - X, 2) + pow(obstacleY - Y, 2));
@@ -25,17 +26,23 @@ Force CA::getForce(double X, double Y, double obstacleX, double obstacleY) {
       cout << "----- ----- ------" << endl;
     }
 
+    /** Change the sign since the values are opposite of what they
+      * should be for some reason
+      */
+    force.X = -force.X;
+    force.Y = -force.Y;
     return force;
 }
 
+/** Normalizes a vector */
 void CA::normalize(Force& force) {
     double length = sqrt(pow(force.X, 2) + pow(force.Y, 2));
     force.X = force.X / length;
     force.Y = force.Y / length;
 }
 
-
-Force CA::forceAtPoints(Position position, vector<Position> obstacles) {
+/** Calculates the total force on a object, based on multiple obstacles */
+Force CA::forceAtPoints(Position& position, vector<Position>& obstacles) {
     Force force = {0, 0};
     for (unsigned int obstacle = 0; obstacle < obstacles.size(); obstacle++) {
         Force obstacleForce = getForce(
@@ -48,4 +55,48 @@ Force CA::forceAtPoints(Position position, vector<Position> obstacles) {
         force.Y += obstacleForce.Y;
     }
     return force;
+}
+
+/** Checks to find shortest path to pass to reach its target.
+  * Negative value indicates that target is on the right side,
+  * positive indicates that target is on the left side of the obstacle.
+  */
+double CA::getPassSide(Position& basePos, Position& target, Position& obstacle) {
+    bool debug = true;
+    Angle baseToTarget = basePos.AngleOfLineToPos(target);
+    Angle baseToObstacle = basePos.AngleOfLineToPos(obstacle);
+
+    if (debug) {
+        cout << "Base to target: " << baseToTarget.Get() << endl;
+        cout << "Base to obstacle: " << baseToObstacle.Get() << endl;
+        cout << "Diff (rad): " << (baseToObstacle - baseToTarget).Get() << endl;
+        cout << "Diff (deg): " << (baseToObstacle - baseToTarget).Deg() << endl;
+    }
+
+    /** If the ball is exactly behinde the obstacle, go to the right */
+    double passSide = (baseToObstacle - baseToTarget).Get();
+    if (passSide == 0) {
+        passSide = -1;
+    }
+    return passSide;
+}
+
+
+/** Calculates the pull from the force given by the obstacle.
+  * That is, a vector value that is perpendicular to the force from the obstacle
+  * and pointing in the direction that is the shortest path around the obstacle
+  * to the target.
+  */
+Force CA::getPull(Position& basePos, Position& target, Position& obstacle) {
+    double passSide = getPassSide(basePos, target, obstacle);
+    Force force = getForce(basePos.GetX(), basePos.GetY(), obstacle.GetX(), obstacle.GetY());
+    Force perpForce;
+    if (passSide < 0) {
+        perpForce.X = force.Y;
+        perpForce.Y = -force.X;
+    } else {
+        perpForce.X = -force.Y;
+        perpForce.Y = force.X;
+    }
+    return perpForce;
 }

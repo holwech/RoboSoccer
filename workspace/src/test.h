@@ -14,7 +14,9 @@ public:
     Test(Master& master);
     void testMenu();
 private:
+    void pullVector();
     void collisionAvoidance(RoboControl& roboMove, RoboControl& roboObs);
+    void getPassSide();
     void testAll();
     void beforePenalty();
     void goalkeeper();

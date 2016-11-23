@@ -17,12 +17,15 @@ struct Force {
 
 
 class CA {
+    friend class Test;
 public:
     CA();
-    Force forceAtPoints(Position position, vector<Position> obstacles);
-    Force getForce(double X, double Y, double obstacleX, double obstacleY);
+    Force getPull(Position& basePos, Position& target, Position& obstacle);
 private:
     void normalize(Force& force);
+    Force forceAtPoints(Position& position, vector<Position>& obstacles);
+    Force getForce(double X, double Y, double obstacleX, double obstacleY);
+    double getPassSide(Position& basePos, Position& target, Position& obstacle);
     int obstacleWeight;
 };
 

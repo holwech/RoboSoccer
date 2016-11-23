@@ -14,8 +14,10 @@ void Test::testMenu() {
         cout << "2: Go to (0, 0)" << endl;
         cout << "3: Test all" << endl;
         cout << "4: Goalkeeper" << endl;
-        cout << "6: Obstacle" << endl;
         cout << "5: Collision avoidance" << endl;
+        cout << "6: Obstacle" << endl;
+        cout << "7: Pull vector" << endl;
+        cout << "8: getPassSide" << endl;
         int program;
         cin >> program;
         bool stop = false;
@@ -39,12 +41,21 @@ void Test::testMenu() {
             cout << "Running 4: Goalkeeper" << endl;
             goalkeeper();
             break;
-        case 6:
-            cout << "Running 6: Obstacle" << endl;
-            pidCollision(master.robo1, master.ball, master.robo2);
         case 5:
             cout << "Running 5: Collision avoidance" << endl;
             collisionAvoidance(master.robo0, master.robo1);
+            break;
+        case 6:
+            cout << "Running 6: Obstacle" << endl;
+            pidCollision(master.robo1, master.ball, master.robo2);
+            break;
+        case 7:
+            cout << "Running 7: Pull vector" << endl;
+            pullVector();
+            break;
+        case 8:
+            cout << "Running 8: getPassSide" << endl;
+            getPassSide();
             break;
         default:
             stop = true;
@@ -56,6 +67,40 @@ void Test::testMenu() {
     }
     cout << "Leaving test menu" << endl;
 }
+
+void Test::getPassSide() {
+    cout << "Remember to set debug to true in the getPassSide function" << endl;
+    while (1) {
+        Position basePos = master.robo0.GetPos();
+        Position target = master.ball.GetPos();
+        Position obstacle = master.robo1.GetPos();
+        double diffAngle = master.ca.getPassSide(basePos, target, obstacle);
+        diffAngle = diffAngle;
+        usleep(1000);
+    }
+}
+
+/**
+  */
+void Test::pullVector() {
+    timer debugTimer;
+    debugTimer.start();
+    while (1) {
+        Position basePos = master.robo0.GetPos();
+        Position target = master.ball.GetPos();
+        Position obstacle = master.robo1.GetPos();
+        double passSide = master.ca.getPassSide(basePos, target, obstacle);
+        Force pull = master.ca.getPull(basePos, target, obstacle);
+        if (debugTimer.getTime() > 0.01) {
+            cout << "----- ----- -----" << endl;
+            cout << "Pass side: " << passSide << endl;
+            cout << "Pull vector: { " << pull.X << " , " << pull.Y << " }" << endl;
+            debugTimer.reset();
+        }
+        usleep(100);
+    }
+}
+
 void Test::pidCollision(RoboControl &robo, RawBall &ball, RoboControl &obstacle){
     pidController pidAngle(40.0, 1, 1.0);
     pidController pidDistance(150.0, 0.0, 0.0);

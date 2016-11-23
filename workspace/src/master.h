@@ -41,6 +41,7 @@ private:
     RoboControl robo2;
     RawBall ball;
     Referee referee;
+    CA ca;
     bool shotCompleted;
     bool shooterInitFirstStepDone;
     void updateFieldSide();
