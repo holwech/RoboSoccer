@@ -70,20 +70,29 @@ int main(void) {
         RTDBConn DBC(client_name.data(), 0.1, "");
 
         /** Init robot(s) */
-        int rfNumber0, rfNumber1, rfNumber2;
+        int rfNumber0, rfNumber1, rfNumber2, rfNumber3, rfNumber4, rfNumber5;
         if (teamColorAnswer == "blue") {
             rfNumber0 = 0;
             rfNumber1 = 1;
             rfNumber2 = 2;
+            rfNumber3 = 3;
+            rfNumber4 = 4;
+            rfNumber5 = 5;
         } else {
             rfNumber0 = 3;
             rfNumber1 = 4;
             rfNumber2 = 5;
+            rfNumber3 = 0;
+            rfNumber4 = 1;
+            rfNumber5 = 2;
         }
 
         RoboControl robo0(DBC, rfNumber0);
         RoboControl robo1(DBC, rfNumber1);
         RoboControl robo2(DBC, rfNumber2);
+        RoboControl robo3(DBC, rfNumber3);
+        RoboControl robo4(DBC, rfNumber4);
+        RoboControl robo5(DBC, rfNumber5);
         cout << "Robots are ready..." << endl;
 
 
@@ -99,7 +108,7 @@ int main(void) {
         // Give objects time to initialize or something.
         // Don't know why this fixes things, but it does.
         usleep(1000);
-        Master master(teamColorAnswer, DBC, robo0, robo1, robo2, ball, referee);
+        Master master(teamColorAnswer, DBC, robo0, robo1, robo2, robo3, robo4, robo5, ball, referee);
         cout << "Master ready..." << endl;
 
         cout << "----- ----- ----- -----" << endl;
