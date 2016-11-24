@@ -60,7 +60,7 @@ void Test::testMenu() {
             break;
         case 9:
             cout << "Running 9: Goalkeeper's kick" << endl;
-            do_goalkeeper_kick(master.robo1, master.ball);
+            do_goalkeeper_kick(master.robo1, master.robo3, master.robo4, master.robo5, master.ball);
             break;
         default:
             stop = true;
@@ -183,7 +183,7 @@ void Test::goalkeeper() {
 }
 
 
-void Test::do_goalkeeper_kick(RoboControl& robogoalkicker, RawBall& ourball){
+void Test::do_goalkeeper_kick(RoboControl& robogoalkicker, RoboControl& robo_blue_1, RoboControl& robo_blue_2,RoboControl& robo_blue_3, RawBall& ourball){
 
     double xstart = 1; // on penlaty line
     double ystart = 0.4; // on penalty line
@@ -197,38 +197,159 @@ void Test::do_goalkeeper_kick(RoboControl& robogoalkicker, RawBall& ourball){
     double yball = ourball.GetY();
 
 
-    if(yball>=0){
+    if(yball>=0){                                       // Stay on penalty line a drive next to ball
     while(robogoalkicker.GetY()- (yball-0.15) > 0.05){
           robogoalkicker.GotoXY(xstart,yball-0.15);}
+
+            if(robogoalkicker.GetPhi().Deg()!=180){            // Turn to 180 degrees
+            robogoalkicker.TurnAbs(180);
+            }
+
+            double yrobot = robogoalkicker.GetY();
+
+            while((xball+0.15) - robogoalkicker.GetX() >  0.05){    // Keep y, move behind ball in x
+                  robogoalkicker.GotoXY(xball+0.15,yrobot);}
+
+
+
+            double xrobot = robogoalkicker.GetX();
+
+            while((yball) - robogoalkicker.GetY() > 0.02){        // Move behind the ball
+                  robogoalkicker.GotoXY(xrobot,yball);}
+            cout << "Test" << endl;
+            if(robogoalkicker.GetPhi().Deg()!=0){              // Adjust orientation
+            robogoalkicker.TurnAbs(0);
+            }
+
     }else{
     while(robogoalkicker.GetY()- (yball+0.15) > 0.05){
           robogoalkicker.GotoXY(xstart,yball+0.15);}
+
+            if(robogoalkicker.GetPhi().Deg()!=180){            // Turn to 180 degrees
+            robogoalkicker.TurnAbs(180);
+            }
+
+            double yrobot = robogoalkicker.GetY();
+
+            while((xball+0.15) - robogoalkicker.GetX() >  0.05){    // Keep y, move behind ball in x
+                  robogoalkicker.GotoXY(xball+0.15,yrobot);}
+
+            cout << "Test" << endl;
+
+            double xrobot = robogoalkicker.GetX();
+
+            while(robogoalkicker.GetY()-(yball) > 0.02){        // Move behind the ball
+                  robogoalkicker.GotoXY(xrobot,yball);}
+
+            if(robogoalkicker.GetPhi().Deg()!=0){              // Adjust orientation
+            robogoalkicker.TurnAbs(0);
+             }
     }
 
-    if(robogoalkicker.GetPhi().Deg()!=180){
-    robogoalkicker.TurnAbs(180);
+
+/*
+    //int port = 0;       // Describes between which blue robots the ball should pass - 0: between small and midpos - 1: between midpos and larg
+
+    double dist1 = 0;  // Check order of blue robots
+    double dist2 = 0;
+
+    double yblue_1 = robo_blue_1.GetY();
+    double yblue_2 = robo_blue_2.GetY();
+    double yblue_3 = robo_blue_3.GetY();
+
+
+   double posvect[4][4];
+
+    posvect[1][1] = robo_blue_1.GetX();
+    posvect[2][1] = robo_blue_1.GetY();
+    posvect[1][2] = robo_blue_2.GetX();
+    posvect[2][2] = robo_blue_2.GetY();
+    posvect[1][3] = robo_blue_3.GetX();
+    posvect[2][3] = robo_blue_3.GetY();
+
+    int small = 0;
+    int midpo = 0;
+    int larg = 0;
+
+    if (yblue_1 < yblue_2 && yblue_1 < yblue_3){
+        small = 1;
+        if (yblue_2 < yblue_3){
+        larg = 3;
+        midpo = 2;
+        dist1 = robo_blue_1.GetPos().DistanceTo(robo_blue_2.GetPos());
+        dist2 = robo_blue_2.GetPos().DistanceTo(robo_blue_3.GetPos());
+        }else{
+        larg = 2;
+        midpo = 3;
+        dist1 = robo_blue_1.GetPos().DistanceTo(robo_blue_3.GetPos());
+        dist2 = robo_blue_3.GetPos().DistanceTo(robo_blue_2.GetPos());
+        }
+    }else{
+        if(yblue_2 < yblue_1 && yblue_2 < yblue_3){
+        small = 2;
+        if (yblue_1 < yblue_3){
+        larg = 3;
+        midpo = 1;
+        dist1 = robo_blue_2.GetPos().DistanceTo(robo_blue_1.GetPos());
+        dist2 = robo_blue_1.GetPos().DistanceTo(robo_blue_3.GetPos());
+        }else{
+        larg = 1;
+        midpo = 3;
+        dist1 = robo_blue_2.GetPos().DistanceTo(robo_blue_3.GetPos());
+        dist2 = robo_blue_3.GetPos().DistanceTo(robo_blue_1.GetPos());
+        }
+
+        }else{
+            small = 3;
+            if (yblue_1 < yblue_2){
+            larg = 2;
+            midpo = 1;
+            dist1 = robo_blue_3.GetPos().DistanceTo(robo_blue_1.GetPos());
+            dist2 = robo_blue_1.GetPos().DistanceTo(robo_blue_2.GetPos());
+            }else{
+            larg = 1;
+            midpo = 2;
+            dist1 = robo_blue_3.GetPos().DistanceTo(robo_blue_2.GetPos());
+            dist2 = robo_blue_2.GetPos().DistanceTo(robo_blue_1.GetPos());
+            }
+        }
     }
 
 
+    if(dist1>dist2){
 
+        Position Targetpoint(0.5,0.5);//posvect[1][midpo] + 0.5*(posvect[1][small]-posvect[1][midpo]),posvect[2][midpo]+ 0.5*(posvect[2][small]-posvect[2][midpo]));
+    }else{
 
-    double yrobot = robogoalkicker.GetY();
-
-
-
-    while((xball+0.15) - robogoalkicker.GetX() >  0.05){
-          robogoalkicker.GotoXY(xball+0.15,yrobot);}
-
-    cout << "Test" << endl;
-
-    double xrobot = robogoalkicker.GetX();
-
-    while(robogoalkicker.GetY()-(yball) > 0.02){
-          robogoalkicker.GotoXY(xrobot,yball);}
-
-    if(robogoalkicker.GetPhi().Deg()!=0){
-    robogoalkicker.TurnAbs(0);
+        Position Targetpoint(0.5,0.5);//posvect[1][midpo] + 0.5*(posvect[1][larg]-posvect[1][midpo]),posvect[2][midpo]+ 0.5*(posvect[2][larg]-posvect[2][midpo]));
     }
+
+
+    cout << dist1 << endl;
+    cout << dist2 << endl;
+
+
+
+
+
+    if(robo_blue_1.GetPos().DistanceTo(robo_blue_2.GetPos()) > robo_blue_1.GetPos().DistanceTo(robo_blue_3.GetPos()){
+
+        dist1 = robo_blue_1.GetPos().DistanceTo(robo_blue_3.GetPos();
+
+    }else{
+        dist1 = robo_blue_1.GetPos().DistanceTo(robo_blue_2.GetPos();
+
+    }
+
+    if(robo_blue_1.GetPos().DistanceTo(robo_blue_2.GetPos()) > robo_blue_1.GetPos().DistanceTo(robo_blue_3.GetPos()){
+
+        dist1 = robo_blue_1.GetPos().DistanceTo(robo_blue_3.GetPos();
+
+    }
+
+
+*/
+
 }
 
 void Test::testAll() {
