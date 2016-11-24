@@ -21,6 +21,7 @@ private:
     void beforePenalty();
     void goalkeeper();
     void pidCollision(RoboControl &robo, RawBall &ball, RoboControl& obstacle);
+    void do_goalkeeper_kick(RoboControl& robogoalkicker, RawBall &ball);
     Master master;
 };
 

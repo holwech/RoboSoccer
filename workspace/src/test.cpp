@@ -18,6 +18,7 @@ void Test::testMenu() {
         cout << "6: Obstacle" << endl;
         cout << "7: Pull vector" << endl;
         cout << "8: getPassSide" << endl;
+        cout << "9: Goalkeeper's kick" << endl;
         int program;
         cin >> program;
         bool stop = false;
@@ -56,6 +57,10 @@ void Test::testMenu() {
         case 8:
             cout << "Running 8: getPassSide" << endl;
             getPassSide();
+            break;
+        case 9:
+            cout << "Running 9: Goalkeeper's kick" << endl;
+            do_goalkeeper_kick(master.robo1, master.ball);
             break;
         default:
             stop = true;
@@ -174,6 +179,55 @@ void Test::beforePenalty() {
 void Test::goalkeeper() {
     while(1) {
         master.runGoalkeeper();
+    }
+}
+
+
+void Test::do_goalkeeper_kick(RoboControl& robogoalkicker, RawBall& ourball){
+
+    double xstart = 1; // on penlaty line
+    double ystart = 0.4; // on penalty line
+
+    Position currTarget(xstart,ystart);
+
+    while(robogoalkicker.GetPos().DistanceTo(currTarget) > 0.10)
+    robogoalkicker.GotoXY(xstart,ystart); // Go to/on goal line
+
+    double xball = ourball.GetX();
+    double yball = ourball.GetY();
+
+
+    if(yball>=0){
+    while(robogoalkicker.GetY()- (yball-0.15) > 0.05){
+          robogoalkicker.GotoXY(xstart,yball-0.15);}
+    }else{
+    while(robogoalkicker.GetY()- (yball+0.15) > 0.05){
+          robogoalkicker.GotoXY(xstart,yball+0.15);}
+    }
+
+    if(robogoalkicker.GetPhi().Deg()!=180){
+    robogoalkicker.TurnAbs(180);
+    }
+
+
+
+
+    double yrobot = robogoalkicker.GetY();
+
+
+
+    while((xball+0.15) - robogoalkicker.GetX() >  0.05){
+          robogoalkicker.GotoXY(xball+0.15,yrobot);}
+
+    cout << "Test" << endl;
+
+    double xrobot = robogoalkicker.GetX();
+
+    while(robogoalkicker.GetY()-(yball) > 0.02){
+          robogoalkicker.GotoXY(xrobot,yball);}
+
+    if(robogoalkicker.GetPhi().Deg()!=0){
+    robogoalkicker.TurnAbs(0);
     }
 }
 
