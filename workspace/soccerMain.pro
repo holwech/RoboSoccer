@@ -4,6 +4,7 @@ TARGET = soccerMain
 #include(/DIST/lehre/lab_roso/tech/usr/include/settings.pri)
 include(/DIST/lehre/lab_roso/tech/usr_sim/include/settings.pri)
 
+QMAKE_CXXFLAGS += -std=gnu++11 -fpermissive
 
 DEPENDPATH += src
 INCLUDEPATH += src

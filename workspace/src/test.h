@@ -7,6 +7,7 @@
 #include "master.h"
 #include "pidController.h"
 #include "robo.h"
+#include <thread>
 
 class Test
 {
