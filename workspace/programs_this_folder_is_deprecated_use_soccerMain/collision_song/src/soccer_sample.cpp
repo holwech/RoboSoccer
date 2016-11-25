@@ -123,9 +123,9 @@ int main(void) {
 		/** Define four positions which form a rectangle...
 		 *
 		 */
-                Position pos1(-1, -0.7);
-                Position pos2(1, -0.7);
-                Position pos3(1, 0.7);
+                Position pos1(1, 0);
+                Position pos2(1.27, -0.35);
+                Position pos3(1.27, 0.35);
                 Position pos4(-1, 0.7);
 
 //                robo.MoveDist(1);
@@ -152,6 +152,7 @@ int main(void) {
 
                 cout<<tt<<endl;
 */
+//                robo4.MoveMs(255,255,200);
 // robo5.GotoPos(pos3);
 //                double a;
 /*
@@ -163,17 +164,75 @@ int main(void) {
  //                    robo5.GotoPos(pos3);
                 }
 */
+
+//                double goalx, goaly,ballx, bally, initrobox, initroboy;
+                Angle ang;
+             //   double delta = 0.15;
+
                 while(1)
                 {
-                    robo4.GotoPos(pos2);
+/*                    robo4;
                     robo5.GotoPos(pos4);
                     while(robo4.GetPos().DistanceTo(pos2)>0.1&&robo5.GetPos().DistanceTo(pos4)>0.1);
-                    usleep(50000);
+                                        usleep(50000);
                     robo4.GotoPos(pos1);
                     robo5.GotoPos(pos3);
                     while(robo4.GetPos().DistanceTo(pos1)>0.1&&robo5.GetPos().DistanceTo(pos3)>0.1);
                     usleep(50000);
+
+                   // robo4.GotoXY(0,0,160,true);
+                    robo4.GotoPos(pos1);
+                     while(robo4.GetPos().DistanceTo(pos1)>0.1);
+
+                    if(ball.GetY()>0)
+                    {
+                        goalx = (robo.GetX() + robo1.GetX())/2;
+                        goaly = (robo.GetY() + robo1.GetY())/2;
+                        robo4.GotoPos(pos2);
+                        while(robo4.GetPos().DistanceTo(pos2)>0.1);
+                    }
+                    else
+                    {
+                        goalx = (robo1.GetX() + robo2.GetX())/2;
+                        goaly = (robo1.GetY() + robo2.GetY())/2;
+                        robo4.GotoPos(pos3);
+                        while(robo4.GetPos().DistanceTo(pos3)>0.1);
+                    }
+                    ballx = ball.GetX();
+                    bally = ball.GetY();
+                    initrobox = ballx+delta;
+                    initroboy = bally + delta*(goaly-bally)/(goalx-ballx);
+                    robo4.GotoXY(initrobox,initroboy,50,true);
+                    Position initP(initrobox,initroboy);
+                    while(robo4.GetPos().DistanceTo(initP)>0.05);
+*/
+//                   while(1);
+//                    robo.getDiffAngle()
+//                    robo.Turn();
+                    ang = robo4.GetPos().AngleOfLineToPos(ball.GetPos());
+                    robo4.TurnAbs(ang);
+                    while((ang-robo4.GetPhi()).Deg()*(ang-robo4.GetPhi()).Deg()<0.01);
+
+                    robo4.GetPhi();
+                    ball.GetPhi();
+                    usleep(100000);
+/*                   ang = robo4.GetPhi().Rad();
+                    tempx = ballx-robo4.GetX();
+                    tempy = bally - robo4.GetY();
+                    ang = acos((tempx*cos(ang)+tempy*sin(ang))/(tempx*tempx+tempy*tempy));
+                    cout<<ang<<endl;
+                    robo4.Turn(ang*180/3.14159);
+//                    ang = tan(45*3.14159/180);
+                    cout << ang<<endl;
+
+*/
+     //               while(1);
+
+
+
+
                 }
+
 /*
        while(1)
 {
@@ -192,7 +251,7 @@ int main(void) {
         break;
     }
 
-}
+
            while(1)
            {
     robo4.GotoPos(pos2);
@@ -207,8 +266,8 @@ int main(void) {
         break;
 }
 }
-*/
-/*    if(robo4.GetPos().DistanceTo(pos1)<0.1)
+
+    if(robo4.GetPos().DistanceTo(pos1)<0.1)
     {
         robo4.StopAction();
 
