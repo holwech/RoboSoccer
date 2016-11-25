@@ -24,7 +24,9 @@ HEADERS += \
     src/timer.h \
     src/collision_avoidance.h \
     src/test.h \
-    src/pidController.h
+    src/pidController.h \
+    src/channel.h \
+    src/channel
 SOURCES += src/soccerMain.cpp \
     src/robo.cpp \
     src/master.cpp \
@@ -44,3 +46,5 @@ dox.depends = FORCE
 
 # somewhere else in the *.pro file
 QMAKE_EXTRA_TARGETS += dox
+
+
