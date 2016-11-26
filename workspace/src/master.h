@@ -28,6 +28,9 @@ public:
            RoboControl& robo0,
            RoboControl& robo1,
            RoboControl& robo2,
+           RoboControl& robo3,
+           RoboControl& robo4,
+           RoboControl& robo5,
            RawBall& ball,
            Referee& referee);
     void run();
@@ -39,8 +42,12 @@ private:
     RoboControl robo0;
     RoboControl robo1;
     RoboControl robo2;
+    RoboControl robo3;
+    RoboControl robo4;
+    RoboControl robo5;
     RawBall ball;
     Referee referee;
+    CA ca;
     bool shotCompleted;
     bool shooterInitFirstStepDone;
     void updateFieldSide();

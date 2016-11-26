@@ -1,9 +1,10 @@
 TEMPLATE = app
 TARGET = soccerMain
 
-#include(/DIST/lehre/lab_roso/tech/usr/include/settings.pri)
-include(/DIST/lehre/lab_roso/tech/usr_sim/include/settings.pri)
+include(/DIST/lehre/lab_roso/tech/usr/include/settings.pri)
+#include(/DIST/lehre/lab_roso/tech/usr_sim/include/settings.pri)
 
+QMAKE_CXXFLAGS += -std=gnu++11 -fpermissive
 
 DEPENDPATH += src
 INCLUDEPATH += src
@@ -23,7 +24,9 @@ HEADERS += \
     src/timer.h \
     src/collision_avoidance.h \
     src/test.h \
-    src/pidController.h
+    src/pidController.h \
+    src/channel.h \
+    src/channel
 SOURCES += src/soccerMain.cpp \
     src/robo.cpp \
     src/master.cpp \
@@ -43,3 +46,5 @@ dox.depends = FORCE
 
 # somewhere else in the *.pro file
 QMAKE_EXTRA_TARGETS += dox
+
+

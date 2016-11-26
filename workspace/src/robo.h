@@ -10,6 +10,7 @@
 #include "angle.h"
 #include "position.h"
 #include "math.h"
+#include "channel.h"
 
 
 class Robo: public RoboControl
@@ -21,8 +22,12 @@ public:
                                             pidAngle( 35, 3, 1),
                                             pidDistance( 150, 0,0){}
    Robo(RoboControl& other): RoboControl(other){}
-
+   void run(cpp::channel<Position> position);
+private:
+   Position targetPosition;
 };
+
+
 
 void driveSoFast(RoboControl& robo1, RawBall &ball, Position  obstPos,pidController &pidAngle, pidController &pidDistance);
 

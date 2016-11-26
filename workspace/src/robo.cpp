@@ -1,6 +1,43 @@
 #include "robo.h"
-#include "angle.h"
 
+
+/** To complete task 2.1 part 1, we have to implement multithreading it seems
+  * like. We will have problems controlling all robots at the same time without
+  */
+void Robo::run(cpp::channel<Position> positionCh) {
+    while (1) {
+    }
+}
+
+/**
+TEST(ChannelTest, SelectRecv)
+{
+  cpp::channel<char> c;
+  cpp::ichannel<char> in(c);
+  char i = '\0';
+
+  std::thread a(send_chars<'F'>, c);
+  cpp::thread_guard a_guard(a);
+
+  cpp::select().recv_only(c, i).wait();
+  EXPECT_EQ('A', i);
+
+  cpp::select().recv(c, i, [](){}).wait();
+  EXPECT_EQ('B', i);
+
+  cpp::select().recv_only(in, i).wait();
+  EXPECT_EQ('C', i);
+
+  cpp::select().recv(in, i, [](){}).wait();
+  EXPECT_EQ('D', i);
+
+  cpp::select().recv(c, [&i](const char k) { i = k; }).wait();
+  EXPECT_EQ('E', i);
+
+  cpp::select().recv(in, [&i](const char k) { i = k; }).wait();
+  EXPECT_EQ('F', i);
+}
+*/
 
 void driveSoFast(RoboControl& robo1, RawBall &ball, Position obstPos ,pidController &pidAngle, pidController &pidDistance){
     usleep(10000);
