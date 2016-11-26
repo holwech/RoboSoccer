@@ -72,7 +72,7 @@ void Test::testMenu() {
             cout << "Running 10: Milestone 2.1 part 1" << endl;
             milestone21part1();
             break;
-        case 7:
+        case 11:
             cout << "Running 7: Penalty Shooting"<<endl;
             penalty();
             break;
@@ -381,15 +381,41 @@ void Test::do_goalkeeper_kick(RoboControl& robogoalkicker, RoboControl& robo_blu
         cout << "Hello dist2" << endl;
 
         }
-
+   ///////////////////// Start Soung: use Targetpoint between 2 blue robots with largest distance
 
     cout << Targetpoint.GetY() << endl;
     cout << Targetpoint.GetX() << endl;
+    cout << "testtest-----"<<endl;
+    double ballx,bally,initrobox,initroboy,delta,goaly,goalx,k;
 
+    robogoalkicker.GotoPos(Targetpoint);
 
-    robogoalkicker.TurnAbs(ourball.GetPos().AngleOfLineToPos(Targetpoint).Deg());
+    delta = 0.15;
 
-    cout << ourball.GetPos().AngleOfLineToPos(Targetpoint).Deg() << endl;
+    goalx = Targetpoint.GetX();
+    goaly = Targetpoint.GetY();
+
+    ballx = ourball.GetX();
+    bally = ourball.GetY();
+
+    k = (goaly-bally)/(goalx-ballx);
+
+    initrobox = ballx+delta;
+    initroboy = bally + delta*k;
+
+    robogoalkicker.GotoXY(initrobox,initroboy,50,true);
+//     robogoalkicker.GotoPos(Targetpoint);
+    robogoalkicker.TurnAbs(-atan(k)*180/3.14159);
+    cout<<atan(k)<<endl;
+//    robogoalkicker.TurnAbs(180);
+//    robogoalkicker.TurnAbs(ourball.GetPos().AngleOfLineToPos(Targetpoint).Deg());
+
+//    cout << ourball.GetPos().AngleOfLineToPos(Targetpoint).Deg() << endl;
+    cout<<initrobox<<endl;
+    cout<<initroboy<<endl;
+    cout<<"-------"<<endl;
+    cout<<ballx<<endl;
+    cout<<bally<<endl;
 
 /*
 
