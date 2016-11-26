@@ -62,7 +62,7 @@ Force CA::forceAtPoints(Position& position, vector<Position>& obstacles) {
   * positive indicates that target is on the left side of the obstacle.
   */
 double CA::getPassSide(Position& basePos, Position& target, Position& obstacle) {
-    bool debug = true;
+    bool debug = false;
     Angle baseToTarget = basePos.AngleOfLineToPos(target);
     Angle baseToObstacle = basePos.AngleOfLineToPos(obstacle);
 

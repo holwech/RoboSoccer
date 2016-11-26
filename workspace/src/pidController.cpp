@@ -20,7 +20,7 @@ pidController::pidController(double input_Kp, double input_Ki, double input_Kd)
 }
 
 void pidController::saveNewErr(double diff){
-    if(error_sign == diff/abs(diff) || error_sign == 0){
+    if(error_sign == diff/fabs(diff) || error_sign == 0){
         double tempErrA = diff;
         double tempErrB;
         for (int i = 0; i < NUM_SAVED_ERR; i++){
@@ -35,17 +35,15 @@ void pidController::saveNewErr(double diff){
         }
         prevErr[0] = diff;
     }
-    error_sign = diff/abs(diff);
+    error_sign = diff/fabs(diff);
+    cout << "Diff: " << diff << endl;
     for (int i = 0; i < NUM_SAVED_ERR; i++){
          cout << i << ": " << prevErr[i] << endl;
     }
-    cout << endl;
+    //cout << endl;
 }
 void pidController::updateInput(double error){
     saveNewErr(error);
-}
-void pidController::setError(double error){
-    err = error;
 }
 void pidController::saveNewInput(double input){
     double tempInpA = input;
