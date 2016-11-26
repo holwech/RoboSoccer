@@ -292,7 +292,7 @@ void Test::goalkeeper() {
 
 
 void Test::do_goalkeeper_kick(RoboControl& robogoalkicker, RoboControl& robo_blue_1, RoboControl& robo_blue_2,RoboControl& robo_blue_3, RawBall& ourball){
-
+/*
     double xstart = 1; // on penlaty line
     double ystart = 0.4; // on penalty line
 
@@ -353,8 +353,8 @@ void Test::do_goalkeeper_kick(RoboControl& robogoalkicker, RoboControl& robo_blu
             robogoalkicker.TurnAbs(0);
              }
     }
-
-
+*/
+//----------------------------
 
     //int port = 0;       // Describes between which blue robots the ball should pass - 0: between small and midpos - 1: between midpos and larg
 
@@ -454,8 +454,61 @@ void Test::do_goalkeeper_kick(RoboControl& robogoalkicker, RoboControl& robo_blu
         Targetpoint.SetX(posvect[1][midpo] + 0.5*(posvect[1][larg]-posvect[1][midpo]));
         Targetpoint.SetY(posvect[2][midpo] + 0.5*(posvect[2][larg]-posvect[2][midpo]));
         cout << "Hello dist2" << endl;
-
         }
+//    ----------------------------------
+    Position pos1(1, 0);
+    Position pos2(1.27, -0.35);
+    Position pos3(1.27, 0.35);
+
+    double goalx, goaly,ballx, bally, initrobox, initroboy;
+    Angle ang;
+    double delta = 0.15;
+
+    goalx = Targetpoint.GetX();
+    goaly = Targetpoint.GetY();
+
+
+       // robogoalkicker.GotoXY(0,0,160,true);
+        robogoalkicker.GotoPos(pos1);
+         while(robogoalkicker.GetPos().DistanceTo(pos1)>0.1);
+
+        if(ourball.GetY()>0)
+        {
+
+            robogoalkicker.GotoPos(pos2);
+            while(robogoalkicker.GetPos().DistanceTo(pos2)>0.1);
+        }
+        else
+        {
+
+            robogoalkicker.GotoPos(pos3);
+            while(robogoalkicker.GetPos().DistanceTo(pos3)>0.1);
+        }
+        ballx = ourball.GetX();
+        bally = ourball.GetY();
+
+        initrobox = ballx+delta;
+        initroboy = bally + delta*(goaly-bally)/(goalx-ballx);
+
+        robogoalkicker.GotoXY(initrobox,initroboy,50,true);
+        Position initP(initrobox,initroboy);
+        while(robogoalkicker.GetPos().DistanceTo(initP)>0.05);
+
+
+        ang = robogoalkicker.GetPos().AngleOfLineToPos(ourball.GetPos());
+        robogoalkicker.TurnAbs(ang);
+        while((ang-robogoalkicker.GetPhi()).Deg()*(ang-robogoalkicker.GetPhi()).Deg()>0.1);
+
+
+        usleep(5000);
+        usleep(5000);
+
+
+        robogoalkicker.MoveMs(-255,-255,300);
+        usleep(3000);
+        robogoalkicker.MoveMs(255,255,500);
+
+
 /*   ///////////////////// Start Soung: use Targetpoint between 2 blue robots with largest distance
 
 
@@ -505,11 +558,11 @@ void Test::do_goalkeeper_kick(RoboControl& robogoalkicker, RoboControl& robo_blu
     */
 
 
-    double pi = 3.1415926535897;
+//    double pi = 3.1415926535897;
     //robogoalkicker.TurnAbs(180/pi * acos((abs(xball)-abs(Targetpoint.GetX()))/abs(ourball.GetPos().DistanceTo(Targetpoint.GetPos()))));
 
 
-    cout << 180/pi * acos(abs((abs(xball)-abs(Targetpoint.GetX())))/abs(ourball.GetPos().DistanceTo(Targetpoint.GetPos()))) << endl;
+/*    cout << 180/pi * acos(abs((abs(xball)-abs(Targetpoint.GetX())))/abs(ourball.GetPos().DistanceTo(Targetpoint.GetPos()))) << endl;
 
 
     double x_start_robo_kick = 0;
@@ -542,7 +595,7 @@ void Test::do_goalkeeper_kick(RoboControl& robogoalkicker, RoboControl& robo_blu
     //usleep(50000);       // Adjust orientation
     //robogoalkicker.TurnAbs(pi/180*abs((abs(xball)-abs(Targetpoint.GetX())))/abs(ourball.GetPos().DistanceTo(Targetpoint.GetPos())));
 
-    /*
+
 
     double dist_ball_target = 0;
     double angle_ball_target = 0;

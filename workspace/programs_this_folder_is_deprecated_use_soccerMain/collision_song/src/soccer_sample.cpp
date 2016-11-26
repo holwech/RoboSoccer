@@ -165,20 +165,12 @@ int main(void) {
                 }
 */
 
-//                double goalx, goaly,ballx, bally, initrobox, initroboy;
+                double goalx, goaly,ballx, bally, initrobox, initroboy;
                 Angle ang;
-             //   double delta = 0.15;
+                double delta = 0.15;
 
                 while(1)
                 {
-/*                    robo4;
-                    robo5.GotoPos(pos4);
-                    while(robo4.GetPos().DistanceTo(pos2)>0.1&&robo5.GetPos().DistanceTo(pos4)>0.1);
-                                        usleep(50000);
-                    robo4.GotoPos(pos1);
-                    robo5.GotoPos(pos3);
-                    while(robo4.GetPos().DistanceTo(pos1)>0.1&&robo5.GetPos().DistanceTo(pos3)>0.1);
-                    usleep(50000);
 
                    // robo4.GotoXY(0,0,160,true);
                     robo4.GotoPos(pos1);
@@ -205,18 +197,25 @@ int main(void) {
                     robo4.GotoXY(initrobox,initroboy,50,true);
                     Position initP(initrobox,initroboy);
                     while(robo4.GetPos().DistanceTo(initP)>0.05);
-*/
+
 //                   while(1);
 //                    robo.getDiffAngle()
 //                    robo.Turn();
                     ang = robo4.GetPos().AngleOfLineToPos(ball.GetPos());
                     robo4.TurnAbs(ang);
-                    while((ang-robo4.GetPhi()).Deg()*(ang-robo4.GetPhi()).Deg()<0.01);
+                    while((ang-robo4.GetPhi()).Deg()*(ang-robo4.GetPhi()).Deg()>0.1);
 
-                    robo4.GetPhi();
-                    ball.GetPhi();
-                    usleep(100000);
-/*                   ang = robo4.GetPhi().Rad();
+                 //   while(1);
+
+                    usleep(5000);
+                    usleep(5000);
+//                    robo4.GotoXY(ballx,bally,160);
+
+                    robo4.MoveMs(-255,-255,300);
+                    usleep(3000);
+                    robo4.MoveMs(255,255,500);
+
+                    /*                   ang = robo4.GetPhi().Rad();
                     tempx = ballx-robo4.GetX();
                     tempy = bally - robo4.GetY();
                     ang = acos((tempx*cos(ang)+tempy*sin(ang))/(tempx*tempx+tempy*tempy));
@@ -226,7 +225,7 @@ int main(void) {
                     cout << ang<<endl;
 
 */
-     //               while(1);
+                    while(1);
 
 
 
