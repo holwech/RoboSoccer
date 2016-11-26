@@ -103,6 +103,39 @@ void Test::milestone21part1() {
     cout << "2: { " << positions[1].GetX() << ", " << positions[1].GetY() << " }" << endl;
     cout << "3: { " << positions[2].GetX() << ", " << positions[2].GetY() << " }" << endl;
     cout << "4: { " << positions[3].GetX() << ", " << positions[3].GetY() << " }" << endl;
+
+    master.robo0.GotoPos(positions[0]);
+    master.robo1.GotoPos(positions[1]);
+    master.robo2.GotoPos(positions[3]);
+    int step = 1;
+
+    while (1) {
+        if (step == 1) {
+            if (
+                master.robo0.GetPos().DistanceTo(positions[0]) < 0.2 &&
+                master.robo1.GetPos().DistanceTo(positions[1]) < 0.2 &&
+                master.robo2.GetPos().DistanceTo(positions[3]) < 0.2)
+            {
+                cout << "Step 1 reached" << endl;
+                master.robo0.GotoPos(positions[2]);
+                master.robo1.GotoPos(positions[3]);
+                master.robo2.GotoPos(positions[1]);
+                step = 2;
+            }
+        } else if (step == 2) {
+            if (
+                master.robo0.GetPos().DistanceTo(positions[2]) < 0.2 &&
+                master.robo1.GetPos().DistanceTo(positions[3]) < 0.2 &&
+                master.robo2.GetPos().DistanceTo(positions[1]) < 0.2)
+            {
+                cout << "Step 2 reached" << endl;
+                master.robo0.GotoPos(positions[0]);
+                master.robo1.GotoPos(positions[1]);
+                master.robo2.GotoPos(positions[3]);
+                step = 1;
+            }
+        }
+    }
 }
 
 void Test::getPassSide() {
