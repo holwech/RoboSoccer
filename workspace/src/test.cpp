@@ -24,6 +24,7 @@ void Test::testMenu() {
         cout << "9: Goalkeeper's kick" << endl;
         cout << "10: Milestone 2.1 part 1" << endl;
         cout << "11: penalty shooting" << endl;
+        cout << "12: Before penalty" << endl;
 
         int program;
         cin >> program;
@@ -75,6 +76,10 @@ void Test::testMenu() {
         case 11:
             cout << "Running 11: Penalty Shooting"<<endl;
             penalty();
+            break;
+        case 12:
+            cout << "Running 12: Before Penalty"<<endl;
+            beforePenalty();
             break;
         default:
             stop = true;
@@ -239,11 +244,45 @@ void Test::collisionAvoidance(RoboControl& roboMove, RoboControl& roboObs) {
 
 void Test::beforePenalty() {
     cout << "Currently not working, loser" << endl;
+    master.robo0.GotoXY(0.3,0, 60, true);
+    master.robo1.GotoXY(1.2, -0.8, 100, false);
+    master.robo2.GotoXY(1.2, 0.8, 100, false);
 }
 void Test::penalty(){
     cout<< "this is the test for Penalty shooting"<<endl;
+    Position pos1(master.ball.GetX()+0.5,master.ball.GetY());
+    Position pos2(master.ball.GetX()+0.3,master.ball.GetY());
+    Position pos3(master.ball.GetX()+0.1,master.ball.GetY());
+    int attpos=0;
+    while (attpos==0){
 
-}
+        cout << "Moving to pos 1"<< endl << endl;
+        master.robo0.CruisetoXY(pos1.GetX(), pos1.GetY(), 150, true);
+        usleep(5000);
+        if (master.robo0.GetPos().DistanceTo(pos1) < 0.05) attpos=1;
+    }
+    while (attpos==1){
+
+        cout << "Moving to pos2" << endl << endl;
+        master.robo0.GotoXY(pos2.GetX(), pos2.GetY(), 120, true);
+        usleep(5000);
+        if (master.robo0.GetPos().DistanceTo(pos2) < 0.1) attpos=2;
+   }
+    while (attpos==2){
+
+        cout << "Moving to " << pos3 << endl << endl;
+        master.robo0.CruisetoXY(pos3.GetX(), pos3.GetY(), 100, true);
+        usleep(5000);
+        if (master.robo0.GetPos().DistanceTo(pos3) < 0.1) attpos=3;
+   }
+    if (attpos==3){
+        cout << "Moving forward" << endl;
+        master.robo0.MoveMs(200,200,2000);
+        usleep(5000);
+        attpos=4;
+    }
+
+   }
 
 void Test::goalkeeper() {
     while(1) {
