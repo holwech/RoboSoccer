@@ -21,6 +21,7 @@ void Test::testMenu() {
         cout << "7: Pull vector" << endl;
         cout << "8: getPassSide" << endl;
         cout << "9: Goalkeeper's kick" << endl;
+        cout << "10: Milestone 2.1 part 1" << endl;
         int program;
         cin >> program;
         bool stop = false;
@@ -45,7 +46,7 @@ void Test::testMenu() {
             goalkeeper();
             break;
         case 5:
-            cout << "Running 5: Collision avoidance" << endl;
+            cout << "Running 5: Collision avoidance (2.1 - part 1)" << endl;
             collisionAvoidance(master.robo0, master.robo1);
             break;
         case 6:
@@ -64,6 +65,10 @@ void Test::testMenu() {
             cout << "Running 9: Goalkeeper's kick" << endl;
             do_goalkeeper_kick(master.robo1, master.robo3, master.robo4, master.robo5, master.ball);
             break;
+        case 10:
+            cout << "Running 10: Milestone 2.1 part 1" << endl;
+            milestone21part1();
+            break;
         default:
             stop = true;
             break;
@@ -73,6 +78,24 @@ void Test::testMenu() {
         }
     }
     cout << "Leaving test menu" << endl;
+}
+
+void Test::milestone21part1() {
+    cout << "To run milestone 2.1 part 1, 4 positions are required." << endl;
+    vector<Position> positions;
+    for (int i = 0; i < 4; i++) {
+        double posX, posY;
+        cout << "Coordinate " << i + 1 << ", X: ";
+        cin >> posX;
+        cout << "Coordinate " << i + 1 << ", Y: ";
+        cin >> posY;
+        positions.push_back(Position(posX, posY));
+    }
+    cout << "Setup complete. Coordinates are:" << endl;
+    cout << "1: { " << positions[0].GetX() << ", " << positions[0].GetY() << " }" << endl;
+    cout << "2: { " << positions[1].GetX() << ", " << positions[1].GetY() << " }" << endl;
+    cout << "3: { " << positions[2].GetX() << ", " << positions[2].GetY() << " }" << endl;
+    cout << "4: { " << positions[3].GetX() << ", " << positions[3].GetY() << " }" << endl;
 }
 
 void Test::getPassSide() {

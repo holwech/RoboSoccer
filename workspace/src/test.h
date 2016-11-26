@@ -7,7 +7,6 @@
 #include "master.h"
 #include "pidController.h"
 #include "robo.h"
-#include <thread>
 
 class Test
 {
@@ -15,6 +14,7 @@ public:
     Test(Master& master);
     void testMenu();
 private:
+    void milestone21part1();
     void pullVector();
     void collisionAvoidance(RoboControl& roboMove, RoboControl& roboObs);
     void getPassSide();
