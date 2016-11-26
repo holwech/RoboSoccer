@@ -72,8 +72,8 @@ void Test::testMenu() {
             cout << "Running 10: Milestone 2.1 part 1" << endl;
             milestone21part1();
             break;
-        case 7:
-            cout << "Running 7: Penalty Shooting"<<endl;
+        case 11:
+            cout << "Running 11: Penalty Shooting"<<endl;
             penalty();
             break;
         default:
@@ -209,6 +209,7 @@ void Test::beforePenalty() {
 }
 void Test::penalty(){
     cout<< "this is the test for Penalty shooting"<<endl;
+
 }
 
 void Test::goalkeeper() {
