@@ -1,6 +1,8 @@
 #include "test.h"
 #include <limits>
 #include "robo.h"
+#include "stdlib.h"
+#include"math.h"
 
 Test::Test(Master& master) : master(master)
 {
@@ -247,7 +249,7 @@ void Test::do_goalkeeper_kick(RoboControl& robogoalkicker, RoboControl& robo_blu
     }
 
 
-/*
+
     //int port = 0;       // Describes between which blue robots the ball should pass - 0: between small and midpos - 1: between midpos and larg
 
     double dist1 = 0;  // Check order of blue robots
@@ -258,8 +260,10 @@ void Test::do_goalkeeper_kick(RoboControl& robogoalkicker, RoboControl& robo_blu
     double yblue_3 = robo_blue_3.GetY();
 
 
-   double posvect[4][4];
+    double posvect[4][4];
 
+    posvect[1][0] = 0;
+    posvect[2][0] = 0;
     posvect[1][1] = robo_blue_1.GetX();
     posvect[2][1] = robo_blue_1.GetY();
     posvect[1][2] = robo_blue_2.GetX();
@@ -316,19 +320,94 @@ void Test::do_goalkeeper_kick(RoboControl& robogoalkicker, RoboControl& robo_blu
     }
 
 
-    if(dist1>dist2){
+    cout << yblue_1 << endl;
+    cout << yblue_2 << endl;
+    cout << yblue_3 << endl;
 
-        Position Targetpoint(0.5,0.5);//posvect[1][midpo] + 0.5*(posvect[1][small]-posvect[1][midpo]),posvect[2][midpo]+ 0.5*(posvect[2][small]-posvect[2][midpo]));
-    }else{
-
-        Position Targetpoint(0.5,0.5);//posvect[1][midpo] + 0.5*(posvect[1][larg]-posvect[1][midpo]),posvect[2][midpo]+ 0.5*(posvect[2][larg]-posvect[2][midpo]));
-    }
-
+    cout << small << endl;
+    cout << midpo << endl;
+    cout << larg << endl;
 
     cout << dist1 << endl;
     cout << dist2 << endl;
 
+    //double pi = 3.1415926535897;
+    Position Targetpoint(0,0);
 
+
+    if(dist1>=dist2){
+
+        Targetpoint.SetX(posvect[1][midpo] + 0.5*(posvect[1][small]-posvect[1][midpo]));
+        Targetpoint.SetY(posvect[2][midpo] + 0.5*(posvect[2][small]-posvect[2][midpo]));
+        cout << "Hello dist1" << endl;
+
+        }else{
+
+        Targetpoint.SetX(posvect[1][midpo] + 0.5*(posvect[1][larg]-posvect[1][midpo]));
+        Targetpoint.SetY(posvect[2][midpo] + 0.5*(posvect[2][larg]-posvect[2][midpo]));
+        cout << "Hello dist2" << endl;
+
+        }
+
+
+    cout << Targetpoint.GetY() << endl;
+    cout << Targetpoint.GetX() << endl;
+
+
+    robogoalkicker.TurnAbs(ourball.GetPos().AngleOfLineToPos(Targetpoint).Deg());
+
+    cout << ourball.GetPos().AngleOfLineToPos(Targetpoint).Deg() << endl;
+
+/*
+
+    double dist_ball_target = 0;
+    double angle_ball_target = 0;
+    double pi = 3.1415926535897;
+
+    dist_ball_target = ourball.GetPos().DistanceTo(Targetpoint.GetPos());
+    angle_ball_target = 180/pi * acos((abs(Targetpoint.GetY())-abs(xball))/abs(dist_ball_target)); // Pi
+
+    cout << dist_ball_target << endl;
+    cout << angle_ball_target << endl;
+*/
+
+/*
+    double xtarget;
+    double ytarget;
+
+    if(dist1>=dist2){
+
+    xtarget = 5;//posvect[1][midpo] + 0.5*(posvect[1][small]-posvect[1][midpo]);
+    ytarget = 5;//posvect[2][midpo]+ 0.5*(posvect[2][small]-posvect[2][midpo]);
+
+     cout << "Hello dist1" << endl;
+
+    }else{
+
+    xtarget = 5;//posvect[1][midpo] + 0.5*(posvect[1][larg]-posvect[1][midpo]);
+    ytarget = 5;//posvect[2][midpo]+ 0.5*(posvect[2][larg]+posvect[2][midpo]);
+
+     cout << "Hello dist2" << endl;
+
+    }
+
+
+    Position Targetpoint(0,0);
+    Targetpoint.SetX(posvect[1][midpo] + 0.5*(posvect[1][small]-posvect[1][midpo]));
+    Targetpoint.SetY(posvect[2][midpo]+ 0.5*(posvect[2][small]-posvect[2][midpo]));
+    cout << "Hello dist1" << endl;
+
+    //Targetpoint(posvect[1][midpo] + 0.5*(posvect[1][larg]-posvect[1][midpo]),posvect[2][midpo]+ 0.5*(posvect[2][larg]+posvect[2][midpo]));
+    cout << "Hello dist2" << endl;
+    cout << Targetpoint.GetY() << endl;
+    cout << Targetpoint.GetX() << endl;
+
+    cout << posvect[1][midpo] + 0.5*(posvect[1][small]-posvect[1][midpo]) << endl;
+    cout << posvect[2][midpo]+ 0.5*(posvect[2][small]-posvect[2][midpo]) << endl;
+
+*/
+
+/*
 
 
 
