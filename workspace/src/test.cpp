@@ -24,6 +24,7 @@ void Test::testMenu() {
         cout << "9: Goalkeeper's kick" << endl;
         cout << "10: Milestone 2.1 part 1" << endl;
         cout << "11: penalty shooting" << endl;
+        cout << "12: Before penalty" << endl;
 
         int program;
         cin >> program;
@@ -73,8 +74,12 @@ void Test::testMenu() {
             milestone21part1();
             break;
         case 11:
-            cout << "Running 7: Penalty Shooting"<<endl;
+            cout << "Running 11: Penalty Shooting"<<endl;
             penalty();
+            break;
+        case 12:
+            cout << "Running 12: Before Penalty"<<endl;
+            beforePenalty();
             break;
         default:
             stop = true;
@@ -239,10 +244,45 @@ void Test::collisionAvoidance(RoboControl& roboMove, RoboControl& roboObs) {
 
 void Test::beforePenalty() {
     cout << "Currently not working, loser" << endl;
+    master.robo0.GotoXY(0.3,0, 60, true);
+    master.robo1.GotoXY(1.2, -0.8, 100, false);
+    master.robo2.GotoXY(1.2, 0.8, 100, false);
 }
 void Test::penalty(){
     cout<< "this is the test for Penalty shooting"<<endl;
-}
+    Position pos1(master.ball.GetX()+0.5,master.ball.GetY());
+    Position pos2(master.ball.GetX()+0.3,master.ball.GetY());
+    Position pos3(master.ball.GetX()+0.1,master.ball.GetY());
+    int attpos=0;
+    while (attpos==0){
+
+        cout << "Moving to pos 1"<< endl << endl;
+        master.robo0.CruisetoXY(pos1.GetX(), pos1.GetY(), 150, true);
+        usleep(5000);
+        if (master.robo0.GetPos().DistanceTo(pos1) < 0.05) attpos=1;
+    }
+    while (attpos==1){
+
+        cout << "Moving to pos2" << endl << endl;
+        master.robo0.GotoXY(pos2.GetX(), pos2.GetY(), 120, true);
+        usleep(5000);
+        if (master.robo0.GetPos().DistanceTo(pos2) < 0.1) attpos=2;
+   }
+    while (attpos==2){
+
+        cout << "Moving to " << pos3 << endl << endl;
+        master.robo0.CruisetoXY(pos3.GetX(), pos3.GetY(), 100, true);
+        usleep(5000);
+        if (master.robo0.GetPos().DistanceTo(pos3) < 0.1) attpos=3;
+   }
+    if (attpos==3){
+        cout << "Moving forward" << endl;
+        master.robo0.MoveMs(200,200,2000);
+        usleep(5000);
+        attpos=4;
+    }
+
+   }
 
 void Test::goalkeeper() {
     while(1) {
@@ -285,7 +325,7 @@ void Test::do_goalkeeper_kick(RoboControl& robogoalkicker, RoboControl& robo_blu
             while((yball) - robogoalkicker.GetY() > 0.02){        // Move behind the ball
                   robogoalkicker.GotoXY(xrobot,yball);}
             cout << "Test" << endl;
-            if(robogoalkicker.GetPhi().Deg()!=0){              // Adjust orientation
+           if(robogoalkicker.GetPhi().Deg()!=0){              // Adjust orientation
             robogoalkicker.TurnAbs(0);
             }
 
@@ -309,7 +349,7 @@ void Test::do_goalkeeper_kick(RoboControl& robogoalkicker, RoboControl& robo_blu
             while(robogoalkicker.GetY()-(yball) > 0.02){        // Move behind the ball
                   robogoalkicker.GotoXY(xrobot,yball);}
 
-            if(robogoalkicker.GetPhi().Deg()!=0){              // Adjust orientation
+           if(robogoalkicker.GetPhi().Deg()!=0){              // Adjust orientation
             robogoalkicker.TurnAbs(0);
              }
     }
@@ -397,7 +437,9 @@ void Test::do_goalkeeper_kick(RoboControl& robogoalkicker, RoboControl& robo_blu
     cout << dist1 << endl;
     cout << dist2 << endl;
 
-    //double pi = 3.1415926535897;
+
+
+
     Position Targetpoint(0,0);
 
 
@@ -414,17 +456,93 @@ void Test::do_goalkeeper_kick(RoboControl& robogoalkicker, RoboControl& robo_blu
         cout << "Hello dist2" << endl;
 
         }
+/*   ///////////////////// Start Soung: use Targetpoint between 2 blue robots with largest distance
 
 
     cout << Targetpoint.GetY() << endl;
     cout << Targetpoint.GetX() << endl;
+    cout << "testtest-----"<<endl;
+    double ballx,bally,initrobox,initroboy,delta,goaly,goalx,k;
 
+    robogoalkicker.GotoPos(Targetpoint);
 
-    robogoalkicker.TurnAbs(ourball.GetPos().AngleOfLineToPos(Targetpoint).Deg());
+    delta = 0.15;
+
+    goalx = Targetpoint.GetX();
+    goaly = Targetpoint.GetY();
+
+    ballx = ourball.GetX();
+    bally = ourball.GetY();
+
+    k = (goaly-bally)/(goalx-ballx);
+
+    initrobox = ballx+delta;
+    initroboy = bally + delta*k;
+
+    robogoalkicker.GotoXY(initrobox,initroboy,50,true);
+//     robogoalkicker.GotoPos(Targetpoint);
+    robogoalkicker.TurnAbs(-atan(k)*180/3.14159);
+    cout<<atan(k)<<endl;
+//    robogoalkicker.TurnAbs(180);
+//    robogoalkicker.TurnAbs(ourball.GetPos().AngleOfLineToPos(Targetpoint).Deg());
+
+//    cout << ourball.GetPos().AngleOfLineToPos(Targetpoint).Deg() << endl;
+    cout<<initrobox<<endl;
+    cout<<initroboy<<endl;
+    cout<<"-------"<<endl;
+    cout<<ballx<<endl;
+    cout<<bally<<endl;
+
+  ////////////// Turn
+
+*/
+
+    /*
+    usleep(50000);
+    robogoalkicker.TurnAbs(ourball.GetPos().AngleOfLineToPos(Targetpoint).Deg() + 180);
 
     cout << ourball.GetPos().AngleOfLineToPos(Targetpoint).Deg() << endl;
+    */
 
-/*
+
+    double pi = 3.1415926535897;
+    //robogoalkicker.TurnAbs(180/pi * acos((abs(xball)-abs(Targetpoint.GetX()))/abs(ourball.GetPos().DistanceTo(Targetpoint.GetPos()))));
+
+
+    cout << 180/pi * acos(abs((abs(xball)-abs(Targetpoint.GetX())))/abs(ourball.GetPos().DistanceTo(Targetpoint.GetPos()))) << endl;
+
+
+    double x_start_robo_kick = 0;
+    double y_start_robo_kick = 0;
+
+
+
+    if(yball>=Targetpoint.GetY()){
+    x_start_robo_kick = xball + 0.12*(xball - Targetpoint.GetX());
+    y_start_robo_kick = yball + 0.12*abs((yball - Targetpoint.GetY()));
+    }else{
+        x_start_robo_kick = xball + 0.12*(xball - Targetpoint.GetX());
+        y_start_robo_kick = yball - 0.12*abs((yball - Targetpoint.GetY()));
+            }
+    Position Traget_behind_ball(x_start_robo_kick,y_start_robo_kick);
+
+    while(robogoalkicker.GetPos().DistanceTo(Traget_behind_ball) > 0.01){        // Move behind the ball
+          robogoalkicker.GotoXY(x_start_robo_kick,y_start_robo_kick);
+
+    }
+
+     usleep(50000);           // Adjust orientation
+     robogoalkicker.TurnAbs(0);
+     usleep(50000);
+     robogoalkicker.GotoXY(xball,yball,160,true);
+     usleep(50000);
+     robogoalkicker.MoveMs(250,250,2000);
+     //robogoalkicker.Kick(100,0.0);
+
+    //usleep(50000);       // Adjust orientation
+    //robogoalkicker.TurnAbs(pi/180*abs((abs(xball)-abs(Targetpoint.GetX())))/abs(ourball.GetPos().DistanceTo(Targetpoint.GetPos())));
+
+    /*
 
     double dist_ball_target = 0;
     double angle_ball_target = 0;
