@@ -242,7 +242,7 @@ void Test::do_goalkeeper_kick(RoboControl& robogoalkicker, RoboControl& robo_blu
             while((yball) - robogoalkicker.GetY() > 0.02){        // Move behind the ball
                   robogoalkicker.GotoXY(xrobot,yball);}
             cout << "Test" << endl;
-            if(robogoalkicker.GetPhi().Deg()!=0){              // Adjust orientation
+           if(robogoalkicker.GetPhi().Deg()!=0){              // Adjust orientation
             robogoalkicker.TurnAbs(0);
             }
 
@@ -266,7 +266,7 @@ void Test::do_goalkeeper_kick(RoboControl& robogoalkicker, RoboControl& robo_blu
             while(robogoalkicker.GetY()-(yball) > 0.02){        // Move behind the ball
                   robogoalkicker.GotoXY(xrobot,yball);}
 
-            if(robogoalkicker.GetPhi().Deg()!=0){              // Adjust orientation
+           if(robogoalkicker.GetPhi().Deg()!=0){              // Adjust orientation
             robogoalkicker.TurnAbs(0);
              }
     }
@@ -354,7 +354,9 @@ void Test::do_goalkeeper_kick(RoboControl& robogoalkicker, RoboControl& robo_blu
     cout << dist1 << endl;
     cout << dist2 << endl;
 
-    //double pi = 3.1415926535897;
+
+
+
     Position Targetpoint(0,0);
 
 
@@ -373,15 +375,59 @@ void Test::do_goalkeeper_kick(RoboControl& robogoalkicker, RoboControl& robo_blu
         }
 
 
+
     cout << Targetpoint.GetY() << endl;
     cout << Targetpoint.GetX() << endl;
 
+  ////////////// Turn
 
-    robogoalkicker.TurnAbs(ourball.GetPos().AngleOfLineToPos(Targetpoint).Deg());
+
+
+    /*
+    usleep(50000);
+    robogoalkicker.TurnAbs(ourball.GetPos().AngleOfLineToPos(Targetpoint).Deg() + 180);
 
     cout << ourball.GetPos().AngleOfLineToPos(Targetpoint).Deg() << endl;
+    */
 
-/*
+    double pi = 3.1415926535897;
+    //robogoalkicker.TurnAbs(180/pi * acos((abs(xball)-abs(Targetpoint.GetX()))/abs(ourball.GetPos().DistanceTo(Targetpoint.GetPos()))));
+
+
+    cout << 180/pi * acos(abs((abs(xball)-abs(Targetpoint.GetX())))/abs(ourball.GetPos().DistanceTo(Targetpoint.GetPos()))) << endl;
+
+
+    double x_start_robo_kick = 0;
+    double y_start_robo_kick = 0;
+
+
+
+    if(yball>=Targetpoint.GetY()){
+    x_start_robo_kick = xball + 0.12*(xball - Targetpoint.GetX());
+    y_start_robo_kick = yball + 0.12*abs((yball - Targetpoint.GetY()));
+    }else{
+        x_start_robo_kick = xball + 0.12*(xball - Targetpoint.GetX());
+        y_start_robo_kick = yball - 0.12*abs((yball - Targetpoint.GetY()));
+            }
+    Position Traget_behind_ball(x_start_robo_kick,y_start_robo_kick);
+
+    while(robogoalkicker.GetPos().DistanceTo(Traget_behind_ball) > 0.01){        // Move behind the ball
+          robogoalkicker.GotoXY(x_start_robo_kick,y_start_robo_kick);
+
+    }
+
+     usleep(50000);           // Adjust orientation
+     robogoalkicker.TurnAbs(0);
+     usleep(50000);
+     robogoalkicker.GotoXY(xball,yball,160,true);
+     usleep(50000);
+     robogoalkicker.MoveMs(250,250,2000);
+     //robogoalkicker.Kick(100,0.0);
+
+    //usleep(50000);       // Adjust orientation
+    //robogoalkicker.TurnAbs(pi/180*abs((abs(xball)-abs(Targetpoint.GetX())))/abs(ourball.GetPos().DistanceTo(Targetpoint.GetPos())));
+
+    /*
 
     double dist_ball_target = 0;
     double angle_ball_target = 0;
