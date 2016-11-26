@@ -21,7 +21,6 @@ public:
     void saveNewErr(double diff);
     void saveNewInput(double input);
     double getInput();
-    void setError(double error);
 };
 
 #endif // PIDCONTROLLER_H

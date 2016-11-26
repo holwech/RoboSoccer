@@ -177,10 +177,10 @@ void Test::pullVector() {
 }
 
 void Test::pidCollision(RoboControl &robo, RawBall &ball, RoboControl &obstacle){
-    pidController pidAngle(40.0, 1, 1.0);
-    pidController pidDistance(150.0, 0.0, 0.0);
+    pidController pidAngle(15.0, 0, 1.0);
+    pidController pidDistance(80.0, 0.0, 0.0);
     while(1){
-        driveSoFast(robo, ball, obstacle.GetPos(), pidAngle, pidDistance);
+        driveWithCA(robo, ball, obstacle.GetPos(), pidAngle, pidDistance);
     }
 
 }
