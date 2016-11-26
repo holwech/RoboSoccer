@@ -16,6 +16,7 @@ void Test::testMenu() {
         cout << "4: Goalkeeper" << endl;
         cout << "6: Obstacle" << endl;
         cout << "5: Collision avoidance" << endl;
+        cout << "7: penalty shooting" << endl;
         int program;
         cin >> program;
         bool stop = false;
@@ -45,6 +46,10 @@ void Test::testMenu() {
         case 5:
             cout << "Running 5: Collision avoidance" << endl;
             collisionAvoidance(master.robo0, master.robo1);
+            break;
+        case 7:
+            cout << "Running 7: Penalty Shooting"<<endl;
+            penalty();
             break;
         default:
             stop = true;
@@ -124,6 +129,9 @@ void Test::collisionAvoidance(RoboControl& roboMove, RoboControl& roboObs) {
 
 void Test::beforePenalty() {
     cout << "Currently not working, loser" << endl;
+}
+void Test::penalty(){
+    cout<< "this is the test for Penalty shooting"<<endl;
 }
 
 void Test::goalkeeper() {

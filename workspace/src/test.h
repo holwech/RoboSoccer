@@ -17,6 +17,7 @@ private:
     void collisionAvoidance(RoboControl& roboMove, RoboControl& roboObs);
     void testAll();
     void beforePenalty();
+    void penalty();
     void goalkeeper();
     void pidCollision(RoboControl &robo, RawBall &ball, RoboControl& obstacle);
     Master master;
