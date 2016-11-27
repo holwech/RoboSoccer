@@ -5,7 +5,7 @@
 #include <vector>
 #include "position.h"
 
-#define CUTOFF_RADIUS 0.5
+#define CUTOFF_RADIUS 0.3
 
 struct Point {
     double X;

@@ -59,7 +59,9 @@ void pidController::saveNewInput(double input){
 }
 double pidController::getInput(){
     //u[k] = u[k-1] + a*e[k] + b*e[k-1] + c*e[k-2]
-    double u = prevInp[0] + a*prevErr[0] + b*prevErr[1] + c*prevErr[2];
+    //double u = prevInp[0] + a*prevErr[0] + b*prevErr[1] + c*prevErr[2];
+    double derivative = ((prevErr[0]-prevErr[1])/TIMESTEP + (prevErr[1]-prevErr[2])/TIMESTEP)/2;
+    double u = Kp*prevErr[0] + Ki*(prevErr[0]+prevErr[1] + prevErr[2])*TIMESTEP + Kd*(derivative);
     saveNewInput(u);
     return u;
 }

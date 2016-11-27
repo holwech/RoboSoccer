@@ -54,7 +54,7 @@ void Test::testMenu() {
             break;
         case 6:
             cout << "Running 6: Obstacle" << endl;
-            pidCollision(master.robo1, master.ball, master.robo2);
+            pidCollision(master.robo0, master.ball, master.robo2);
             break;
         case 7:
             cout << "Running 7: Pull vector" << endl;
@@ -179,7 +179,7 @@ void Test::pullVector() {
 }
 
 void Test::pidCollision(Robo &robo, RawBall &ball, Robo &obstacle){
-    pidController pidAngle(15.0, 0, 1.0);
+    pidController pidAngle(50.0, 0.5, 1);
     pidController pidDistance(80.0, 0.0, 0.0);
     while(1){
         robo.driveWithCA(robo, ball, obstacle.GetPos(), pidAngle, pidDistance);

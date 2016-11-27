@@ -1,6 +1,6 @@
 #include "robo.h"
 #include "collision_avoidance.h"
-#define CA_SCALE 20 //How munch influenced by CA, lower is more. test: 20
+#define CA_SCALE 5 //How munch influenced by CA, lower is more. test: 20
 
 /** To complete task 2.1 part 1, we have to implement multithreading it seems
   * like. We will have problems controlling all robots at the same time without
@@ -18,26 +18,41 @@ void Robo::driveWithCA(RoboControl& robo1, RawBall &ball, Position obstPos ,pidC
         pidDistance.updateInput(dist_error);
     }
     else{
-        pidDistance.updateInput(1);
+        pidDistance.updateInput(1.2);
     }
-
     double angleErrorRad = getAngleErrRad(ball.GetPos(), obstPos);
-    pidAngle.updateInput(angleErrorRad);
+    double sinAngleErrorRad = sin(angleErrorRad/2);
+    pidAngle.updateInput(sinAngleErrorRad);
     double driveSpeed = pidDistance.getInput();
+    //std::cout << "angleErrorRad: " << angleErrorRad << std::endl;
+    double angleInput = pidAngle.getInput();
+    //std::cout << "angleInput: " << angleInput<< std::endl;
 
     // the cos will make it drive fastest in the right direction, and also back up and turn if behind you
-    double rightWheel =driveSpeed*cos(angleErrorRad) + pidAngle.getInput();
-    double leftWheel = driveSpeed*cos(angleErrorRad) - pidAngle.getInput();
+    double rightWheel =driveSpeed*cos(angleErrorRad) + angleInput;
+    double leftWheel = driveSpeed*cos(angleErrorRad) - angleInput;
     robo1.MoveMs(leftWheel,rightWheel, 100, 10);
     //out << endl <<robo1.GetPos().AngleOfLineToPos(ball.GetPos())-robo1.GetPhi() << endl;
     //robo1.TurnAbs(robo1.GetPos().AngleOfLineToPos(ball.GetPos())-robo1.GetPhi());
+
 }
 
 double Robo::getAngleWithCA(Force obstacleForce, Position targetPos){
 
     double targetDeg = this->GetPos().AngleOfLineToPos(targetPos).Deg();
     double caScale = obstacleForce.len/(CA_SCALE + obstacleForce.len);
-    double targetDegWithCA = obstacleForce.deg*(caScale) + targetDeg*(1 - caScale);
+    double obstacleAngle = obstacleForce.deg;
+    double ajusted_obstacleAngle = ((int)obstacleAngle + 4*180) % (2*180);
+    double ajustedTargetDeg = ((int)targetDeg + 4*180) % (2*180);
+    if(fabs(ajusted_obstacleAngle - ajustedTargetDeg) < fabs(obstacleAngle - targetDeg)){
+        obstacleAngle = ajusted_obstacleAngle;
+        targetDeg = ajustedTargetDeg;
+    }
+    //cout << fabs(ajusted_obstacleAngle - ajustedTargetDeg) << " and " << fabs(obstacleAngle - targetDeg) << endl;
+    double targetDegWithCA = obstacleAngle*(caScale) + targetDeg*(1 - caScale);
+    //cout << "targetDeg : " << targetDeg << endl;
+    //cout << "obstacleForce.deg : " << obstacleAngle << endl;
+    //cout << "targetDegWithCA : " << targetDegWithCA << endl;
     return targetDegWithCA;
 //    //get the magnitude of force
 //    int obstAngleSign = obstAngleDiffRad/fabs(obstAngleDiffRad);
