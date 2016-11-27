@@ -81,6 +81,16 @@ double CA::getPassSide(Position& basePos, Position& target, Position& obstacle) 
     return passSide;
 }
 
+void CA::toPerp(Force& force, double passSide) {
+    if (passSide < 0) {
+        force.X = force.Y;
+        force.Y = -force.X;
+    } else {
+        force.X = -force.Y;
+        force.Y = force.X;
+    }
+}
+
 
 /** Calculates the pull from the force given by the obstacle.
   * That is, a vector value that is perpendicular to the force from the obstacle
@@ -100,20 +110,33 @@ Force CA::getPull(Position& basePos, Position& target, Position& obstacle) {
         Force temp = {0.0, 0.0, 0.0, 0.0, 0.0};
         return temp;
     }
-
     Force force = getForce(basePos.GetX(), basePos.GetY(), obstacle.GetX(), obstacle.GetY());
-    Force perpForce;
-    if (passSide < 0) {
-        perpForce.X = force.Y;
-        perpForce.Y = -force.X;
-    } else {
-        perpForce.X = -force.Y;
-        perpForce.Y = force.X;
-    }
-    perpForce.len = sqrt(pow(perpForce.X, 2) + pow(perpForce.X, 2));
-    Position forcePos(basePos.GetX() + perpForce.X, basePos.GetY() + perpForce.Y);
+    toPerp(force, passSide);
+
+    force.len = sqrt(pow(force.X, 2) + pow(force.X, 2));
+    Position forcePos(basePos.GetX() + force.X, basePos.GetY() + force.Y);
     Angle forceAngle = basePos.AngleOfLineToPos(forcePos);
-    perpForce.rad = forceAngle.Get();
-    perpForce.deg = forceAngle.Deg();
-    return perpForce;
+    force.rad = forceAngle.Get();
+    force.deg = forceAngle.Deg();
+    return force;
+}
+
+Force CA::operator+=(const Force& force) {
+   Force newForce;
+   newForce
+   return box;
+}
+
+Fraction& operator += (const Fraction &obj)
+{
+.  num = (num * obj.den) + (obj.num * den) ;
+.  den = obj.den * den ;
+.  return (*this) ;
+}
+
+Force CA::getTotalPull(Position basePos, Position target, vector<Position>& team, vector<Position>& otherTeam, bool gravity = false) {
+    Force totalForce = {0.0, 0.0, 0.0, 0.0, 0.0};
+    for (Position &obstacle : team) {
+        Force temp = getPull(basePos, target, obstacle);
+    }
 }
