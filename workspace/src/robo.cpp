@@ -31,7 +31,9 @@ void Robo::driveWithCA(RoboControl& robo1, RawBall &ball, Position obstPos ,pidC
     // the cos will make it drive fastest in the right direction, and also back up and turn if behind you
     double rightWheel =driveSpeed*cos(angleErrorRad) + angleInput;
     double leftWheel = driveSpeed*cos(angleErrorRad) - angleInput;
-    robo1.MoveMs(leftWheel,rightWheel, 100, 10);
+    rightWheel += leftWheel;
+    leftWheel = leftWheel;
+    //robo1.MoveMs(leftWheel,rightWheel, 100, 10);
     //out << endl <<robo1.GetPos().AngleOfLineToPos(ball.GetPos())-robo1.GetPhi() << endl;
     //robo1.TurnAbs(robo1.GetPos().AngleOfLineToPos(ball.GetPos())-robo1.GetPhi());
 
@@ -50,9 +52,9 @@ double Robo::getAngleWithCA(Force obstacleForce, Position targetPos){
     }
     //cout << fabs(ajusted_obstacleAngle - ajustedTargetDeg) << " and " << fabs(obstacleAngle - targetDeg) << endl;
     double targetDegWithCA = obstacleAngle*(caScale) + targetDeg*(1 - caScale);
-    //cout << "targetDeg : " << targetDeg << endl;
-    //cout << "obstacleForce.deg : " << obstacleAngle << endl;
-    //cout << "targetDegWithCA : " << targetDegWithCA << endl;
+    cout << "targetDeg : " << targetDeg << endl;
+    cout << "obstacleForce.deg : " << obstacleAngle << endl;
+    cout << "targetDegWithCA : " << targetDegWithCA << endl;
     return targetDegWithCA;
 //    //get the magnitude of force
 //    int obstAngleSign = obstAngleDiffRad/fabs(obstAngleDiffRad);
