@@ -82,12 +82,13 @@ double CA::getPassSide(Position& basePos, Position& target, Position& obstacle) 
 }
 
 void CA::toPerp(Force& force, double passSide) {
+    double tempX = force.X;
     if (passSide < 0) {
         force.X = force.Y;
-        force.Y = -force.X;
+        force.Y = -tempX;
     } else {
         force.X = -force.Y;
-        force.Y = force.X;
+        force.Y = tempX;
     }
 }
 
@@ -141,6 +142,8 @@ Force CA::getTotalPull(Position basePos, Position target, vector<Position>& team
         totalForce.rad += temp.rad;
     }
     int totalSize = team.size() + otherTeam.size();
-    totalForce.len = totalForce.len / totalSize;
+    if (totalForce.len != 0) {
+        totalForce.len = totalForce.len / totalSize;
+    }
     return totalForce;
 }
