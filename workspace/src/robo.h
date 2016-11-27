@@ -13,26 +13,24 @@
 class Robo: public RoboControl
 {
 public:
-   pidController pidAngle;
-   pidController pidDistance;
-   Robo(RTDBConn& DBC, const int deviceNr): RoboControl(DBC, deviceNr),
+    pidController pidAngle;
+    pidController pidDistance;
+    Robo(RTDBConn& DBC, const int deviceNr): RoboControl(DBC, deviceNr),
                                             pidAngle( 35, 3, 1),
                                             pidDistance( 150, 0,0){}
-   Robo(RoboControl& other): RoboControl(other){}
-   void run(cpp::channel<Position> position);
-   CA ca;
-   void driveWithCA(RoboControl& robo1, RawBall &ball, Position  obstPos,pidController &pidAngle, pidController &pidDistance);
+    Robo(RoboControl& other): RoboControl(other){}
+    void run(cpp::channel<Position> position);
+    CA ca;
+    void driveWithCA(RoboControl& robo1, RawBall &ball, Position  obstPos,pidController &pidAngle, pidController &pidDistance);
 
 private:
-   Position targetPosition;
-   double getObstacleAngleDiffRad(RoboControl& robo, Position obstPos);
-    double getTargetAngleDiffRad(RoboControl& robo, Position targetPos);
-    double getAngleDiffWithCA(double obstAngleDiffRad, double distToObst);
-
+    Position targetPosition;
+    double getObstacleAngleDiffRad(RoboControl& robo, Position obstPos);
+    double getAngleErrRad(Position targetPos, Position obstPos);
+    double getAngleWithCA(Force obstacleForce, Position targetPos);
 };
 
 
 
-void driveWithCA(RoboControl& robo1, RawBall &ball, Position  obstPos,pidController &pidAngle, pidController &pidDistance);
 
 #endif // ROBO_H

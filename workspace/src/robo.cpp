@@ -13,10 +13,6 @@ void Robo::run(cpp::channel<Position> positionCh) {
 
 void Robo::driveWithCA(RoboControl& robo1, RawBall &ball, Position obstPos ,pidController &pidAngle, pidController &pidDistance){
     usleep(10000);
-    double targetDiff_rad = getTargetAngleDiffRad(robo1, ball.GetPos());
-
-    double sinTargetDiff_rad = sin(targetDiff_rad/2);
-
     double dist_error = robo1.GetPos().DistanceTo(ball.GetPos());
     if (dist_error < 0.03){
         pidDistance.updateInput(dist_error);
@@ -25,41 +21,41 @@ void Robo::driveWithCA(RoboControl& robo1, RawBall &ball, Position obstPos ,pidC
         pidDistance.updateInput(1);
     }
 
-    double obstAngleDiffRad = getObstacleAngleDiffRad(robo1, obstPos);
-    double distToObst = robo1.GetPos().DistanceTo(obstPos);
-
-    double total_update_angle_rad = sinTargetDiff_rad + getAngleDiffWithCA(obstAngleDiffRad, distToObst);
-    pidAngle.updateInput(total_update_angle_rad);
+    double angleErrorRad = getAngleErrRad(ball.GetPos(), obstPos);
+    pidAngle.updateInput(angleErrorRad);
     double driveSpeed = pidDistance.getInput();
 
     // the cos will make it drive fastest in the right direction, and also back up and turn if behind you
-    double rightWheel =driveSpeed*cos(targetDiff_rad) + pidAngle.getInput();
-    double leftWheel = driveSpeed*cos(targetDiff_rad) - pidAngle.getInput();
+    double rightWheel =driveSpeed*cos(angleErrorRad) + pidAngle.getInput();
+    double leftWheel = driveSpeed*cos(angleErrorRad) - pidAngle.getInput();
     robo1.MoveMs(leftWheel,rightWheel, 100, 10);
     //out << endl <<robo1.GetPos().AngleOfLineToPos(ball.GetPos())-robo1.GetPhi() << endl;
     //robo1.TurnAbs(robo1.GetPos().AngleOfLineToPos(ball.GetPos())-robo1.GetPhi());
 }
 
-double Robo::getAngleWithCA(Force obstacleForce){
+double Robo::getAngleWithCA(Force obstacleForce, Position targetPos){
 
-    double ref_deg = robo.GetPos().AngleOfLineToPos( targetPos).Deg();
+    double targetDeg = this->GetPos().AngleOfLineToPos(targetPos).Deg();
     double caScale = obstacleForce.len/(CA_SCALE + obstacleForce.len);
-    double compensationAngle = obstacleForce.deg*(caScale) + ref_deg*(1 - caScale);
-    //get the magnitude of force
-    int obstAngleSign = obstAngleDiffRad/fabs(obstAngleDiffRad);
-    if(distToObst > 0.3 || obstAngleDiffRad > M_PI/2){
-        return 0; //No collition avoidance needed
-    } else{
-        // collition avoidance needed
-        // right sign,          more turn the more direct treath, 4 is just scaling. Last part increases when closer to obstacle. TO BE CHANGED FOR JOACHIMS STUFF
-        return -obstAngleSign * cos(obstAngleDiffRad)/4          * 0.3/(distToObst);
-    }
+    double targetDegWithCA = obstacleForce.deg*(caScale) + targetDeg*(1 - caScale);
+    return targetDegWithCA;
+//    //get the magnitude of force
+//    int obstAngleSign = obstAngleDiffRad/fabs(obstAngleDiffRad);
+//    if(distToObst > 0.3 || obstAngleDiffRad > M_PI/2){
+//        return 0; //No collition avoidance needed
+//    } else{
+//        // collition avoidance needed
+//        // right sign,          more turn the more direct treath, 4 is just scaling. Last part increases when closer to obstacle. TO BE CHANGED FOR JOACHIMS STUFF
+//        return -obstAngleSign * cos(obstAngleDiffRad)/4          * 0.3/(distToObst);
+//    }
 }
 
-double Robo::getTargetAngleDiffRad(RoboControl& robo, Position targetPos){
+double Robo::getAngleErrRad(Position targetPos, Position obstPos){
     //get the error
-    double ref_deg = robo.GetPos().AngleOfLineToPos( targetPos).Deg();
-    double myAngle_deg = robo.GetPhi().Deg();
+    CA ca;
+    Position myPos = this->GetPos();
+    double ref_deg = getAngleWithCA(ca.getPull(myPos, targetPos, obstPos ), targetPos);
+    double myAngle_deg = this->GetPhi().Deg();
     //and solving the angle gap-problem
     //cout << "ref before: " << ref_deg << endl;
     //cout << "angle before: " << myAngle_deg << endl;
