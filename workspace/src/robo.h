@@ -3,9 +3,6 @@
 
 #include "robo_control.h"
 #include "pidController.h"
-
-
-
 #include "raw_ball.h"
 #include "angle.h"
 #include "position.h"
@@ -24,8 +21,14 @@ public:
    Robo(RoboControl& other): RoboControl(other){}
    void run(cpp::channel<Position> position);
    CA ca;
+   void driveWithCA(RoboControl& robo1, RawBall &ball, Position  obstPos,pidController &pidAngle, pidController &pidDistance);
+
 private:
    Position targetPosition;
+   double getObstacleAngleDiffRad(RoboControl& robo, Position obstPos);
+    double getTargetAngleDiffRad(RoboControl& robo, Position targetPos);
+    double getAngleDiffWithCA(double obstAngleDiffRad, double distToObst);
+
 };
 
 

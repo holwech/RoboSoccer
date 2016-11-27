@@ -16,14 +16,14 @@ public:
 private:
     void milestone21part1();
     void pullVector();
-    void collisionAvoidance(RoboControl& roboMove, RoboControl& roboObs);
+    void collisionAvoidance(Robo& roboMove, Robo& roboObs);
     void getPassSide();
     void testAll();
     void beforePenalty();
     void penalty();
     void goalkeeper();
-    void pidCollision(RoboControl &robo, RawBall &ball, RoboControl& obstacle);
-    void do_goalkeeper_kick(RoboControl& robogoalkicker, RoboControl& robo_blue_1, RoboControl& robo_blue_2,RoboControl& robo_blue_3, RawBall& ourball);
+    void pidCollision(Robo &robo, RawBall &ball, Robo& obstacle);
+    void do_goalkeeper_kick(Robo& robogoalkicker, Robo& robo_blue_1, Robo& robo_blue_2,Robo& robo_blue_3, RawBall& ourball);
     Master master;
 };
 

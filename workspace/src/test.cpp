@@ -176,16 +176,16 @@ void Test::pullVector() {
     }
 }
 
-void Test::pidCollision(RoboControl &robo, RawBall &ball, RoboControl &obstacle){
+void Test::pidCollision(Robo &robo, RawBall &ball, Robo &obstacle){
     pidController pidAngle(15.0, 0, 1.0);
     pidController pidDistance(80.0, 0.0, 0.0);
     while(1){
-        driveWithCA(robo, ball, obstacle.GetPos(), pidAngle, pidDistance);
+        robo.driveWithCA(robo, ball, obstacle.GetPos(), pidAngle, pidDistance);
     }
 
 }
 
-void Test::collisionAvoidance(RoboControl& roboMove, RoboControl& roboObs) {
+void Test::collisionAvoidance(Robo& roboMove, Robo& roboObs) {
     roboObs.GotoXY(0.0, 0.0, 60);
     CA ca;
     timer debugTimer;
@@ -291,7 +291,7 @@ void Test::goalkeeper() {
 }
 
 
-void Test::do_goalkeeper_kick(RoboControl& robogoalkicker, RoboControl& robo_blue_1, RoboControl& robo_blue_2,RoboControl& robo_blue_3, RawBall& ourball){
+void Test::do_goalkeeper_kick(Robo& robogoalkicker, Robo& robo_blue_1, Robo& robo_blue_2,Robo& robo_blue_3, RawBall& ourball){
 /*
     double xstart = 1; // on penlaty line
     double ystart = 0.4; // on penalty line

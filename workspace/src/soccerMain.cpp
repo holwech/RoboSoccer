@@ -87,12 +87,12 @@ int main(void) {
             rfNumber5 = 2;
         }
 
-        RoboControl robo0(DBC, rfNumber0);
-        RoboControl robo1(DBC, rfNumber1);
-        RoboControl robo2(DBC, rfNumber2);
-        RoboControl robo3(DBC, rfNumber3);
-        RoboControl robo4(DBC, rfNumber4);
-        RoboControl robo5(DBC, rfNumber5);
+        Robo robo0(DBC, rfNumber0);
+        Robo robo1(DBC, rfNumber1);
+        Robo robo2(DBC, rfNumber2);
+        Robo robo3(DBC, rfNumber3);
+        Robo robo4(DBC, rfNumber4);
+        Robo robo5(DBC, rfNumber5);
         cout << "Robots are ready..." << endl;
 
 

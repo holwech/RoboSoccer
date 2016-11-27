@@ -3,7 +3,9 @@
 #define TIMESTEP 0.01
 #define NUM_SAVED_INP 2
 
-class RoboControl;
+#include <math.h>
+#include <iostream>
+
 pidController::pidController(double input_Kp, double input_Ki, double input_Kd)
                             : Kp(input_Kp), Ki(input_Ki), Kd(input_Kd), error_sign(0){
     //Init error list
@@ -36,9 +38,9 @@ void pidController::saveNewErr(double diff){
         prevErr[0] = diff;
     }
     error_sign = diff/fabs(diff);
-    cout << "Diff: " << diff << endl;
+    std::cout << "Diff: " << diff << std::endl;
     for (int i = 0; i < NUM_SAVED_ERR; i++){
-         cout << i << ": " << prevErr[i] << endl;
+         std::cout << i << ": " << prevErr[i] << std::endl;
     }
     //cout << endl;
 }

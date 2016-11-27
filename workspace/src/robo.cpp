@@ -1,6 +1,6 @@
 #include "robo.h"
 #include "collision_avoidance.h"
-
+#define CA_SCALE 20 //How munch influenced by CA, lower is more. test: 20
 
 /** To complete task 2.1 part 1, we have to implement multithreading it seems
   * like. We will have problems controlling all robots at the same time without
@@ -10,49 +10,8 @@ void Robo::run(cpp::channel<Position> positionCh) {
     }
 }
 
-/**
-TEST(ChannelTest, SelectRecv)
-{
-  cpp::channel<char> c;
-  cpp::ichannel<char> in(c);
-  char i = '\0';
 
-  std::thread a(send_chars<'F'>, c);
-  cpp::thread_guard a_guard(a);
-
-  cpp::select().recv_only(c, i).wait();
-  EXPECT_EQ('A', i);
-
-  cpp::select().recv(c, i, [](){}).wait();
-  EXPECT_EQ('B', i);
-
-  cpp::select().recv_only(in, i).wait();
-  EXPECT_EQ('C', i);
-
-  cpp::select().recv(in, i, [](){}).wait();
-  EXPECT_EQ('D', i);
-
-  cpp::select().recv(c, [&i](const char k) { i = k; }).wait();
-  EXPECT_EQ('E', i);
-
-  cpp::select().recv(in, [&i](const char k) { i = k; }).wait();
-  EXPECT_EQ('F', i);
-}
-*/
-
-/** Quick dirty dirty fix */
-int obstAngleSign;
-double distToObst;
-double obstAngleDiffRad;
-double getAngleDiffWithCA(double a, double b) { return 0.0;};
-
-
-double getTargetAngleDiffRad(RoboControl& robo, Position targetPos);
-double getObstacleAngleDiffRad(RoboControl& robo, Position obstPos);
-
-double getAngleDiffWithCA(double obstAngleDiffRad, double distToObst);
-
-void driveWithCA(RoboControl& robo1, RawBall &ball, Position obstPos ,pidController &pidAngle, pidController &pidDistance){
+void Robo::driveWithCA(RoboControl& robo1, RawBall &ball, Position obstPos ,pidController &pidAngle, pidController &pidDistance){
     usleep(10000);
     double targetDiff_rad = getTargetAngleDiffRad(robo1, ball.GetPos());
 
@@ -81,11 +40,14 @@ void driveWithCA(RoboControl& robo1, RawBall &ball, Position obstPos ,pidControl
     //robo1.TurnAbs(robo1.GetPos().AngleOfLineToPos(ball.GetPos())-robo1.GetPhi());
 }
 
-double getAngleDiffWithCA(Force obstForce){
-    //get the magnitude of force
-    double forceMagnitude = sqrt(pow(obstForce.X, 2) + pow(obstForce.Y, 2));
+double Robo::getAngleWithCA(Force obstacleForce){
 
-    if( forceMagnitude < 1 || obstAngleDiffRad > M_PI/2){
+    double ref_deg = robo.GetPos().AngleOfLineToPos( targetPos).Deg();
+    double caScale = obstacleForce.len/(CA_SCALE + obstacleForce.len);
+    double compensationAngle = obstacleForce.deg*(caScale) + ref_deg*(1 - caScale);
+    //get the magnitude of force
+    int obstAngleSign = obstAngleDiffRad/fabs(obstAngleDiffRad);
+    if(distToObst > 0.3 || obstAngleDiffRad > M_PI/2){
         return 0; //No collition avoidance needed
     } else{
         // collition avoidance needed
@@ -94,7 +56,7 @@ double getAngleDiffWithCA(Force obstForce){
     }
 }
 
-double getTargetAngleDiffRad(RoboControl& robo, Position targetPos){
+double Robo::getTargetAngleDiffRad(RoboControl& robo, Position targetPos){
     //get the error
     double ref_deg = robo.GetPos().AngleOfLineToPos( targetPos).Deg();
     double myAngle_deg = robo.GetPhi().Deg();
@@ -115,7 +77,7 @@ double getTargetAngleDiffRad(RoboControl& robo, Position targetPos){
     return err_rad;
 }
 
-double getObstacleAngleDiffRad(RoboControl& robo, Position obstPos){
+double Robo::getObstacleAngleDiffRad(RoboControl& robo, Position obstPos){
     double myAngle_deg = robo.GetPhi().Deg();
     double roboAngleObstacle_deg = robo.GetPos().AngleOfLineToPos(obstPos).Deg();
 

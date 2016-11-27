@@ -1,11 +1,12 @@
 #ifndef PIDCONTROLLER_H
 #define PIDCONTROLLER_H
 #include <vector>
-#include <robo_control.h>
+
+class Robo;
 class pidController{
-    vector<double> prevErr;
-    vector<double> prevInp;
-    RoboControl * robot_ptr;
+    std::vector<double> prevErr;
+    std::vector<double> prevInp;
+    Robo * robot_ptr;
     double Kp;
     double Ki;
     double Kd;

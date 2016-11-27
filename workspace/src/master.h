@@ -25,12 +25,12 @@ public:
     friend class Test;
     Master(string& team,
            RTDBConn& DBC,
-           RoboControl& robo0,
-           RoboControl& robo1,
-           RoboControl& robo2,
-           RoboControl& robo3,
-           RoboControl& robo4,
-           RoboControl& robo5,
+           Robo& robo0,
+           Robo& robo1,
+           Robo& robo2,
+           Robo& robo3,
+           Robo& robo4,
+           Robo& robo5,
            RawBall& ball,
            Referee& referee);
     void run();
@@ -39,12 +39,12 @@ private:
     string team;
     eSide side;
     RTDBConn DBC;
-    RoboControl robo0;
-    RoboControl robo1;
-    RoboControl robo2;
-    RoboControl robo3;
-    RoboControl robo4;
-    RoboControl robo5;
+    Robo robo0;
+    Robo robo1;
+    Robo robo2;
+    Robo robo3;
+    Robo robo4;
+    Robo robo5;
     RawBall ball;
     Referee referee;
     CA ca;
