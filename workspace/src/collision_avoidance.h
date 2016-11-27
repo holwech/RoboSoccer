@@ -31,6 +31,8 @@ private:
     Force forceAtPoints(Position& position, vector<Position>& obstacles);
     Force getForce(double X, double Y, double obstacleX, double obstacleY);
     double getPassSide(Position& basePos, Position& target, Position& obstacle);
+    Force getTotalPull(Position basePos, Position target, vector<Position>& team, vector<Position>& otherTeam, bool gravity);
+    void toPerp(Force& force, double passSide);
     int obstacleWeight;
 };
 
