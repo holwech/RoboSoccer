@@ -121,22 +121,26 @@ Force CA::getPull(Position& basePos, Position& target, Position& obstacle) {
     return force;
 }
 
-Force CA::operator+=(const Force& force) {
-   Force newForce;
-   newForce
-   return box;
-}
-
-Fraction& operator += (const Fraction &obj)
-{
-.  num = (num * obj.den) + (obj.num * den) ;
-.  den = obj.den * den ;
-.  return (*this) ;
-}
 
 Force CA::getTotalPull(Position basePos, Position target, vector<Position>& team, vector<Position>& otherTeam, bool gravity = false) {
     Force totalForce = {0.0, 0.0, 0.0, 0.0, 0.0};
     for (Position &obstacle : team) {
         Force temp = getPull(basePos, target, obstacle);
+        totalForce.X += temp.X;
+        totalForce.Y += temp.Y;
+        totalForce.len += temp.len;
+        totalForce.deg += temp.deg;
+        totalForce.rad += temp.rad;
     }
+    for (Position &obstacle : otherTeam) {
+        Force temp = getPull(basePos, target, obstacle);
+        totalForce.X += temp.X;
+        totalForce.Y += temp.Y;
+        totalForce.len += temp.len;
+        totalForce.deg += temp.deg;
+        totalForce.rad += temp.rad;
+    }
+    int totalSize = team.size() + otherTeam.size();
+    totalForce.len = totalForce.len / totalSize;
+    return totalForce;
 }
