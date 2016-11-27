@@ -17,7 +17,6 @@ void Test::testMenu() {
         cout << "3: Test all" << endl;
         cout << "4: Goalkeeper" << endl;
         cout << "5: Collision avoidance" << endl;
-
         cout << "6: Obstacle" << endl;
         cout << "7: Pull vector" << endl;
         cout << "8: getPassSide" << endl;
@@ -168,8 +167,11 @@ void Test::pullVector() {
         Force pull = master.ca.getPull(basePos, target, obstacle);
         if (debugTimer.getTime() > 0.01) {
             cout << "----- ----- -----" << endl;
+            cout << "Current position, X: " << basePos.GetX() << " Y: " << basePos.GetY() << endl;
             cout << "Pass side: " << passSide << endl;
             cout << "Pull vector: { " << pull.X << " , " << pull.Y << " }" << endl;
+            cout << "Pull length: " << pull.len << endl;
+            cout << "Pull reference angle, rad: " << pull.rad << " deg: " << pull.deg << endl;
             debugTimer.reset();
         }
         usleep(100);

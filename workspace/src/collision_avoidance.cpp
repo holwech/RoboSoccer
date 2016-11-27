@@ -89,6 +89,18 @@ double CA::getPassSide(Position& basePos, Position& target, Position& obstacle) 
   */
 Force CA::getPull(Position& basePos, Position& target, Position& obstacle) {
     double passSide = getPassSide(basePos, target, obstacle);
+
+    /** If the angle between the base, obstacle and target is larger than
+      * 90 degrees, the force is set to 0. This is because the obstacle is passed
+      * and does not need to be avoided anymore
+      */
+    if (fabs(passSide) >= 1.5708 ||
+        (basePos.DistanceTo(obstacle) > basePos.DistanceTo(target) &&
+         fabs(passSide) <= 1.5708)) {
+        Force temp = {0.0, 0.0, 0.0, 0.0, 0.0};
+        return temp;
+    }
+
     Force force = getForce(basePos.GetX(), basePos.GetY(), obstacle.GetX(), obstacle.GetY());
     Force perpForce;
     if (passSide < 0) {
