@@ -39,6 +39,14 @@ TEST(ChannelTest, SelectRecv)
   EXPECT_EQ('F', i);
 }
 */
+
+/** Quick dirty dirty fix */
+int obstAngleSign;
+double distToObst;
+double obstAngleDiffRad;
+double getAngleDiffWithCA(double a, double b) { return 0.0;};
+
+
 double getTargetAngleDiffRad(RoboControl& robo, Position targetPos);
 double getObstacleAngleDiffRad(RoboControl& robo, Position obstPos);
 

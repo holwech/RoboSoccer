@@ -13,6 +13,9 @@ struct Point {
 struct Force {
     double X;
     double Y;
+    double len;
+    double rad;
+    double deg;
 };
 
 

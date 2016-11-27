@@ -8,7 +8,7 @@ CA::CA() {
 Force CA::getForce(double X, double Y, double obstacleX, double obstacleY) {
     bool debug = false;
     double magnitude = obstacleWeight / (pow(obstacleX - X, 2) + pow(obstacleY - Y, 2));
-    Force force = {obstacleX - X, obstacleY - Y};
+    Force force = {obstacleX - X, obstacleY - Y, 0, 0, 0};
 
     if (debug) {
       cout << "---------- CA.getForce ----------" << endl;
@@ -43,7 +43,7 @@ void CA::normalize(Force& force) {
 
 /** Calculates the total force on a object, based on multiple obstacles */
 Force CA::forceAtPoints(Position& position, vector<Position>& obstacles) {
-    Force force = {0, 0};
+    Force force = {0, 0, 0, 0, 0};
     for (unsigned int obstacle = 0; obstacle < obstacles.size(); obstacle++) {
         Force obstacleForce = getForce(
                         position.GetX(),
@@ -98,5 +98,10 @@ Force CA::getPull(Position& basePos, Position& target, Position& obstacle) {
         perpForce.X = -force.Y;
         perpForce.Y = force.X;
     }
+    perpForce.len = sqrt(pow(perpForce.X, 2) + pow(perpForce.X, 2));
+    Position forcePos(basePos.GetX() + perpForce.X, basePos.GetY() + perpForce.Y);
+    Angle forceAngle = basePos.AngleOfLineToPos(forcePos);
+    perpForce.rad = forceAngle.Get();
+    perpForce.deg = forceAngle.Deg();
     return perpForce;
 }
