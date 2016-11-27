@@ -31,9 +31,9 @@ void Robo::driveWithCA(RoboControl& robo1, RawBall &ball, Position obstPos ,pidC
     // the cos will make it drive fastest in the right direction, and also back up and turn if behind you
     double rightWheel =driveSpeed*cos(angleErrorRad) + angleInput;
     double leftWheel = driveSpeed*cos(angleErrorRad) - angleInput;
-    rightWheel += leftWheel;
-    leftWheel = leftWheel;
-    //robo1.MoveMs(leftWheel,rightWheel, 100, 10);
+    //rightWheel += leftWheel;
+    //leftWheel = leftWheel;
+    robo1.MoveMs(leftWheel,rightWheel, 100, 10);
     //out << endl <<robo1.GetPos().AngleOfLineToPos(ball.GetPos())-robo1.GetPhi() << endl;
     //robo1.TurnAbs(robo1.GetPos().AngleOfLineToPos(ball.GetPos())-robo1.GetPhi());
 
