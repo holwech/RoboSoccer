@@ -48,14 +48,16 @@ int main(void) {
     string teamColorAnswer;
     bool teamChosen = false;
     while (!teamChosen) {
-        cout << "Which team do you want to control? (blue/red) ";
+        cout << "Which team do you want to control? (b/r) ";
         cin >> teamColorAnswer;
-        if (teamColorAnswer == "blue" || teamColorAnswer == "red") {
+        if (teamColorAnswer == "b" ) {
+            cout << "Initiating for blue" << endl;
             teamChosen = true;
-            cout << "Initiating for " << teamColorAnswer << endl;
-        }
-        else{
-            cout << "-blue- or -red- not specified." << endl;
+        } else if (teamColorAnswer == "r") {
+            cout << "Initiating for red" << endl;
+            teamChosen = true;
+        } else{
+            cout << "-b- (blue) or -r- (red) not specified." << endl;
         }
     }
 
@@ -71,7 +73,7 @@ int main(void) {
 
         /** Init robot(s) */
         int rfNumber0, rfNumber1, rfNumber2, rfNumber3, rfNumber4, rfNumber5;
-        if (teamColorAnswer == "blue") {
+        if (teamColorAnswer == "b") {
             rfNumber0 = 0;
             rfNumber1 = 1;
             rfNumber2 = 2;
