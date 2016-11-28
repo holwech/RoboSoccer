@@ -33,16 +33,18 @@ void Robo::updatePositions() {
 
 }
 
-void Robo::driveWithCA(RoboControl& robo1, RawBall &ball, Position obstPos ,pidController &pidAngle, pidController &pidDistance){
+
+
+void Robo::driveWithCA(RawBall &ball) {
     usleep(10000);
-    double dist_error = robo1.GetPos().DistanceTo(ball.GetPos());
+    double dist_error = this->GetPos().DistanceTo(ball.GetPos());
     if (dist_error < 0.03){
         pidDistance.updateInput(dist_error);
     }
     else{
         pidDistance.updateInput(1.2);
     }
-    double angleErrorRad = getAngleErrRad(ball.GetPos(), obstPos);
+    double angleErrorRad = getAngleErrRad(ball.GetPos());
     double sinAngleErrorRad = sin(angleErrorRad/2);
     pidAngle.updateInput(sinAngleErrorRad);
     double driveSpeed = pidDistance.getInput();
@@ -55,7 +57,7 @@ void Robo::driveWithCA(RoboControl& robo1, RawBall &ball, Position obstPos ,pidC
     double leftWheel = driveSpeed*cos(angleErrorRad) - angleInput;
     //rightWheel += leftWheel;
     //leftWheel = leftWheel;
-    robo1.MoveMs(leftWheel,rightWheel, 100, 10);
+    this->MoveMs(leftWheel,rightWheel, 100, 10);
     //out << endl <<robo1.GetPos().AngleOfLineToPos(ball.GetPos())-robo1.GetPhi() << endl;
     //robo1.TurnAbs(robo1.GetPos().AngleOfLineToPos(ball.GetPos())-robo1.GetPhi());
 
@@ -89,7 +91,7 @@ double Robo::getAngleWithCA(Force obstacleForce, Position targetPos){
 //    }
 }
 
-double Robo::getAngleErrRad(Position targetPos, Position obstPos){
+double Robo::getAngleErrRad(Position targetPos){
     //get the error
     CA ca;
     Position myPos = this->GetPos();
@@ -112,6 +114,7 @@ double Robo::getAngleErrRad(Position targetPos, Position obstPos){
     return err_rad;
 }
 
+/**
 double Robo::getObstacleAngleDiffRad(RoboControl& robo, Position obstPos){
     double myAngle_deg = robo.GetPhi().Deg();
     double roboAngleObstacle_deg = robo.GetPos().AngleOfLineToPos(obstPos).Deg();
@@ -129,3 +132,4 @@ double Robo::getObstacleAngleDiffRad(RoboControl& robo, Position obstPos){
     return diffRoboObstAngle_rad;
 
 }
+*/

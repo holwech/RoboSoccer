@@ -129,21 +129,15 @@ Force CA::getTotalPull(Position basePos, Position target, vector<Position>& team
         Force temp = getPull(basePos, target, obstacle);
         totalForce.X += temp.X;
         totalForce.Y += temp.Y;
-        totalForce.len += temp.len;
-        totalForce.deg += temp.deg;
-        totalForce.rad += temp.rad;
     }
     for (Position &obstacle : otherTeam) {
         Force temp = getPull(basePos, target, obstacle);
         totalForce.X += temp.X;
         totalForce.Y += temp.Y;
-        totalForce.len += temp.len;
-        totalForce.deg += temp.deg;
-        totalForce.rad += temp.rad;
     }
-    int totalSize = team.size() + otherTeam.size();
-    if (totalForce.len != 0) {
-        totalForce.len = totalForce.len / totalSize;
-    }
+    totalForce.len = sqrt(pow(totalForce.X, 2) + pow(totalForce.Y, 2));
+    Angle angle = basePos.AngleOfLineToPos(Position(basePos.GetX() + totalForce.X, basePos.GetY() + totalForce.Y));
+    totalForce.deg = angle.Deg();
+    totalForce.rad = angle.Get();
     return totalForce;
 }
