@@ -555,9 +555,9 @@ void Test::do_goalkeeper_kick(Robo& robogoalkicker, Robo& robo_blue_1, Robo& rob
         //while(abs(abs(ang.Deg())-abs(robogoalkicker.GetPhi().Deg())) > 0.05); //*(ang.Deg()-robogoalkicker.GetPhi().Deg())>0.05);
         //while((ang.Deg()-robogoalkicker.GetPhi().Deg())*(ang.Deg()-robogoalkicker.GetPhi().Deg()) > 0.1); //*(ang.Deg()-robogoalkicker.GetPhi().Deg())>0.05);
  //       while(abs(our_angle-robogoalkicker.GetPhi().Deg())>0.1)
-
-//        usleep(5000);
-//        usleep(5000);
+        robogoalkicker.StopAction();
+        usleep(5000);
+        usleep(5000);
 
         cout << "----- Before -----" << endl;
         cout << "Robo orientation: " << robogoalkicker.GetPhi().Deg() << endl;
