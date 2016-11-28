@@ -53,14 +53,13 @@ void Robo::driveWithCA(RawBall &ball) {
     //std::cout << "angleInput: " << angleInput<< std::endl;
 
     // the cos will make it drive fastest in the right direction, and also back up and turn if behind you
-    double rightWheel =driveSpeed*cos(angleErrorRad) + angleInput;
+    double rightWheel = driveSpeed*cos(angleErrorRad) + angleInput;
     double leftWheel = driveSpeed*cos(angleErrorRad) - angleInput;
     //rightWheel += leftWheel;
     //leftWheel = leftWheel;
     this->MoveMs(leftWheel,rightWheel, 100, 10);
     //out << endl <<robo1.GetPos().AngleOfLineToPos(ball.GetPos())-robo1.GetPhi() << endl;
     //robo1.TurnAbs(robo1.GetPos().AngleOfLineToPos(ball.GetPos())-robo1.GetPhi());
-
 }
 
 double Robo::getAngleWithCA(Force obstacleForce, Position targetPos){
@@ -93,9 +92,8 @@ double Robo::getAngleWithCA(Force obstacleForce, Position targetPos){
 
 double Robo::getAngleErrRad(Position targetPos){
     //get the error
-    CA ca;
     Position myPos = this->GetPos();
-    double ref_deg = getAngleWithCA(ca.getTotalPull(myPos, targetPos, posTeam, posOtherTeam, false), targetPos);
+    double ref_deg = getAngleWithCA(this->ca.getTotalPull(myPos, targetPos, posTeam, posOtherTeam, false), targetPos);
     double myAngle_deg = this->GetPhi().Deg();
     //and solving the angle gap-problem
     //cout << "ref before: " << ref_deg << endl;
