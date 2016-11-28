@@ -10,6 +10,28 @@ void Robo::run(cpp::channel<Position> positionCh) {
     }
 }
 
+void Robo::setVariables(Robo& team1, Robo& team2, Robo& otherTeam1, Robo& otherTeam2, Robo& otherTeam3) {
+    team.push_back(&team1);
+    team.push_back(&team2);
+    otherTeam.push_back(&otherTeam1);
+    otherTeam.push_back(&otherTeam2);
+    otherTeam.push_back(&otherTeam3);
+
+    posTeam.push_back(team[0]->GetPos());
+    posTeam.push_back(team[1]->GetPos());
+    posOtherTeam.push_back(otherTeam[0]->GetPos());
+    posOtherTeam.push_back(otherTeam[1]->GetPos());
+    posOtherTeam.push_back(otherTeam[2]->GetPos());
+}
+
+void Robo::updatePositions() {
+   posTeam[0] = team[0]->GetPos();
+   posTeam[1] = team[1]->GetPos();
+   posOtherTeam[0] = otherTeam[0]->GetPos();
+   posOtherTeam[1] = otherTeam[1]->GetPos();
+   posOtherTeam[2] = otherTeam[2]->GetPos();
+
+}
 
 void Robo::driveWithCA(RoboControl& robo1, RawBall &ball, Position obstPos ,pidController &pidAngle, pidController &pidDistance){
     usleep(10000);
@@ -71,7 +93,7 @@ double Robo::getAngleErrRad(Position targetPos, Position obstPos){
     //get the error
     CA ca;
     Position myPos = this->GetPos();
-    double ref_deg = getAngleWithCA(ca.getPull(myPos, targetPos, obstPos ), targetPos);
+    double ref_deg = getAngleWithCA(ca.getTotalPull(myPos, targetPos, posTeam, posOtherTeam, false), targetPos);
     double myAngle_deg = this->GetPhi().Deg();
     //and solving the angle gap-problem
     //cout << "ref before: " << ref_deg << endl;
