@@ -199,10 +199,9 @@ void Test::pullVector() {
 }
 
 void Test::pidCollision(Robo &robo, RawBall &ball, Robo &obstacle){
-    pidController pidAngle(50.0, 0.5, 1);
-    pidController pidDistance(80.0, 0.0, 0.0);
     while(1){
-        robo.driveWithCA(robo, ball, obstacle.GetPos(), pidAngle, pidDistance);
+        robo.driveWithCA(ball);
+        robo.updatePositions();
     }
 
 }

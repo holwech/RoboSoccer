@@ -16,19 +16,19 @@ public:
     pidController pidAngle;
     pidController pidDistance;
     Robo(RTDBConn& DBC, const int deviceNr): RoboControl(DBC, deviceNr),
-                                            pidAngle( 35, 3, 1),
-                                            pidDistance( 150, 0,0){}
+                                            pidAngle(50.0, 0.5, 1),
+                                            pidDistance(80.0, 0.0, 0.0){}
     Robo(RoboControl& other): RoboControl(other){}
     void run(cpp::channel<Position> position);
     CA ca;
     void driveWithCA(RawBall &ball);
     void setVariables(Robo& team1, Robo& team2, Robo& otherTeam1, Robo& otherTeam2, Robo& otherTeam3);
+    void updatePositions();
 private:
     Position targetPosition;
-    double getObstacleAngleDiffRad(RoboControl& robo, Position obstPos);
+//    double getObstacleAngleDiffRad(RoboControl& robo);
     double getAngleErrRad(Position targetPos);
     double getAngleWithCA(Force obstacleForce, Position targetPos);
-    void updatePositions();
     vector<Robo*> team;
     vector<Robo*> otherTeam;
     vector<Position> posTeam;

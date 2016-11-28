@@ -33,7 +33,9 @@ void Robo::updatePositions() {
 
 }
 
-void Robo::driveWithCA(RawBall &ball){
+
+
+void Robo::driveWithCA(RawBall &ball) {
     usleep(10000);
     double dist_error = this->GetPos().DistanceTo(ball.GetPos());
     if (dist_error < 0.03){
@@ -110,7 +112,8 @@ double Robo::getAngleErrRad(Position targetPos){
     return err_rad;
 }
 
-double Robo::getObstacleAngleDiffRad(RoboControl& robo,Position obstPos){
+/**
+double Robo::getObstacleAngleDiffRad(RoboControl& robo, Position obstPos){
     double myAngle_deg = robo.GetPhi().Deg();
     double roboAngleObstacle_deg = robo.GetPos().AngleOfLineToPos(obstPos).Deg();
 
@@ -127,3 +130,4 @@ double Robo::getObstacleAngleDiffRad(RoboControl& robo,Position obstPos){
     return diffRoboObstAngle_rad;
 
 }
+*/
