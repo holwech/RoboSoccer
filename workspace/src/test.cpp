@@ -556,26 +556,35 @@ void Test::do_goalkeeper_kick(Robo& robogoalkicker, Robo& robo_blue_1, Robo& rob
         //while(abs(abs(ang.Deg())-abs(robogoalkicker.GetPhi().Deg())) > 0.05); //*(ang.Deg()-robogoalkicker.GetPhi().Deg())>0.05);
         //while((ang.Deg()-robogoalkicker.GetPhi().Deg())*(ang.Deg()-robogoalkicker.GetPhi().Deg()) > 0.1); //*(ang.Deg()-robogoalkicker.GetPhi().Deg())>0.05);
  //       while(abs(our_angle-robogoalkicker.GetPhi().Deg())>0.1)
-        robogoalkicker.StopAction();
-        usleep(5000);
-        usleep(5000);
+
 
         cout << "----- Before -----" << endl;
         cout << "Robo orientation: " << robogoalkicker.GetPhi().Deg() << endl;
 
         cout << "Turning to " << ang.Deg() << " degrees" << endl;
-        robogoalkicker.TurnAbs(Angle(100));
+
+        int i =1;
+
+        for(i=1;i<5;i++)
+        {
+        robogoalkicker.TurnAbs(ang);
+        while((ang.Deg()-robogoalkicker.GetPhi().Deg())*(ang.Deg()-robogoalkicker.GetPhi().Deg()) > 0.1)
+        {
+            if(fabs(robogoalkicker.GetSpeedLeft()==robogoalkicker.GetSpeedRight())<0.1)
+            {
+                usleep(2000);
+                break;
+            }
+        }
+        }
+
         usleep(5000000);
-        cout << "Turn complete" << endl;
+        cout << "Turn complete" << endl;9
 
-        cout << "----- After -----" << endl;
-        cout << "Robo orientation: " << robogoalkicker.GetPhi().Deg() << endl;
-
-        cout<<Targetpoint.GetX()<<endl;
         cout<<Targetpoint.GetY()<<endl;
 
 
-//        robogoalkicker.MoveMs(-255,-255,300);
+        robogoalkicker.MoveMs(255,255,300);
 //        usleep(3000);
         //robogoalkicker.MoveMs(255,225,500);
 
