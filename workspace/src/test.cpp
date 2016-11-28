@@ -24,6 +24,7 @@ void Test::testMenu() {
         cout << "10: Milestone 2.1 part 1" << endl;
         cout << "11: penalty shooting" << endl;
         cout << "12: Before penalty" << endl;
+        cout << "13: Turning" << endl;
 
         int program;
         cin >> program;
@@ -80,6 +81,10 @@ void Test::testMenu() {
             cout << "Running 12: Before Penalty"<<endl;
             beforePenalty();
             break;
+        case 13:
+            cout << "Running 13: Turning" << endl;
+            turning();
+            break;
         default:
             stop = true;
             break;
@@ -90,6 +95,19 @@ void Test::testMenu() {
     }
     cout << "Leaving test menu" << endl;
 }
+
+void Test::turning() {
+    cout << "----- Before -----" << endl;
+    cout << "Robo orientation: " << master.robo0.GetPhi().Deg() << endl;
+
+    master.robo0.TurnAbs(Angle(170));
+    usleep(5000000);
+    cout << "Turn complete" << endl;
+
+    cout << "----- After -----" << endl;
+    cout << "Robo orientation: " << master.robo0.GetPhi().Deg() << endl;
+}
+
 
 void Test::milestone21part1() {
     cout << "To run milestone 2.1 part 1, 4 positions are required." << endl;
@@ -111,6 +129,8 @@ void Test::milestone21part1() {
     master.robo0.GotoPos(positions[0]);
     master.robo1.GotoPos(positions[1]);
     master.robo2.GotoPos(positions[3]);
+
+
     int step = 1;
 
     while (1) {
@@ -179,10 +199,9 @@ void Test::pullVector() {
 }
 
 void Test::pidCollision(Robo &robo, RawBall &ball, Robo &obstacle){
-    pidController pidAngle(50.0, 0.5, 1);
-    pidController pidDistance(80.0, 0.0, 0.0);
     while(1){
-        robo.driveWithCA(robo, ball, obstacle.GetPos(), pidAngle, pidDistance);
+        robo.driveWithCA(ball);
+        robo.updatePositions();
     }
 
 }
@@ -532,24 +551,41 @@ void Test::do_goalkeeper_kick(Robo& robogoalkicker, Robo& robo_blue_1, Robo& rob
 //        cout<< our_angle << endl;
 
 
-        robogoalkicker.MoveMs(-25,25,50000);
+        //robogoalkicker.MoveMs(-25,25,50000);
         //while(abs(abs(ang.Deg())-abs(robogoalkicker.GetPhi().Deg())) > 0.05); //*(ang.Deg()-robogoalkicker.GetPhi().Deg())>0.05);
-        while((ang.Deg()-robogoalkicker.GetPhi().Deg())*(ang.Deg()-robogoalkicker.GetPhi().Deg()) > 0.1); //*(ang.Deg()-robogoalkicker.GetPhi().Deg())>0.05);
+        //while((ang.Deg()-robogoalkicker.GetPhi().Deg())*(ang.Deg()-robogoalkicker.GetPhi().Deg()) > 0.1); //*(ang.Deg()-robogoalkicker.GetPhi().Deg())>0.05);
  //       while(abs(our_angle-robogoalkicker.GetPhi().Deg())>0.1)
 
-//        usleep(5000);
-//        usleep(5000);
 
+        cout << "----- Before -----" << endl;
+        cout << "Robo orientation: " << robogoalkicker.GetPhi().Deg() << endl;
 
+        cout << "Turning to " << ang.Deg() << " degrees" << endl;
 
+        int i =1;
 
-        cout<<Targetpoint.GetX()<<endl;
+        for(i=1;i<5;i++)
+        {
+        robogoalkicker.TurnAbs(ang);
+        while((ang.Deg()-robogoalkicker.GetPhi().Deg())*(ang.Deg()-robogoalkicker.GetPhi().Deg()) > 0.1)
+        {
+            if(fabs(robogoalkicker.GetSpeedLeft()==robogoalkicker.GetSpeedRight())<0.1)
+            {
+                usleep(2000);
+                break;
+            }
+        }
+        }
+
+        usleep(5000000);
+        cout << "Turn complete" << endl;9
+
         cout<<Targetpoint.GetY()<<endl;
 
 
-//        robogoalkicker.MoveMs(-255,-255,300);
+        robogoalkicker.MoveMs(255,255,300);
 //        usleep(3000);
-        robogoalkicker.MoveMs(255,225,500);
+        //robogoalkicker.MoveMs(255,225,500);
 
 
 /*   ///////////////////// Start Soung: use Targetpoint between 2 blue robots with largest distance
