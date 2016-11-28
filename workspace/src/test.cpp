@@ -459,23 +459,78 @@ void Test::do_goalkeeper_kick(Robo& robogoalkicker, Robo& robo_blue_1, Robo& rob
     cout << dist2 << endl;
 
 
+    double dist_larg_wall = 0.85 - fabs(posvect[2][larg]);
+    double dist_small_wall = 0.85 - fabs(posvect[2][small]);
 
 
-    Position Targetpoint(0,0);
+      Position Targetpoint(0,0);
 
 
     if(dist1>=dist2){
-
-        Targetpoint.SetX(posvect[1][midpo] + 0.5*(posvect[1][small]-posvect[1][midpo]));
-        Targetpoint.SetY(posvect[2][midpo] + 0.5*(posvect[2][small]-posvect[2][midpo]));
         cout << "Hello dist1" << endl;
+
+        if (dist1 > dist_larg_wall && dist1 > dist_small_wall){
+            Targetpoint.SetX(posvect[1][midpo] + 0.5*(posvect[1][small]-posvect[1][midpo]));
+            Targetpoint.SetY(posvect[2][midpo] + 0.5*(posvect[2][small]-posvect[2][midpo]));
+        }
+
+        if (dist_larg_wall > dist1 && dist_larg_wall > dist_small_wall){
+            Targetpoint.SetX(posvect[1][larg]);
+            Targetpoint.SetY((0.85 + posvect[2][larg])/2);
+        }
+
+        if (dist_small_wall > dist1 && dist_small_wall > dist_larg_wall){
+            Targetpoint.SetX(posvect[1][small]);
+            Targetpoint.SetY((-0.85 + posvect[2][small])/2);
+
+
+
+        }
 
         }else{
 
+        cout << "Hello dist2" << endl;
+
+        if (dist2 > dist_larg_wall && dist2 > dist_small_wall){
         Targetpoint.SetX(posvect[1][midpo] + 0.5*(posvect[1][larg]-posvect[1][midpo]));
         Targetpoint.SetY(posvect[2][midpo] + 0.5*(posvect[2][larg]-posvect[2][midpo]));
-        cout << "Hello dist2" << endl;
         }
+
+        if (dist_larg_wall > dist2 && dist_larg_wall > dist_small_wall){
+            Targetpoint.SetX(posvect[1][larg]);
+            Targetpoint.SetY((0.85 + posvect[2][larg])/2);
+        }
+
+        if (dist_small_wall > dist2 && dist_small_wall > dist_larg_wall){
+            Targetpoint.SetX(posvect[1][small]);
+            Targetpoint.SetY((-0.85 + posvect[2][small])/2);
+        }
+
+
+        }
+
+    if(Targetpoint.GetX()>0.75){
+
+
+        if(posvect[2][midpo] < -0.40 || posvect[2][midpo] > 0.40){
+
+            Targetpoint.SetX(-0.4);
+            Targetpoint.SetY(ourball.GetY());
+
+
+        }else{
+
+
+            Targetpoint.SetY((Targetpoint.GetY() + posvect[2][midpo])/2);
+            Targetpoint.SetX(Targetpoint.GetX() + 0.02);
+
+
+        }
+
+    }
+
+
+
 //    ----------------------------------
     Position pos1(1, 0);
     Position pos2(1.27, -0.35);
@@ -484,6 +539,7 @@ void Test::do_goalkeeper_kick(Robo& robogoalkicker, Robo& robo_blue_1, Robo& rob
     double goalx, goaly,ballx, bally, initrobox, initroboy;
     Angle ang;
     double delta = 0.09;
+
 
     goalx = Targetpoint.GetX();
     goaly = Targetpoint.GetY();
@@ -511,6 +567,8 @@ void Test::do_goalkeeper_kick(Robo& robogoalkicker, Robo& robo_blue_1, Robo& rob
         initrobox = ballx+delta;
         initroboy = bally + delta*(goaly-bally)/(goalx-ballx);
 
+
+
         if(bally>0)
         {
             initroboy = initroboy+0.02;
@@ -520,6 +578,21 @@ void Test::do_goalkeeper_kick(Robo& robogoalkicker, Robo& robo_blue_1, Robo& rob
             initroboy = initroboy-0.02;
         }
 
+
+        if(Targetpoint.GetX()>0.75){
+
+
+            if(bally>0)
+            {
+                initroboy = initroboy-0.02;
+            }
+            else
+            {
+                initroboy = initroboy+0.02;
+            }
+
+
+        }
 
         robogoalkicker.GotoXY(initrobox,initroboy,50,true);
         Position initP(initrobox,initroboy);
@@ -577,13 +650,13 @@ void Test::do_goalkeeper_kick(Robo& robogoalkicker, Robo& robo_blue_1, Robo& rob
         }
         }
 
-        usleep(5000000);
-        cout << "Turn complete" << endl;9
+        usleep(3000000);
+        cout << "Turn complete" << endl;
 
         cout<<Targetpoint.GetY()<<endl;
 
 
-        robogoalkicker.MoveMs(255,255,300);
+        robogoalkicker.MoveMs(250,250,800);
 //        usleep(3000);
         //robogoalkicker.MoveMs(255,225,500);
 
