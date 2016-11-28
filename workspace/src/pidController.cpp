@@ -5,7 +5,7 @@
 
 #include <math.h>
 #include <iostream>
-
+//soccerlab_vision -g is the name i allways forget
 pidController::pidController(double input_Kp, double input_Ki, double input_Kd)
                             : Kp(input_Kp), Ki(input_Ki), Kd(input_Kd), error_sign(0){
     //Init error list

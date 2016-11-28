@@ -21,7 +21,8 @@ public:
     Robo(RoboControl& other): RoboControl(other){}
     void run(cpp::channel<Position> position);
     CA ca;
-    void driveWithCA(RawBall &ball);
+    void driveWithCA();
+    void updatePids(Position targetPos);
     void setVariables(Robo& team1, Robo& team2, Robo& otherTeam1, Robo& otherTeam2, Robo& otherTeam3);
     void updatePositions();
 private:
@@ -29,10 +30,13 @@ private:
 //    double getObstacleAngleDiffRad(RoboControl& robo);
     double getAngleErrRad(Position targetPos);
     double getAngleWithCA(Force obstacleForce, Position targetPos);
+    void updateAnglePid(Position targetPos);
+    void updateDistancePid(Position targetPos);
     vector<Robo*> team;
     vector<Robo*> otherTeam;
     vector<Position> posTeam;
     vector<Position> posOtherTeam;
+    double angleErrorRad;
 };
 
 

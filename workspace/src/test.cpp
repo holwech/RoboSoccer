@@ -112,13 +112,26 @@ void Test::turning() {
 void Test::milestone21part1() {
     cout << "To run milestone 2.1 part 1, 4 positions are required." << endl;
     vector<Position> positions;
-    for (int i = 0; i < 4; i++) {
-        double posX, posY;
-        cout << "Coordinate " << i + 1 << ", X: ";
-        cin >> posX;
-        cout << "Coordinate " << i + 1 << ", Y: ";
-        cin >> posY;
-        positions.push_back(Position(posX, posY));
+    string fixedCoordinates;
+    do{
+        cout << "Use fixed coordinates? (y/n) ";
+        cin >> fixedCoordinates;
+        cout << endl;
+    }while(fixedCoordinates != "y" && fixedCoordinates != "n");
+    if (fixedCoordinates == "n") {
+        for (int i = 0; i < 4; i++) {
+            double posX, posY;
+            cout << "Coordinate " << i + 1 << ", X: ";
+            cin >> posX;
+            cout << "Coordinate " << i + 1 << ", Y: ";
+            cin >> posY;
+            positions.push_back(Position(posX, posY));
+        }
+    }else{
+        positions.push_back(Position(1.2, -0.45));
+        positions.push_back(Position(-1.2, -0.45));
+        positions.push_back(Position(-1.2, 0.45));
+        positions.push_back(Position(1.2, 0.5));
     }
     cout << "Setup complete. Coordinates are:" << endl;
     cout << "1: { " << positions[0].GetX() << ", " << positions[0].GetY() << " }" << endl;
@@ -126,13 +139,27 @@ void Test::milestone21part1() {
     cout << "3: { " << positions[2].GetX() << ", " << positions[2].GetY() << " }" << endl;
     cout << "4: { " << positions[3].GetX() << ", " << positions[3].GetY() << " }" << endl;
 
-    master.robo0.GotoPos(positions[0]);
-    master.robo1.GotoPos(positions[1]);
-    master.robo2.GotoPos(positions[3]);
+    master.robo0.updatePids(positions[0]);
+    master.robo1.updatePids(positions[1]);
+    master.robo2.updatePids(positions[3]);
+    Position robo0Pos = positions[0];
+    Position robo1Pos = positions[1];
+    Position robo2Pos = positions[3];
+    while(1){
+        usleep(10000);
+        master.robo0.updatePids(robo0Pos);
+        master.robo1.updatePids(robo1Pos);
+        master.robo2.updatePids(robo2Pos);
+        master.robo0.driveWithCA();
+        master.robo1.driveWithCA();
+        master.robo2.driveWithCA();
+        if(master.robo0.GetPos().DistanceTo(robo0Pos)){
+            robo0Pos = positions[2];
+        }
+    }
 
-
-    int step = 1;
-
+    //old whileloop
+    int step = 1; 
     while (1) {
         if (step == 1) {
             if (
@@ -200,10 +227,11 @@ void Test::pullVector() {
 
 void Test::pidCollision(Robo &robo, RawBall &ball, Robo &obstacle){
     while(1){
-        robo.driveWithCA(ball);
-        robo.updatePositions();
+        usleep(10000);
+        robo.updatePids(ball.GetPos());
+        robo.driveWithCA();
+     //   robo.updatePositions();
     }
-
 }
 
 void Test::collisionAvoidance(Robo& roboMove, Robo& roboObs) {
@@ -578,7 +606,7 @@ void Test::do_goalkeeper_kick(Robo& robogoalkicker, Robo& robo_blue_1, Robo& rob
         }
 
         usleep(5000000);
-        cout << "Turn complete" << endl;9
+        cout << "Turn complete" << endl;
 
         cout<<Targetpoint.GetY()<<endl;
 

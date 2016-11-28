@@ -5,6 +5,7 @@
 /** To complete task 2.1 part 1, we have to implement multithreading it seems
   * like. We will have problems controlling all robots at the same time without
   */
+
 void Robo::run(cpp::channel<Position> positionCh) {
     while (1) {
     }
@@ -34,36 +35,45 @@ void Robo::updatePositions() {
 }
 
 
-
-void Robo::driveWithCA(RawBall &ball) {
-    usleep(10000);
-    double dist_error = this->GetPos().DistanceTo(ball.GetPos());
+void Robo::updateDistancePid(Position targetPos){
+    double dist_error = this->GetPos().DistanceTo(targetPos);
     if (dist_error < 0.03){
         pidDistance.updateInput(dist_error);
     }
     else{
         pidDistance.updateInput(1.2);
     }
-    double angleErrorRad = getAngleErrRad(ball.GetPos());
-    double sinAngleErrorRad = sin(angleErrorRad/2);
+}
+void Robo::updateAnglePid(Position targetPos){
+    this->angleErrorRad = getAngleErrRad(targetPos);
+    double sinAngleErrorRad = sin(this->angleErrorRad/2);
     pidAngle.updateInput(sinAngleErrorRad);
+}
+void Robo::updatePids(Position targetPos){
+    updateDistancePid(targetPos);
+    updateAnglePid(targetPos);
+}
+
+
+void Robo::driveWithCA() {
     double driveSpeed = pidDistance.getInput();
     //std::cout << "angleErrorRad: " << angleErrorRad << std::endl;
     double angleInput = pidAngle.getInput();
     //std::cout << "angleInput: " << angleInput<< std::endl;
 
     // the cos will make it drive fastest in the right direction, and also back up and turn if behind you
-    double rightWheel = driveSpeed*cos(angleErrorRad) + angleInput;
-    double leftWheel = driveSpeed*cos(angleErrorRad) - angleInput;
+    double rightWheel = driveSpeed*cos(this->angleErrorRad) + angleInput;
+    double leftWheel = driveSpeed*cos(this->angleErrorRad) - angleInput;
     //rightWheel += leftWheel;
     //leftWheel = leftWheel;
+    cout << "leftwheel: " << leftWheel << endl;
+    cout << "rightwheel: " << rightWheel << endl;
     this->MoveMs(leftWheel,rightWheel, 100, 10);
     //out << endl <<robo1.GetPos().AngleOfLineToPos(ball.GetPos())-robo1.GetPhi() << endl;
     //robo1.TurnAbs(robo1.GetPos().AngleOfLineToPos(ball.GetPos())-robo1.GetPhi());
 }
 
 double Robo::getAngleWithCA(Force obstacleForce, Position targetPos){
-
     double targetDeg = this->GetPos().AngleOfLineToPos(targetPos).Deg();
     double caScale = obstacleForce.len/(CA_SCALE + obstacleForce.len);
     double obstacleAngle = obstacleForce.deg;

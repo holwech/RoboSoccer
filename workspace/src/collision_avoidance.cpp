@@ -1,6 +1,18 @@
 #include "collision_avoidance.h"
 
 CA::CA() {
+    //Adding goalArea obstacle-Positions
+    //GoalArea towards pc-s
+    //right
+    goalArea.push_back(Position(1.35, -0.365));
+    goalArea.push_back(Position(1.42, -0.365));
+    //left
+    goalArea.push_back(Position(1.41, 0.349));
+    goalArea.push_back(Position(1.34, 0.349));
+    //mid
+    goalArea.push_back(Position(1.29, 0.0));
+    //GoalArea towards door
+    //todo
     obstacleWeight = 1;
 }
 
@@ -125,16 +137,24 @@ Force CA::getPull(Position& basePos, Position& target, Position& obstacle) {
 
 Force CA::getTotalPull(Position basePos, Position target, vector<Position>& team, vector<Position>& otherTeam, bool gravity = false) {
     Force totalForce = {0.0, 0.0, 0.0, 0.0, 0.0};
+    Force temp;
     for (Position &obstacle : team) {
-        Force temp = getPull(basePos, target, obstacle);
+        temp = getPull(basePos, target, obstacle);
         totalForce.X += temp.X;
         totalForce.Y += temp.Y;
     }
     for (Position &obstacle : otherTeam) {
-        Force temp = getPull(basePos, target, obstacle);
+        temp = getPull(basePos, target, obstacle);
         totalForce.X += temp.X;
         totalForce.Y += temp.Y;
     }
+    //Add force from goal area
+    for(Position &obstacle : goalArea){
+        temp = getPull(basePos, target, obstacle);
+        totalForce.X += temp.X;
+        totalForce.Y += temp.Y;
+    }
+
     totalForce.len = sqrt(pow(totalForce.X, 2) + pow(totalForce.Y, 2));
     Angle angle = basePos.AngleOfLineToPos(Position(basePos.GetX() + totalForce.X, basePos.GetY() + totalForce.Y));
     totalForce.deg = angle.Deg();

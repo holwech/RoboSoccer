@@ -33,6 +33,7 @@ private:
     double getPassSide(Position& basePos, Position& target, Position& obstacle);
     void toPerp(Force& force, double passSide);
     int obstacleWeight;
+    std::vector<Position> goalArea;
 };
 
 #endif // COLLISION_AVOIDANCE_H

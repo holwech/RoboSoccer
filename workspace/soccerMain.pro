@@ -46,5 +46,3 @@ dox.depends = FORCE
 
 # somewhere else in the *.pro file
 QMAKE_EXTRA_TARGETS += dox
-
-

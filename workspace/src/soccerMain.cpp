@@ -88,7 +88,6 @@ int main(void) {
             rfNumber4 = 1;
             rfNumber5 = 2;
         }
-
         Robo robo0(DBC, rfNumber0);
         Robo robo1(DBC, rfNumber1);
         Robo robo2(DBC, rfNumber2);
