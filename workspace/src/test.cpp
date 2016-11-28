@@ -464,7 +464,7 @@ void Test::do_goalkeeper_kick(Robo& robogoalkicker, Robo& robo_blue_1, Robo& rob
 
     double goalx, goaly,ballx, bally, initrobox, initroboy;
     Angle ang;
-    double delta = 0.15;
+    double delta = 0.09;
 
     goalx = Targetpoint.GetX();
     goaly = Targetpoint.GetY();
@@ -478,13 +478,13 @@ void Test::do_goalkeeper_kick(Robo& robogoalkicker, Robo& robo_blue_1, Robo& rob
         {
 
             robogoalkicker.GotoPos(pos2);
-            while(robogoalkicker.GetPos().DistanceTo(pos2)>0.1);
+            while(robogoalkicker.GetPos().DistanceTo(pos2)>0.08);
         }
         else
         {
 
             robogoalkicker.GotoPos(pos3);
-            while(robogoalkicker.GetPos().DistanceTo(pos3)>0.1);
+            while(robogoalkicker.GetPos().DistanceTo(pos3)>0.08);
         }
         ballx = ourball.GetX();
         bally = ourball.GetY();
@@ -492,23 +492,64 @@ void Test::do_goalkeeper_kick(Robo& robogoalkicker, Robo& robo_blue_1, Robo& rob
         initrobox = ballx+delta;
         initroboy = bally + delta*(goaly-bally)/(goalx-ballx);
 
+        if(bally>0)
+        {
+            initroboy = initroboy+0.02;
+        }
+        else
+        {
+            initroboy = initroboy-0.02;
+        }
+
+
         robogoalkicker.GotoXY(initrobox,initroboy,50,true);
         Position initP(initrobox,initroboy);
         while(robogoalkicker.GetPos().DistanceTo(initP)>0.05);
 
 
         ang = robogoalkicker.GetPos().AngleOfLineToPos(ourball.GetPos());
-        robogoalkicker.TurnAbs(ang);
+
+        //ang = ourball.GetPos().AngleOfLineToPos(Targetpoint);
+/*        robogoalkicker.TurnAbs(ang);
         while((ang-robogoalkicker.GetPhi()).Deg()*(ang-robogoalkicker.GetPhi()).Deg()>0.1);
+*/
+
+        ///////// Claculate angle
+
+//        double pi = 3.1415926535897;
+//        double our_angle = 180/pi*acos((ballx-Targetpoint.GetX())/abs(ourball.GetPos().DistanceTo(Targetpoint)));
+//        double our_angle = 180+180/pi*atan((Targetpoint.GetY()-bally)/(Targetpoint.GetX()-ballx));
+/*
+        if(Targetpoint.GetY()>=0){
+            our_angle = 180-our_angle;
+
+        }else{
+
+            our_angle = our_angle-180;
+        }
+*/
+
+//        cout<< our_angle << endl;
 
 
-        usleep(5000);
-        usleep(5000);
+        robogoalkicker.MoveMs(-25,25,50000);
+        //while(abs(abs(ang.Deg())-abs(robogoalkicker.GetPhi().Deg())) > 0.05); //*(ang.Deg()-robogoalkicker.GetPhi().Deg())>0.05);
+        while((ang.Deg()-robogoalkicker.GetPhi().Deg())*(ang.Deg()-robogoalkicker.GetPhi().Deg()) > 0.1); //*(ang.Deg()-robogoalkicker.GetPhi().Deg())>0.05);
+ //       while(abs(our_angle-robogoalkicker.GetPhi().Deg())>0.1)
+
+//        usleep(5000);
+//        usleep(5000);
 
 
-        robogoalkicker.MoveMs(-255,-255,300);
-        usleep(3000);
-        robogoalkicker.MoveMs(255,255,500);
+
+
+        cout<<Targetpoint.GetX()<<endl;
+        cout<<Targetpoint.GetY()<<endl;
+
+
+//        robogoalkicker.MoveMs(-255,-255,300);
+//        usleep(3000);
+        robogoalkicker.MoveMs(255,225,500);
 
 
 /*   ///////////////////// Start Soung: use Targetpoint between 2 blue robots with largest distance
