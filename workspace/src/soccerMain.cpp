@@ -97,6 +97,9 @@ int main(void) {
         Robo robo5(DBC, rfNumber5);
         cout << "Robots are ready..." << endl;
 
+        robo0.setVariables(robo1, robo2, robo3, robo4, robo5);
+        robo1.setVariables(robo0, robo2, robo3, robo4, robo5);
+        robo2.setVariables(robo0, robo1, robo3, robo4, robo5);
 
         /** Create a ball object */
         RawBall ball(DBC);

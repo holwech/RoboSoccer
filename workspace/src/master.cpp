@@ -29,6 +29,7 @@ Master::Master(string& team,
 
 
 void Master::run() {
+
     cout << "Starting state machine..." << endl;
     debugTimer.start();
     printInfo();
