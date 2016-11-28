@@ -22,12 +22,17 @@ public:
     void run(cpp::channel<Position> position);
     CA ca;
     void driveWithCA(RoboControl& robo1, RawBall &ball, Position  obstPos,pidController &pidAngle, pidController &pidDistance);
-
+    void setVariables(Robo& team1, Robo& team2, Robo& otherTeam1, Robo& otherTeam2, Robo& otherTeam3);
 private:
     Position targetPosition;
     double getObstacleAngleDiffRad(RoboControl& robo, Position obstPos);
     double getAngleErrRad(Position targetPos, Position obstPos);
     double getAngleWithCA(Force obstacleForce, Position targetPos);
+    void updatePositions();
+    vector<Robo*> team;
+    vector<Robo*> otherTeam;
+    vector<Position> posTeam;
+    vector<Position> posOtherTeam;
 };
 
 
