@@ -134,6 +134,39 @@ Force CA::getPull(Position& basePos, Position& target, Position& obstacle) {
     return force;
 }
 
+/** Field boundaries: {-1.383, 0.089}, {1.422, 0.876}, {1.465, -0.924}, {-1.466, -0.884}
+  * Goal boundaries
+  * Goal (not by the door): {1.414, 0.338}, {1.191, 0.341}, {1.205, -0.354}, {1.430, -0.362}
+  * Goal (by the door): {-1.389, 0.369}, {-1.174, 0.360}, {-1.194, -0.332}, {-1.415, -0.325}
+  */
+
+/** This program is just based on approx. boundaries, and probably needs some tuning*/
+Force CA::getWallPull(Position& basePos, Position& target, double scale = 0.1) {
+    Position leftPos(-1.383, basePos.GetY());
+    Position rightPos(1.422, basePos.GetY());
+    if (basePos.GetY() <= 0.35 && basePos.GetY() >= -0.35) {
+        leftPos.SetX(-1.2);
+        rightPos.SetX(1.2);
+    }
+    Position topPos(basePos.GetX(), 0.876);
+    if (topPos.GetX() >= 1.2 && topPos.GetY() < 0) {
+        topPos.SetY(-0.360);
+    } else if (topPos.GetX() <= -1.2 && topPos.GetY() < 0) {
+        topPos.SetY(-0.360);
+    }
+    Position botPos(basePos.GetY(), -0.884);
+    if (topPos.GetX() >= 1.2 && topPos.GetY() > 0) {
+        botPos.SetY(0.345);
+    } else if (topPos.GetX() <= -1.2 && topPos.GetY() > 0) {
+        botPos.SetY(0.345);
+    }
+    Force left = getForce(basePos.GetX(), basePos.GetY(), leftPos.GetX(), leftPos.GetY());
+    Force right = getForce(basePos.GetX(), basePos.GetY(), rightPos.GetX(), rightPos.GetY());
+    Force top = getForce(basePos.GetX(), basePos.GetY(), topPos.GetX(), topPos.GetY());
+    Force bot = getForce(basePos.GetX(), basePos.GetY(), botPos.GetX(), botPos.GetY());
+    Force boundaryForce = {(left.X + right.X + top.X + bot.X) * scale, (left.Y + right.Y + top.Y + bot.Y) * scale, 0.0, 0.0, 0.0};
+    return boundaryForce;
+}
 
 Force CA::getTotalPull(Position basePos, Position target, vector<Position>& team, vector<Position>& otherTeam, bool gravity = false) {
     Force totalForce = {0.0, 0.0, 0.0, 0.0, 0.0};
@@ -148,12 +181,9 @@ Force CA::getTotalPull(Position basePos, Position target, vector<Position>& team
         totalForce.X += temp.X;
         totalForce.Y += temp.Y;
     }
-    //Add force from goal area
-    for(Position &obstacle : goalArea){
-        temp = getPull(basePos, target, obstacle);
-        totalForce.X += temp.X;
-        totalForce.Y += temp.Y;
-    }
+    Force wallPull = getWallPull(basePos, target);
+    totalForce.X += wallPull.X;
+    totalForce.Y += wallPull.Y;
 
     totalForce.len = sqrt(pow(totalForce.X, 2) + pow(totalForce.Y, 2));
     Angle angle = basePos.AngleOfLineToPos(Position(basePos.GetX() + totalForce.X, basePos.GetY() + totalForce.Y));

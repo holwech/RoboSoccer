@@ -25,6 +25,7 @@ void Test::testMenu() {
         cout << "11: penalty shooting" << endl;
         cout << "12: Before penalty" << endl;
         cout << "13: Turning" << endl;
+        cout << "14: Map measurement" << endl;
 
         int program;
         cin >> program;
@@ -84,6 +85,10 @@ void Test::testMenu() {
         case 13:
             cout << "Running 13: Turning" << endl;
             turning();
+            break;
+        case 14:
+            cout << "Running 14: Map measurement" << endl;
+            cout << "Coordinates of ball: " << master.ball.GetX() << " " << master.ball.GetY() << endl;
             break;
         default:
             stop = true;
@@ -145,21 +150,47 @@ void Test::milestone21part1() {
     Position robo0Pos = positions[0];
     Position robo1Pos = positions[1];
     Position robo2Pos = positions[3];
+    int step = 1;
     while(1){
         usleep(10000);
         master.robo0.updatePids(robo0Pos);
         master.robo1.updatePids(robo1Pos);
         master.robo2.updatePids(robo2Pos);
+        master.robo0.updatePositions();
+        master.robo1.updatePositions();
+        master.robo2.updatePositions();
         master.robo0.driveWithCA();
         master.robo1.driveWithCA();
         master.robo2.driveWithCA();
-        if(master.robo0.GetPos().DistanceTo(robo0Pos)){
-            robo0Pos = positions[2];
+
+        if (step == 1) {
+            if (
+                master.robo0.GetPos().DistanceTo(positions[0]) < 0.2 &&
+                master.robo1.GetPos().DistanceTo(positions[1]) < 0.2 &&
+                master.robo2.GetPos().DistanceTo(positions[3]) < 0.2)
+            {
+                cout << "Step 1 reached" << endl;
+                robo0Pos = positions[2];
+                robo1Pos = positions[3];
+                robo2Pos = positions[1];
+                step = 2;
+            }
+        } else if (step == 2) {
+            if (
+                master.robo0.GetPos().DistanceTo(positions[2]) < 0.2 &&
+                master.robo1.GetPos().DistanceTo(positions[3]) < 0.2 &&
+                master.robo2.GetPos().DistanceTo(positions[1]) < 0.2)
+            {
+                cout << "Step 2 reached" << endl;
+                robo0Pos = positions[0];
+                robo1Pos = positions[1];
+                robo2Pos = positions[3];
+                step = 1;
+            }
         }
     }
 
     //old whileloop
-    int step = 1; 
     while (1) {
         if (step == 1) {
             if (

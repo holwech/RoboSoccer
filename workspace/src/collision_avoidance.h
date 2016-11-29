@@ -32,6 +32,7 @@ private:
     Force getForce(double X, double Y, double obstacleX, double obstacleY);
     double getPassSide(Position& basePos, Position& target, Position& obstacle);
     void toPerp(Force& force, double passSide);
+    Force getWallPull(Position& basePos, Position& target, double scale);
     int obstacleWeight;
     std::vector<Position> goalArea;
 };
