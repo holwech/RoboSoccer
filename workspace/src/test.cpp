@@ -73,7 +73,7 @@ void Test::testMenu() {
             break;
         case 9:
             cout << "Running 9: Goalkeeper's kick" << endl;
-            do_goalkeeper_kick(master.robo1, master.robo3, master.robo4, master.robo5, master.ball);
+            do_goalkeeper_kick(master.robo2, master.robo3, master.robo4, master.robo5, master.ball);
             break;
         case 10:
             cout << "Running 10: Milestone 2.1 part 1" << endl;
@@ -581,7 +581,6 @@ void Test::do_goalkeeper_kick(Robo& robogoalkicker, Robo& robo_blue_1, Robo& rob
 
     if(dist1>=dist2){
         cout << "Hello dist1" << endl;
-
         if (dist1 > dist_larg_wall && dist1 > dist_small_wall){
             Targetpoint.SetX(posvect[1][midpo] + 0.5*(posvect[1][small]-posvect[1][midpo]));
             Targetpoint.SetY(posvect[2][midpo] + 0.5*(posvect[2][small]-posvect[2][midpo]));
@@ -654,7 +653,7 @@ void Test::do_goalkeeper_kick(Robo& robogoalkicker, Robo& robo_blue_1, Robo& rob
 
     double goalx, goaly,ballx, bally, initrobox, initroboy;
     Angle ang;
-    double delta = 0.09;
+    double delta = 0.085;
 
 
     goalx = Targetpoint.GetX();
