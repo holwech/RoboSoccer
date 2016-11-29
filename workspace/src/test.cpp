@@ -756,7 +756,7 @@ void Test::do_goalkeeper_kick(Robo& robogoalkicker, Robo& robo_blue_1, Robo& rob
 
         int i =1;
 
-        for(i=1;i<5;i++)
+        for(i=1;i<10;i++)
         {
         robogoalkicker.TurnAbs(ang);
          usleep(300000);
@@ -776,7 +776,7 @@ void Test::do_goalkeeper_kick(Robo& robogoalkicker, Robo& robo_blue_1, Robo& rob
         cout<<Targetpoint.GetY()<<endl;
 
 
-        robogoalkicker.MoveMs(250,250,700);
+        robogoalkicker.MoveMs(250,250,500);
 //        usleep(3000);
         //robogoalkicker.MoveMs(255,225,500);
 
