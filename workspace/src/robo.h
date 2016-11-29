@@ -25,12 +25,13 @@ public:
     void updatePids(Position targetPos);
     void setVariables(Robo& team1, Robo& team2, Robo& otherTeam1, Robo& otherTeam2, Robo& otherTeam3);
     void updatePositions();
+    void turnWithPid(Position targetPos);
 private:
     Position targetPosition;
 //    double getObstacleAngleDiffRad(RoboControl& robo);
-    double getAngleErrRad(Position targetPos);
+    double getAngleErrRad(Position targetPos, bool ca);
     double getAngleWithCA(Force obstacleForce, Position targetPos);
-    void updateAnglePid(Position targetPos);
+    void updateAnglePid(Position targetPos, bool ca);
     void updateDistancePid(Position targetPos);
     vector<Robo*> team;
     vector<Robo*> otherTeam;

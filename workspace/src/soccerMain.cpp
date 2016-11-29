@@ -44,7 +44,6 @@ int main(void) {
      *
      */
 
-
     string teamColorAnswer;
     bool teamChosen = false;
     while (!teamChosen) {
@@ -99,7 +98,10 @@ int main(void) {
         robo0.setVariables(robo1, robo2, robo3, robo4, robo5);
         robo1.setVariables(robo0, robo2, robo3, robo4, robo5);
         robo2.setVariables(robo0, robo1, robo3, robo4, robo5);
-
+        //following only needed for milestone 2
+        robo3.setVariables(robo4, robo5, robo0, robo1, robo2);
+        robo4.setVariables(robo3, robo5, robo0, robo1, robo2);
+        robo5.setVariables(robo3, robo4, robo0, robo1, robo2);
         /** Create a ball object */
         RawBall ball(DBC);
         cout << "Ball ready..." << endl;

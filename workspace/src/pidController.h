@@ -22,6 +22,7 @@ public:
     void saveNewErr(double diff);
     void saveNewInput(double input);
     double getInput();
+    void changeParams(double newKp, double newKi, double newKd);
 };
 
 #endif // PIDCONTROLLER_H

@@ -44,8 +44,8 @@ void Robo::updateDistancePid(Position targetPos){
         pidDistance.updateInput(1.2);
     }
 }
-void Robo::updateAnglePid(Position targetPos){
-    this->angleErrorRad = getAngleErrRad(targetPos);
+void Robo::updateAnglePid(Position targetPos, bool ca = true){
+    this->angleErrorRad = getAngleErrRad(targetPos, ca);
     double sinAngleErrorRad = sin(this->angleErrorRad/2);
     pidAngle.updateInput(sinAngleErrorRad);
 }
@@ -53,7 +53,16 @@ void Robo::updatePids(Position targetPos){
     updateDistancePid(targetPos);
     updateAnglePid(targetPos);
 }
+void Robo::turnWithPid(Position targetPos){
+    this->updateAnglePid(targetPos);
+    double angleInput = pidAngle.getInput();
+    double rightWheel = +angleInput;
+    double leftWheel = -angleInput;
 
+    cout << "leftwheel: " << leftWheel << endl;
+    cout << "rightwheel: " << rightWheel << endl;
+    this->MoveMs(leftWheel, rightWheel,100,10);
+}
 
 void Robo::driveWithCA() {
     double driveSpeed = pidDistance.getInput();
@@ -85,9 +94,9 @@ double Robo::getAngleWithCA(Force obstacleForce, Position targetPos){
     }
     //cout << fabs(ajusted_obstacleAngle - ajustedTargetDeg) << " and " << fabs(obstacleAngle - targetDeg) << endl;
     double targetDegWithCA = obstacleAngle*(caScale) + targetDeg*(1 - caScale);
-    cout << "targetDeg : " << targetDeg << endl;
-    cout << "obstacleForce.deg : " << obstacleAngle << endl;
-    cout << "targetDegWithCA : " << targetDegWithCA << endl;
+//    cout << "targetDeg : " << targetDeg << endl;
+//    cout << "obstacleForce.deg : " << obstacleAngle << endl;
+//    cout << "targetDegWithCA : " << targetDegWithCA << endl;
     return targetDegWithCA;
 //    //get the magnitude of force
 //    int obstAngleSign = obstAngleDiffRad/fabs(obstAngleDiffRad);
@@ -100,10 +109,15 @@ double Robo::getAngleWithCA(Force obstacleForce, Position targetPos){
 //    }
 }
 
-double Robo::getAngleErrRad(Position targetPos){
+double Robo::getAngleErrRad(Position targetPos, bool ca = true){
     //get the error
     Position myPos = this->GetPos();
-    double ref_deg = getAngleWithCA(this->ca.getTotalPull(myPos, targetPos, posTeam, posOtherTeam, false), targetPos);
+    double ref_deg;
+    if(ca){
+        ref_deg = getAngleWithCA(this->ca.getTotalPull(myPos, targetPos, posTeam, posOtherTeam, false), targetPos);
+    }else{
+        ref_deg = myPos.GetPos().AngleOfLineToPos(targetPos).Deg();
+    }
     double myAngle_deg = this->GetPhi().Deg();
     //and solving the angle gap-problem
     //cout << "ref before: " << ref_deg << endl;
@@ -130,7 +144,7 @@ double Robo::getObstacleAngleDiffRad(RoboControl& robo, Position obstPos){
     double ajusted_myAngle_deg = ((int)myAngle_deg + 4*180) % (2*180);
     double ajusted_roboAngleObstacle_deg = ((int)roboAngleObstacle_deg + 4*180) % (2*180);
     double diffRoboObstAngle_rad;
-    if(fabs(ajusted_roboAngleObstacle_deg - ajusted_myAngle_deg) < fabs(roboAngleObstacle_deg - myAngle_deg)){
+    if(fabs(ajusted_roboAngleObstacle_deg //- ajusted_myAngle_deg) < fabs(roboAngleObstacle_deg - myAngle_deg)){
         diffRoboObstAngle_rad = (ajusted_roboAngleObstacle_deg - ajusted_myAngle_deg)*(M_PI/180);
     }else{
         diffRoboObstAngle_rad = (roboAngleObstacle_deg - myAngle_deg)*(M_PI/180);

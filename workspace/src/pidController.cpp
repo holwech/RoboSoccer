@@ -21,6 +21,11 @@ pidController::pidController(double input_Kp, double input_Ki, double input_Kd)
     c = Kd/TIMESTEP;
 }
 
+void pidController::changeParams(double newKp, double newKi, double newKd){
+    Kp = newKp;
+    Ki = newKi;
+    Kd = newKd;
+}
 void pidController::saveNewErr(double diff){
     if(error_sign == diff/fabs(diff) || error_sign == 0){
         double tempErrA = diff;
@@ -38,10 +43,10 @@ void pidController::saveNewErr(double diff){
         prevErr[0] = diff;
     }
     error_sign = diff/fabs(diff);
-    std::cout << "Diff: " << diff << std::endl;
-    for (int i = 0; i < NUM_SAVED_ERR; i++){
-         std::cout << i << ": " << prevErr[i] << std::endl;
-    }
+//    std::cout << "Diff: " << diff << std::endl;
+//    for (int i = 0; i < NUM_SAVED_ERR; i++){
+//         std::cout << i << ": " << prevErr[i] << std::endl;
+//    }
     //cout << endl;
 }
 void pidController::updateInput(double error){
