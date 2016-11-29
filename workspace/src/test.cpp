@@ -561,8 +561,11 @@ void Test::do_goalkeeper_kick(Robo& robogoalkicker, Robo& robo_blue_1, Robo& rob
 
 //    ----------------------------------
     Position pos1(1, 0);
-    Position pos2(1.27, -0.35);
-    Position pos3(1.27, 0.35);
+    Position pos2(1.3, -0.35);
+    Position pos3(1.3, 0.35);
+    Position pos4(1.1, 0);
+
+    pos1.SetY(robogoalkicker.GetY());
 
     double goalx, goaly,ballx, bally, initrobox, initroboy;
     Angle ang;
@@ -576,6 +579,9 @@ void Test::do_goalkeeper_kick(Robo& robogoalkicker, Robo& robo_blue_1, Robo& rob
        // robogoalkicker.GotoXY(0,0,160,true);
         robogoalkicker.GotoPos(pos1);
          while(robogoalkicker.GetPos().DistanceTo(pos1)>0.1);
+
+         robogoalkicker.GotoPos(pos4);
+          while(robogoalkicker.GetPos().DistanceTo(pos4)>0.1);
 
         if(ourball.GetY()>0)
         {
@@ -668,9 +674,10 @@ void Test::do_goalkeeper_kick(Robo& robogoalkicker, Robo& robo_blue_1, Robo& rob
         for(i=1;i<5;i++)
         {
         robogoalkicker.TurnAbs(ang);
+         usleep(300000);
         while((ang.Deg()-robogoalkicker.GetPhi().Deg())*(ang.Deg()-robogoalkicker.GetPhi().Deg()) > 0.1)
         {
-            if(fabs(robogoalkicker.GetSpeedLeft()==robogoalkicker.GetSpeedRight())<0.1)
+            if(fabs(robogoalkicker.GetSpeedLeft()==robogoalkicker.GetSpeedRight())<0.01)
             {
                 usleep(2000);
                 break;
@@ -684,7 +691,7 @@ void Test::do_goalkeeper_kick(Robo& robogoalkicker, Robo& robo_blue_1, Robo& rob
         cout<<Targetpoint.GetY()<<endl;
 
 
-        robogoalkicker.MoveMs(250,250,800);
+        robogoalkicker.MoveMs(250,250,700);
 //        usleep(3000);
         //robogoalkicker.MoveMs(255,225,500);
 
