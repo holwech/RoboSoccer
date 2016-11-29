@@ -142,7 +142,7 @@ Force CA::getPull(Position& basePos, Position& target, Position& obstacle) {
 
 /** This program is just based on approx. boundaries, and probably needs some tuning*/
 Force CA::getWallPull(Position& basePos, Position& target, double scale = 0.1) {
-    bool debug = true;
+    bool debug = false;
     Position leftPos(-1.383, basePos.GetY());
     Position rightPos(1.422, basePos.GetY());
     if (basePos.GetY() <= 0.35 && basePos.GetY() >= -0.35 && fabs(basePos.GetX()) < 1.2) {
@@ -151,14 +151,26 @@ Force CA::getWallPull(Position& basePos, Position& target, double scale = 0.1) {
     }
     Position topPos(basePos.GetX(), 0.876);
     if (topPos.GetX() >= 1.2 && (basePos.GetY() < -0.360)) {
+        if(debug){
+            cout << "IN TOP POS RIGHT" << endl;
+        }
         topPos.SetY(-0.360);
     } else if (topPos.GetX() <= -1.2 && basePos.GetY() < -0.360) {
+        if(debug){
+            cout << "IN TOP POS LEFT" << endl;
+        }
         topPos.SetY(-0.360);
     }
     Position botPos(basePos.GetX(), -0.884);
     if (botPos.GetX() >= 1.2 && basePos.GetY() > 0.360) {
+        if(debug){
+            cout << "IN BOT POS RIGHT" << endl;
+        }
         botPos.SetY(0.360);
     } else if (botPos.GetX() <= -1.2 && basePos.GetY() > 0.360) {
+        if(debug){
+            cout << "IN BOT POS LEFT" << endl;
+        }
         botPos.SetY(0.360);
     }
     Force left = getForce(basePos.GetX(), basePos.GetY(), leftPos.GetX(), leftPos.GetY());

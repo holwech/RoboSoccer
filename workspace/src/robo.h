@@ -29,9 +29,9 @@ public:
 private:
     Position targetPosition;
 //    double getObstacleAngleDiffRad(RoboControl& robo);
-    double getAngleErrRad(Position targetPos, bool ca);
+    double getAngleErrRad(Position targetPos);
     double getAngleWithCA(Force obstacleForce, Position targetPos);
-    void updateAnglePid(Position targetPos, bool ca);
+    void updateAnglePid(Position targetPos);
     void updateDistancePid(Position targetPos);
     vector<Robo*> team;
     vector<Robo*> otherTeam;

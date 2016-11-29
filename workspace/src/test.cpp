@@ -56,12 +56,7 @@ void Test::testMenu() {
             break;
         case 6:
             cout << "Running 6: Milestone 2.1 part 2" << endl;
-            pidCollision(master.robo2, master.ball);
-                //master.robo0.pidAngle.changeParams(50, 0, 0);
-//            while(1){
-//                usleep(10000);
-//                master.robo0.turnWithPid(master.ball.GetPos());
-//            }
+            pidCollision(master.robo0, master.ball);
             break;
         case 7:
             cout << "Running 7: Pull vector" << endl;

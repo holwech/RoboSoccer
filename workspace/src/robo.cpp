@@ -44,8 +44,8 @@ void Robo::updateDistancePid(Position targetPos){
         pidDistance.updateInput(1.2);
     }
 }
-void Robo::updateAnglePid(Position targetPos, bool ca = true){
-    this->angleErrorRad = getAngleErrRad(targetPos, ca);
+void Robo::updateAnglePid(Position targetPos){
+    this->angleErrorRad = getAngleErrRad(targetPos);
     double sinAngleErrorRad = sin(this->angleErrorRad/2);
     pidAngle.updateInput(sinAngleErrorRad);
 }
@@ -109,15 +109,10 @@ double Robo::getAngleWithCA(Force obstacleForce, Position targetPos){
 //    }
 }
 
-double Robo::getAngleErrRad(Position targetPos, bool ca = true){
+double Robo::getAngleErrRad(Position targetPos){
     //get the error
     Position myPos = this->GetPos();
-    double ref_deg;
-    if(ca){
-        ref_deg = getAngleWithCA(this->ca.getTotalPull(myPos, targetPos, posTeam, posOtherTeam, false), targetPos);
-    }else{
-        ref_deg = myPos.GetPos().AngleOfLineToPos(targetPos).Deg();
-    }
+    double ref_deg = getAngleWithCA(this->ca.getTotalPull(myPos, targetPos, posTeam, posOtherTeam, false), targetPos);
     double myAngle_deg = this->GetPhi().Deg();
     //and solving the angle gap-problem
     //cout << "ref before: " << ref_deg << endl;
