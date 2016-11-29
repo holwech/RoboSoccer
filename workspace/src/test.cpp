@@ -186,8 +186,7 @@ void Test::milestone21part1() {
     Position robo2Pos = positions[3];
     Position randomPos;
     newRandomPosition(randomPos, distY(mtY), distX(mtX));
-    //int step = 1;
-    //master.robo3.GotoPos(randomPos);
+    master.robo3.GotoXY(randomPos.GetX(), randomPos.GetY(), 100);
     while(1){
         usleep(10000);
         master.robo0.updatePids(robo0Pos);
@@ -215,7 +214,7 @@ void Test::milestone21part1() {
         }
         if(master.robo3.GetPos().DistanceTo(randomPos) < 0.2){
             newRandomPosition(randomPos, distY(mtY), distX(mtX));
-            master.robo3.GotoPos(randomPos);
+            master.robo3.GotoXY(randomPos.GetX(), randomPos.GetY(), 60);
         }
 //        if (step == 1) {
 //            if (
@@ -314,7 +313,7 @@ void Test::pidCollision(Robo &robo, RawBall &ball){
     while(1){
         usleep(10000);
         robo.updatePids(ball.GetPos());
-        //robo.driveWithCA();
+        robo.driveWithCA();
         robo.updatePositions();
     }
 }

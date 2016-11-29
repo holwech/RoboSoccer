@@ -142,32 +142,40 @@ Force CA::getPull(Position& basePos, Position& target, Position& obstacle) {
 
 /** This program is just based on approx. boundaries, and probably needs some tuning*/
 Force CA::getWallPull(Position& basePos, Position& target, double scale = 0.1) {
+    bool debug = true;
     Position leftPos(-1.383, basePos.GetY());
     Position rightPos(1.422, basePos.GetY());
-    if (basePos.GetY() <= 0.35 && basePos.GetY() >= -0.35) {
+    if (basePos.GetY() <= 0.35 && basePos.GetY() >= -0.35 && fabs(basePos.GetX()) < 1.2) {
         leftPos.SetX(-1.2);
         rightPos.SetX(1.2);
     }
     Position topPos(basePos.GetX(), 0.876);
-    if (topPos.GetX() >= 1.2 && topPos.GetY() < 0) {
+    if (topPos.GetX() >= 1.2 && (basePos.GetY() < -0.360)) {
         topPos.SetY(-0.360);
-    } else if (topPos.GetX() <= -1.2 && topPos.GetY() < 0) {
+    } else if (topPos.GetX() <= -1.2 && basePos.GetY() < -0.360) {
         topPos.SetY(-0.360);
     }
     Position botPos(basePos.GetX(), -0.884);
-    if (botPos.GetX() >= 1.2 && botPos.GetY() > 0) {
-        botPos.SetY(0.345);
-    } else if (botPos.GetX() <= -1.2 && botPos.GetY() > 0) {
-        botPos.SetY(0.345);
+    if (botPos.GetX() >= 1.2 && basePos.GetY() > 0.360) {
+        botPos.SetY(0.360);
+    } else if (botPos.GetX() <= -1.2 && basePos.GetY() > 0.360) {
+        botPos.SetY(0.360);
     }
     Force left = getForce(basePos.GetX(), basePos.GetY(), leftPos.GetX(), leftPos.GetY());
     Force right = getForce(basePos.GetX(), basePos.GetY(), rightPos.GetX(), rightPos.GetY());
     Force top = getForce(basePos.GetX(), basePos.GetY(), topPos.GetX(), topPos.GetY());
     Force bot = getForce(basePos.GetX(), basePos.GetY(), botPos.GetX(), botPos.GetY());
-    cout << "left: " << left.X << ", " << left.Y << endl;
-    cout << "right: " << right.X << ", " << right.Y << endl;
-    cout << "top: " << top.X << ", " << top.Y << endl;
-    cout << "bot: " << bot.X << ", " << bot.Y << endl;
+    if (debug) {
+        cout << "----- ----- CA::getWallPull ----- -----" << endl;
+        cout << "leftPos: " << leftPos.GetX() << ", " << leftPos.GetY() << endl;
+        cout << "left: " << left.X << ", " << left.Y << endl;
+        cout << "rightPos: " << rightPos.GetX() << ", " << rightPos.GetY() << endl;
+        cout << "right: " << right.X << ", " << right.Y << endl;
+        cout << "topPos: " << topPos.GetX() << ", " << topPos.GetY() << endl;
+        cout << "top: " << top.X << ", " << top.Y << endl;
+        cout << "botPos: " << botPos.GetX() << ", " << botPos.GetY() << endl;
+        cout << "bot: " << bot.X << ", " << bot.Y << endl;
+    }
     Force boundaryForce = {(left.X + right.X + top.X + bot.X) * scale, (left.Y + right.Y + top.Y + bot.Y) * scale, 0.0, 0.0, 0.0};
     return boundaryForce;
 }
