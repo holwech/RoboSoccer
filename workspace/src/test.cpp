@@ -68,7 +68,7 @@ void Test::testMenu() {
             break;
         case 9:
             cout << "Running 9: Goalkeeper's kick" << endl;
-            do_goalkeeper_kick(master.robo2, master.robo3, master.robo4, master.robo5, master.ball);
+            do_goalkeeper_kick(master.robo0, master.robo3, master.robo4, master.robo5, master.ball);
             break;
         case 10:
             cout << "Running 10: Milestone 2.1 part 1" << endl;
@@ -181,7 +181,7 @@ void Test::milestone21part1() {
     Position robo2Pos = positions[3];
     Position randomPos;
     newRandomPosition(randomPos, distY(mtY), distX(mtX));
-    master.robo3.GotoXY(randomPos.GetX(), randomPos.GetY(), 100);
+    master.robo3.GotoXY(randomPos.GetX(), randomPos.GetY(), 40);
     while(1){
         usleep(10000);
         master.robo0.updatePids(robo0Pos);
@@ -209,7 +209,7 @@ void Test::milestone21part1() {
         }
         if(master.robo3.GetPos().DistanceTo(randomPos) < 0.2){
             newRandomPosition(randomPos, distY(mtY), distX(mtX));
-            master.robo3.GotoXY(randomPos.GetX(), randomPos.GetY(), 60);
+            master.robo3.GotoXY(randomPos.GetX(), randomPos.GetY(), 40);
         }
 //        if (step == 1) {
 //            if (
@@ -647,7 +647,7 @@ void Test::do_goalkeeper_kick(Robo& robogoalkicker, Robo& robo_blue_1, Robo& rob
 
     double goalx, goaly,ballx, bally, initrobox, initroboy;
     Angle ang;
-    double delta = 0.085;
+    double delta = 0.09;
 
 
     goalx = Targetpoint.GetX();
