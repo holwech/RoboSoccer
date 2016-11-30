@@ -18,27 +18,24 @@ CONFIG +=  debug
 
 
 # Input
-HEADERS += \ 
-    src/robo.h \
-    src/master.h \
-    src/timer.h \
-    src/collision_avoidance.h \
-    src/test.h \
-    src/pidController.h \
-    src/channel.h \
-    src/channel \
-    src/goalkeeper.h \
-    src/attacker.h
 SOURCES += src/soccerMain.cpp \
-    src/robo.cpp \
-    src/master.cpp \
+    src/master/master.h \
+    src/master/master.cpp \
+    src/robo/robo.h \
+    src/robo/robo.cpp \
+    src/control/collision_avoidance.h \
+    src/control/collision_avoidance.cpp \
+    src/control/pidController.h \
+    src/control/pidController.cpp \
+    src/goalkeeper/goalkeeper.h \
+    src/goalkeeper/goalkeeper.cpp \
+    src/attacker/attacker.h \
+    src/attacker/attacker.cpp \
+    src/timer.h \
     src/timer.cpp \
-    src/collision_avoidance.cpp \
-    src/test.cpp \
-    src/pidController.cpp \
-    src/goalkeeper.cpp \
-    src/attacker.cpp
-		
+    src/test.h \
+    src/test.cpp
+
 		
 ##############
 ## Documentation
