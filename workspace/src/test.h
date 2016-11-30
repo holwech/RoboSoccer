@@ -25,6 +25,7 @@ private:
     void pidCollision(Robo &robo, RawBall &ball);
     void do_goalkeeper_kick(Robo& robogoalkicker, Robo& robo_blue_1, Robo& robo_blue_2,Robo& robo_blue_3, RawBall& ourball);
     void turning();
+    void randomDrivingWithCA();
     Master master;
 };
 

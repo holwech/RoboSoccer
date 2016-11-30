@@ -26,6 +26,7 @@ void Test::testMenu() {
         cout << "12: Before penalty" << endl;
         cout << "13: Turning" << endl;
         cout << "14: Map measurement" << endl;
+        cout << "15: Random driving" << endl;
 
         int program;
         cin >> program;
@@ -89,6 +90,10 @@ void Test::testMenu() {
         case 14:
             cout << "Running 14: Map measurement" << endl;
             cout << "Coordinates of ball: " << master.ball.GetX() << " " << master.ball.GetY() << endl;
+            break;
+        case 15:
+            cout << "Running 15: Random driving" << endl;
+            randomDrivingWithCA();
             break;
         default:
             stop = true;
@@ -211,61 +216,74 @@ void Test::milestone21part1() {
             newRandomPosition(randomPos, distY(mtY), distX(mtX));
             master.robo3.GotoXY(randomPos.GetX(), randomPos.GetY(), 40);
         }
-//        if (step == 1) {
-//            if (
-//                master.robo0.GetPos().DistanceTo(positions[0]) < 0.2 &&
-//                master.robo1.GetPos().DistanceTo(positions[1]) < 0.2 &&
-//                master.robo2.GetPos().DistanceTo(positions[3]) < 0.2)
-//            {
-//                cout << "Step 1 reached" << endl;
-//                robo0Pos = positions[2];
-//                robo1Pos = positions[3];
-//                robo2Pos = positions[1];
-//                step = 2;
-//            }
-//        } else if (step == 2) {
-//            if (
-//                master.robo0.GetPos().DistanceTo(positions[2]) < 0.2 &&
-//                master.robo1.GetPos().DistanceTo(positions[3]) < 0.2 &&
-//                master.robo2.GetPos().DistanceTo(positions[1]) < 0.2)
-//            {
-//                cout << "Step 2 reached" << endl;
-//                robo0Pos = positions[0];
-//                robo1Pos = positions[1];
-//                robo2Pos = positions[3];
-//                step = 1;
-//            }
-//        }
+    }
+}
+
+void Test::randomDrivingWithCA() {
+    //for the random function
+    std::random_device rdY;
+    std::random_device rdX;
+    std::mt19937 mtY(rdY());
+    std::mt19937 mtX(rdX());
+    std::uniform_real_distribution<double> distY(-0.4, 0.4);
+    std::uniform_real_distribution<double> distX(-1.2, 1.2);
+
+    Position rPos0, rPos1, rPos2, rPos3, rPos4, rPos5;
+    newRandomPosition(rPos0, distY(mtY), distX(mtX));
+    newRandomPosition(rPos1, distY(mtY), distX(mtX));
+    newRandomPosition(rPos2, distY(mtY), distX(mtX));
+    newRandomPosition(rPos3, distY(mtY), distX(mtX));
+    newRandomPosition(rPos4, distY(mtY), distX(mtX));
+    newRandomPosition(rPos5, distY(mtY), distX(mtX));
+
+
+    while(1){
+        usleep(10000);
+        master.robo0.updatePids(rPos0);
+        master.robo1.updatePids(rPos1);
+        master.robo2.updatePids(rPos2);
+        master.robo3.updatePids(rPos3);
+        master.robo4.updatePids(rPos4);
+        master.robo5.updatePids(rPos5);
+        master.robo0.updatePositions();
+        master.robo1.updatePositions();
+        master.robo2.updatePositions();
+        master.robo3.updatePositions();
+        master.robo4.updatePositions();
+        master.robo5.updatePositions();
+        master.robo0.driveWithCA();
+        master.robo1.driveWithCA();
+        master.robo2.driveWithCA();
+        master.robo3.driveWithCA();
+        master.robo4.driveWithCA();
+        master.robo5.driveWithCA();
+
+        if(master.robo0.GetPos().DistanceTo(rPos0) < 0.2){
+            newRandomPosition(rPos0, distY(mtY), distX(mtX));
+            master.robo0.GotoXY(rPos0.GetX(), rPos0.GetY(), 40);
+        }
+        if(master.robo1.GetPos().DistanceTo(rPos1) < 0.2){
+            newRandomPosition(rPos1, distY(mtY), distX(mtX));
+            master.robo1.GotoXY(rPos1.GetX(), rPos1.GetY(), 40);
+        }
+        if(master.robo2.GetPos().DistanceTo(rPos2) < 0.2){
+            newRandomPosition(rPos2, distY(mtY), distX(mtX));
+            master.robo2.GotoXY(rPos2.GetX(), rPos2.GetY(), 40);
+        }
+        if(master.robo3.GetPos().DistanceTo(rPos3) < 0.2){
+            newRandomPosition(rPos3, distY(mtY), distX(mtX));
+            master.robo3.GotoXY(rPos3.GetX(), rPos3.GetY(), 40);
+        }
+        if(master.robo4.GetPos().DistanceTo(rPos4) < 0.2){
+            newRandomPosition(rPos4, distY(mtY), distX(mtX));
+            master.robo4.GotoXY(rPos4.GetX(), rPos4.GetY(), 40);
+        }
+        if(master.robo5.GetPos().DistanceTo(rPos5) < 0.2){
+            newRandomPosition(rPos5, distY(mtY), distX(mtX));
+            master.robo5.GotoXY(rPos5.GetX(), rPos5.GetY(), 40);
+        }
     }
 
-    //old whileloop
-//    while (1) {
-//        if (step == 1) {
-//            if (
-//                master.robo0.GetPos().DistanceTo(positions[0]) < 0.2 &&
-//                master.robo1.GetPos().DistanceTo(positions[1]) < 0.2 &&
-//                master.robo2.GetPos().DistanceTo(positions[3]) < 0.2)
-//            {
-//                cout << "Step 1 reached" << endl;
-//                master.robo0.GotoPos(positions[2]);
-//                master.robo1.GotoPos(positions[3]);
-//                master.robo2.GotoPos(positions[1]);
-//                step = 2;
-//            }
-//        } else if (step == 2) {
-//            if (
-//                master.robo0.GetPos().DistanceTo(positions[2]) < 0.2 &&
-//                master.robo1.GetPos().DistanceTo(positions[3]) < 0.2 &&
-//                master.robo2.GetPos().DistanceTo(positions[1]) < 0.2)
-//            {
-//                cout << "Step 2 reached" << endl;
-//                master.robo0.GotoPos(positions[0]);
-//                master.robo1.GotoPos(positions[1]);
-//                master.robo2.GotoPos(positions[3]);
-//                step = 1;
-//            }
-//        }
-//    }
 }
 
 void Test::getPassSide() {
