@@ -5,7 +5,6 @@
   * like. We will have problems controlling all robots at the same time without
   */
 
-
 void Robo::setVariables(Robo& team1, Robo& team2, Robo& otherTeam1, Robo& otherTeam2, Robo& otherTeam3) {
     team.push_back(&team1);
     team.push_back(&team2);

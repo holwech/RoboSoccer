@@ -1,32 +1,23 @@
 #include "attacker.h"
 
-Position Attacker::nextMove() {
-    update();
-    Position nextMove;
-    switch(state) {
-    case DEFEND:
-        nextMove = defend();
-        break;
-    case GOAL_KICK:
-        nextMove = goalKick();
-        break;
-    case GOAL_KICK_TO_TEAM:
-        nextMove = goalKickToTeam();
-        break;
-    case IDLE:
-        break;
-    case MOVING:
-        break;
-    }
-    return nextMove;
+
+void Attacker::run() {
+   while(1) {
+       switch(state) {
+        case A_DEFEND:
+            break;
+        case A_GOAL_KICK:
+            break;
+        case A_GOAL_KICK_TO_TEAM:
+            break;
+        case A_IDLE:
+            break;
+        case A_MOVING:
+            break;
+       }
+   }
 }
 
-void Attacker::update() {
-    for (int r = 0; r <= 5; r++) {
-        positions[r] = robot[r]->GetPos();
-    }
-    ballPos = ball.GetPos();
-}
 
 AState Attacker::getState() {
     return state;

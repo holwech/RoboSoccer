@@ -4,6 +4,7 @@
 #include "raw_ball.h"
 #include "position.h"
 #include "robo/robo.h"
+#include "test_goalkeeper.h"
 
 enum GState {
     DEFEND,
@@ -21,6 +22,7 @@ enum GState {
  */
 class Goalkeeper
 {
+    friend class TestGoalkeeper;
 public:
     Goalkeeper(vector<Robo*>& robot, RawBall& ball) : robot(robot), ball(ball) {};
     Position nextMove();
