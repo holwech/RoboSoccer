@@ -2,13 +2,12 @@
 #define ROBO_H
 
 #include "robo_control.h"
-#include "pidController.h"
+#include "control/pidController.h"
 #include "raw_ball.h"
 #include "angle.h"
 #include "position.h"
 #include "math.h"
-#include "channel.h"
-#include "collision_avoidance.h"
+#include "control/collision_avoidance.h"
 
 class Robo: public RoboControl
 {
@@ -19,7 +18,6 @@ public:
                                             pidAngle(50.0, 0.5, 1),
                                             pidDistance(80.0, 0.0, 0.0){}
     Robo(RoboControl& other): RoboControl(other){}
-    void run(cpp::channel<Position> position);
     CA ca;
     void driveWithCA();
     void updatePids(Position targetPos);

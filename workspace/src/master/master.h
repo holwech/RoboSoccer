@@ -5,12 +5,12 @@
 #include <iostream>
 #include <vector>
 #include "kogmo_rtdb.hxx"
-#include "robo.h"
+#include "robo/robo.h"
 #include "referee.h"
 #include "timer.h"
-#include "collision_avoidance.h"
-#include "robo.h"
-#include "pidController.h"
+#include "control/collision_avoidance.h"
+#include "robo/robo.h"
+#include "control/pidController.h"
 
 enum ePlayModePlus {
     STATE_MENU,

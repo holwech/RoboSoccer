@@ -3,7 +3,7 @@
 
 #include "raw_ball.h"
 #include "position.h"
-#include "robo.h"
+#include "robo/robo.h"
 
 enum GState {
     DEFEND,

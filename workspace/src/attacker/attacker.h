@@ -3,7 +3,7 @@
 
 #include "raw_ball.h"
 #include "position.h"
-#include "robo.h"
+#include "robo/robo.h"
 
 
 /** These functions should be called doing something else probably

@@ -2,11 +2,11 @@
 #define TEST_H
 
 #include "robo_control.h"
-#include "collision_avoidance.h"
+#include "control/collision_avoidance.h"
 #include "timer.h"
-#include "master.h"
-#include "pidController.h"
-#include "robo.h"
+#include "master/master.h"
+#include "control/pidController.h"
+#include "robo/robo.h"
 
 class Test
 {

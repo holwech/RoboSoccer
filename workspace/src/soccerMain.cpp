@@ -11,8 +11,8 @@
 #include <iostream>
 #include <vector>
 #include "kogmo_rtdb.hxx"
-#include "robo.h"
-#include "master.h"
+#include "robo/robo.h"
+#include "master/master.h"
 #include "referee.h"
 #include "test.h"
 
