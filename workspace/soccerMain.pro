@@ -33,10 +33,12 @@ SOURCES += src/soccerMain.cpp \
     src/goalkeeper/test_goalkeeper.cpp \
     src/attacker/attacker.h \
     src/attacker/attacker.cpp \
+    src/attacker/test_attacker.h \
     src/timer.h \
     src/timer.cpp \
     src/test.h \
-    src/test.cpp
+    src/test.cpp \
+    src/attacker/test_attacker.cpp
 
 		
 ##############
@@ -49,7 +51,5 @@ dox.depends = FORCE
 
 # somewhere else in the *.pro file
 QMAKE_EXTRA_TARGETS += dox
-
-HEADERS += \
 
 

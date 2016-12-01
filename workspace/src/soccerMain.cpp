@@ -125,7 +125,7 @@ int main(void) {
         if (testMode == "y") {
             Test test(master);
             cout << "Test program starting..." << endl;
-            test.testMenu();
+            test.specializedTestMenu();
         } else {
             cout << "Main program starting..." << endl;
             master.run();

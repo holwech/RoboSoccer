@@ -3,31 +3,17 @@
 #include "robo/robo.h"
 #include "stdlib.h"
 #include"math.h"
+#include "attacker/test_attacker.h"
 
 Test::Test(Master& master) : master(master)
 {
 }
 
-void Test::testMenu() {
+void Test::specializedTestMenu(){
     while(1) {
-        cout << "Choose test program: " << endl;
+        cout << "Choose part to test: " << endl;
         cout << "0: Return to program" << endl;
-        cout << "1: Print to screen" << endl;
-        cout << "2: Go to (0, 0)" << endl;
-        cout << "3: Test all" << endl;
-        cout << "4: Goalkeeper" << endl;
-        cout << "5: Collision avoidance" << endl;
-        cout << "6: Milestone2.1 part 2" << endl;
-        cout << "7: Pull vector" << endl;
-        cout << "8: getPassSide" << endl;
-        cout << "9: Goalkeeper's kick" << endl;
-        cout << "10: Milestone 2.1 part 1" << endl;
-        cout << "11: penalty shooting" << endl;
-        cout << "12: Before penalty" << endl;
-        cout << "13: Turning" << endl;
-        cout << "14: Map measurement" << endl;
-        cout << "15: Random driving" << endl;
-
+        cout << "1: Run attacker test" << endl;
         int program;
         cin >> program;
         bool stop = false;
@@ -37,18 +23,61 @@ void Test::testMenu() {
             stop = true;
             break;
         case 1:
-            cout << "Program 1 running..." << endl;
+            Test_attacker ta;
+            ta.run();
+            break;
+        default:
+            stop = true;
+            break;
+        }
+        if (stop) {
+            break;
+        }
+    }
+    cout << "leaving test menu" << endl;
+}
+
+void Test::testMenu() {
+    while(1) {
+        cout << "Choose test program: " << endl;
+        cout << "0: Return to program" << endl;
+        cout << "1: Print to screen" << endl;
+        cout << "2: Go to (0, 0)" << endl;
+        cout << "3: test all" << endl;
+        cout << "4: goalkeeper" << endl;
+        cout << "5: collision avoidance" << endl;
+        cout << "6: milestone2.1 part 2" << endl;
+        cout << "7: pull vector" << endl;
+        cout << "8: getpassside" << endl;
+        cout << "9: goalkeeper's kick" << endl;
+        cout << "10: milestone 2.1 part 1" << endl;
+        cout << "11: penalty shooting" << endl;
+        cout << "12: before penalty" << endl;
+        cout << "13: turning" << endl;
+        cout << "14: map measurement" << endl;
+        cout << "15: random driving" << endl;
+        cout << "16: thread driving test, single robot." << endl;
+        int program;
+        cin >> program;
+        bool stop = false;
+
+        switch(program) {
+        case 0:
+            stop = true;
+            break;
+        case 1:
+            cout << "program 1 running..." << endl;
             break;
         case 2:
-            cout << "Running 2: Go to (0, 0)" << endl;
+            cout << "running 2: go to (0, 0)" << endl;
             master.robo0.GotoXY(0.0, 0.0);
             break;
         case 3:
-            cout << "Running 3: Test all" << endl;
+            cout << "running 3: test all" << endl;
             testAll();
             break;
         case 4:
-            cout << "Running 4: Goalkeeper" << endl;
+            cout << "running 4: goalkeeper" << endl;
             goalkeeper();
             break;
         case 5:
@@ -95,6 +124,7 @@ void Test::testMenu() {
             cout << "Running 15: Random driving" << endl;
             randomDrivingWithCA();
             break;
+
         default:
             stop = true;
             break;
@@ -103,7 +133,7 @@ void Test::testMenu() {
             break;
         }
     }
-    cout << "Leaving test menu" << endl;
+    cout << "leaving test menu" << endl;
 }
 
 void Test::turning() {

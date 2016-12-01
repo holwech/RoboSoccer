@@ -13,6 +13,7 @@ class Test
 public:
     Test(Master& master);
     void testMenu();
+    void specializedTestMenu();
 private:
     void milestone21part1();
     void pullVector();
