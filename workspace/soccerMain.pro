@@ -36,7 +36,8 @@ SOURCES += src/soccerMain.cpp \
     src/timer.h \
     src/timer.cpp \
     src/test.h \
-    src/test.cpp
+    src/test.cpp \
+    src/config.cpp
 
 		
 ##############
