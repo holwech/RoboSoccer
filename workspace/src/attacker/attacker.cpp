@@ -1,5 +1,8 @@
 #include "attacker.h"
 
+Attacker::Attacker(vector<Position>* positions, Position* ball, Command* command, Robo* robo) : positions(positions), ball(ball), command(command), robo(robo) {
+    state = A_MOVING;
+}
 
 void Attacker::run() {
    while(1) {
@@ -18,6 +21,25 @@ void Attacker::run() {
    }
 }
 
+/**
+void moveSquare() {
+    Position pos1 = {0.5, 0.5};
+    Position pos2 = {-0.5, 0.5};
+    Position pos3 = {-0.5, -0.5};
+    Position pos4 = {0.5, -0.5};
+    int step = 0;
+    Position targetPos;
+    while(1) {
+        robo->updatePids(targetPos);
+        robo->updatePositions();
+        robo->driveWithCA();
+        if(master.robo.GetPos().DistanceTo(targetPos) < 0.2){
+
+        }
+    }
+
+}
+*/
 
 AState Attacker::getState() {
     return state;
