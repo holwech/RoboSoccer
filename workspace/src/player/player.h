@@ -1,5 +1,5 @@
-#ifndef ATTACKER_H
-#define ATTACKER_H
+#ifndef PLAYER_H
+#define PLAYER_H
 
 #include "raw_ball.h"
 #include "position.h"
@@ -11,12 +11,17 @@
 /** These functions should be called doing something else probably
  *  I was just lazy, so copy paste from goalkeeper
  **/
-enum AState {
-    A_DEFEND,
-    A_GOAL_KICK,
-    A_GOAL_KICK_TO_TEAM,
-    A_IDLE,
-    A_MOVING
+enum PState {
+    IDLE,
+    BEFORE_PASS,
+    PASS,
+    GOTO,
+    BEFORE_KICK,
+    KICK,
+    BLOCK_BALL,
+    DEFEND,
+    KICK_OUT,
+    TEST
 };
 
 
@@ -26,15 +31,17 @@ enum AState {
  * 	Do not use anything that blocks stalls the function.
  * 	While-loops can be replaced by if-statements, and usleep can be replaced by timers.
  */
-class Attacker
+class Player
 {
 public:
-    Attacker(vector<Position>* positions, Position* ball, Command* command, Robo* robo);
+    Player(vector<Position>* positions, Position* ball, Channel* channel, Robo* robo);
     void run();
-    AState getState();
-    AState getPrevState();
-    void setState(AState newState);
+    PState getState();
+    PState getPrevState();
+    void setState(PState newState);
 private:
+    void readCommand();
+    void goTo();
     Position defend();
     Position goalKick();
     Position goalKickToTeam();
@@ -44,9 +51,10 @@ private:
      */
     vector<Position>* positions;
     Position* ball;
-    Command* command;
+    Channel* channel;
+    Command command;
     Robo* robo;
-    AState prevState;
-    AState state;
+    PState prevState;
+    PState state;
 };
-#endif // ATTACKER_H
+#endif // PLAYER_H
