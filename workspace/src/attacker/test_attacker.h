@@ -3,7 +3,7 @@
 #include "attacker.h"
 class Test_attacker {
 public:
-    void run();
+    static void run();
 
 private:
 };

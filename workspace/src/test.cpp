@@ -23,8 +23,7 @@ void Test::specializedTestMenu(){
             stop = true;
             break;
         case 1:
-            Test_attacker ta;
-            ta.run();
+            Test_attacker::run();
             break;
         default:
             stop = true;

@@ -19,6 +19,8 @@ public:
                                             pidDistance(80.0, 0.0, 0.0){}
     Robo(RoboControl& other): RoboControl(other){}
     CA ca;
+    void Goto(Position target);
+    void goalieGoto(Position target);
     void driveWithCA();
     void updatePids(Position targetPos);
     void setVariables(Robo& team1, Robo& team2, Robo& otherTeam1, Robo& otherTeam2, Robo& otherTeam3);
@@ -27,6 +29,7 @@ public:
 private:
     Position targetPosition;
 //    double getObstacleAngleDiffRad(RoboControl& robo);
+    double getRealDiffRad(double angle1, double angle2);
     double getAngleErrRad(Position targetPos);
     double getAngleWithCA(Force obstacleForce, Position targetPos);
     void updateAnglePid(Position targetPos);
@@ -37,8 +40,5 @@ private:
     vector<Position> posOtherTeam;
     double angleErrorRad;
 };
-
-
-
 
 #endif // ROBO_H
