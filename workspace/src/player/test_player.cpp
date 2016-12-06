@@ -1,6 +1,9 @@
 #include "test_player.h"
 
 
+Test_player::Test_player(Master& master) : master(master), player(&master.positions, &master.ball, &master.channels[0], &master.robo0) {
+}
+
 void Test_player::run(){
     while(1) {
         cout << "Choose test program: " << endl;
@@ -32,3 +35,8 @@ void Test_player::run(){
     cout << "Leaving test menu" << endl;
 }
 
+
+void Test_player::testThreads() {
+    std::thread threadRobo0(player.run());
+    threadRobo0.join();
+}

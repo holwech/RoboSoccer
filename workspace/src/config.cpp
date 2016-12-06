@@ -3,6 +3,7 @@
 
 #include "atomic"
 #include "mutex"
+#include "position.h"
 
 typedef enum {
     ACTION_IDLE,
@@ -20,10 +21,9 @@ typedef enum {
 struct Command {
     Action action;
     Position target;
-    Command() {}
-    Command(Action action, Position target = Position(0.0, 0.0)) {
-        this->set(action, target);
-    }
+    Command() : action(ACTION_IDLE), target(Position(0.0, 0.0)) {}
+    Command(Action action, Position target = Position(0.0, 0.0)) : action(action), target(target) {}
+
     void set(Action action, Position target = Position(0.0, 0.0)) {
         this->action = action;
         this->target = target;
@@ -31,6 +31,9 @@ struct Command {
 };
 
 struct Channel {
+    Channel() : command(), seen(0) {
+    }
+
     Command read() {
         std::lock_guard<std::mutex> guard(mutex);
         this->seen = true;

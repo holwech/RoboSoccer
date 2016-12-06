@@ -24,6 +24,10 @@ Master::Master(string& team,
     cout << "Constructing Master variables..." << endl;
     side = RIGHT_SIDE;
     state = REFEREE_INIT;
+    for (int i = 0; i <= 5; i++) {
+        channels.push_back(Channel());
+    }
+    updatePositions();
 }
 
 
@@ -69,6 +73,15 @@ void Master::run() {
     }
 }
 
+void Master::updatePositions() {
+    positions[0] = robo0.GetPos();
+    positions[1] = robo1.GetPos();
+    positions[2] = robo2.GetPos();
+    positions[3] = robo3.GetPos();
+    positions[4] = robo4.GetPos();
+    positions[5] = robo5.GetPos();
+    ballPos = ball.GetPos();
+}
 
 
 /** Runs the program for goalkeeper.

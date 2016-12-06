@@ -23,7 +23,7 @@ void Test::specializedTestMenu(){
             stop = true;
             break;
         case 1:
-            Test_player ta;
+            Test_player ta(master);
             ta.run();
             break;
         default:
