@@ -208,9 +208,9 @@ void Test::milestone21part1() {
     cout << "3: { " << positions[2].GetX() << ", " << positions[2].GetY() << " }" << endl;
     cout << "4: { " << positions[3].GetX() << ", " << positions[3].GetY() << " }" << endl;
 
-    master.robo0.updatePids(positions[0]);
-    master.robo1.updatePids(positions[1]);
-    master.robo2.updatePids(positions[3]);
+    master.robo0.updatePids(positions[0], true);
+    master.robo1.updatePids(positions[1], true);
+    master.robo2.updatePids(positions[3], true);
     Position robo0Pos = positions[0];
     Position robo1Pos = positions[1];
     Position robo2Pos = positions[3];
@@ -219,9 +219,9 @@ void Test::milestone21part1() {
     master.robo3.GotoXY(randomPos.GetX(), randomPos.GetY(), 40);
     while(1){
         usleep(10000);
-        master.robo0.updatePids(robo0Pos);
-        master.robo1.updatePids(robo1Pos);
-        master.robo2.updatePids(robo2Pos);
+        master.robo0.updatePids(robo0Pos, true);
+        master.robo1.updatePids(robo1Pos, true);
+        master.robo2.updatePids(robo2Pos, true);
         //master.robo3.updatePids(randomPos);
         master.robo0.updatePositions();
         master.robo1.updatePositions();
@@ -269,12 +269,12 @@ void Test::randomDrivingWithCA() {
 
     while(1){
         usleep(10000);
-        master.robo0.updatePids(rPos0);
-        master.robo1.updatePids(rPos1);
-        master.robo2.updatePids(rPos2);
-        master.robo3.updatePids(rPos3);
-        master.robo4.updatePids(rPos4);
-        master.robo5.updatePids(rPos5);
+        master.robo0.updatePids(rPos0, true);
+        master.robo1.updatePids(rPos1, true);
+        master.robo2.updatePids(rPos2, true);
+        master.robo3.updatePids(rPos3, true);
+        master.robo4.updatePids(rPos4, true);
+        master.robo5.updatePids(rPos5, true);
         master.robo0.updatePositions();
         master.robo1.updatePositions();
         master.robo2.updatePositions();
@@ -355,7 +355,7 @@ void Test::pullVector() {
 void Test::pidCollision(Robo &robo, RawBall &ball){
     while(1){
         usleep(10000);
-        robo.updatePids(ball.GetPos());
+        robo.updatePids(ball.GetPos(), true);
         robo.driveWithCA();
         robo.updatePositions();
     }

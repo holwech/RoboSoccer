@@ -7,7 +7,7 @@
   * like. We will have problems controlling all robots at the same time without
   */
 
-
+//Use Goto to set target position. Remember to also run the driveWithCA() 100 times a second
 void Robo::Goto(Position target){
     this->targetPosition = target;
 }
@@ -36,9 +36,16 @@ void Robo::updatePositions() {
    posOtherTeam[0] = otherTeam[0]->GetPos();
    posOtherTeam[1] = otherTeam[1]->GetPos();
    posOtherTeam[2] = otherTeam[2]->GetPos();
-
 }
-
+//PID - related functions
+void Robo::updatePids(Position targetPos, bool ca = true){
+    updateDistancePid(targetPos);
+    if (ca){
+        updateAnglePidWithCA(targetPos);
+    }else{
+        updateAnglePidWithoutCA(targetPos);
+    }
+}
 
 void Robo::updateDistancePid(Position targetPos){
     double dist_error = this->GetPos().DistanceTo(targetPos);
@@ -46,20 +53,27 @@ void Robo::updateDistancePid(Position targetPos){
         pidDistance.updateInput(dist_error);
     }
     else{
-        pidDistance.updateInput(1.7);
+        pidDistance.updateInput(1.1);
     }
 }
-void Robo::updateAnglePid(Position targetPos){
-    this->angleErrorRad = getAngleErrRad(targetPos);
+void Robo::updateAnglePidWithoutCA(Position targetPos){
+    this->angleErrorRad = getReferenceAngleErrRad(targetPos, true);
     double sinAngleErrorRad = sin(this->angleErrorRad/2);
     pidAngle.updateInput(sinAngleErrorRad);
 }
-void Robo::updatePids(Position targetPos){
-    updateDistancePid(targetPos);
-    updateAnglePid(targetPos);
+void Robo::updateAnglePidWithCA(Position targetPos){
+    this->angleErrorRad = getReferenceAngleErrRad(targetPos, false);
+    double sinAngleErrorRad = sin(this->angleErrorRad/2);
+    pidAngle.updateInput(sinAngleErrorRad);
 }
-void Robo::turnWithPid(Position targetPos){
-    this->updateAnglePid(targetPos);
+
+void Robo::updateAnglePidGoalie(Position targetPos){
+    this->angleErrorRad = 9000;
+}
+
+//DRIVE - related functions
+void Robo::turn(Position targetPos){
+    this->updateAnglePidWithoutCA(targetPos);
     double angleInput = pidAngle.getInput();
     double rightWheel = +angleInput;
     double leftWheel = -angleInput;
@@ -68,8 +82,9 @@ void Robo::turnWithPid(Position targetPos){
     cout << "rightwheel: " << rightWheel << endl;
     this->MoveMs(leftWheel, rightWheel,100,10);
 }
-
+//Drive functions must be run 100 times a second for robot to drive. Target position set by Goto()
 void Robo::driveWithCA() {
+    updatePids(targetPosition, true);
     // Get designated pid values
     double driveSpeed = pidDistance.getInput();
     double angleInput = pidAngle.getInput();
@@ -86,7 +101,7 @@ void Robo::driveWithCA() {
     //robo1.TurnAbs(robo1.GetPos().AngleOfLineToPos(ball.GetPos())-robo1.GetPhi());
 }
 
-double Robo::getRealDiffRad(double angle1, double angle2){
+double Robo::getDiffBetweenAnglesRad(double angle1, double angle2){
     double ajusted_angle1 = ((int)angle1 + 4*180) % (2*180);
     double ajusted_angle2 = ((int)angle2 + 4*180) % (2*180);
     if (fabs(ajusted_angle1 - ajusted_angle2) < fabs(angle1 - angle2)){
@@ -97,7 +112,7 @@ double Robo::getRealDiffRad(double angle1, double angle2){
     }
 }
 
-double Robo::getAngleWithCA(Force obstacleForce, Position targetPos){
+double Robo::getRefAngleWithCA(Force obstacleForce, Position targetPos){
     double targetDeg = this->GetPos().AngleOfLineToPos(targetPos).Deg();
     double caScale = obstacleForce.len/(CA_SCALE + obstacleForce.len);
     double obstacleAngle = obstacleForce.deg;
@@ -111,10 +126,36 @@ double Robo::getAngleWithCA(Force obstacleForce, Position targetPos){
     return targetDegWithCA;
 }
 
-double Robo::getAngleErrRad(Position targetPos){
+double Robo::getRefAngleWithoutCA(Position targetPos){
+    return this->GetPos().AngleOfLineToPos(targetPos).Deg();
+}
+
+
+
+double Robo::getGoalieReferenceAngleErrRad(Position targetPos){
+   // Position myPos = this->GetPos();
+    double ref_deg = getRefAngleWithoutCA(targetPos);
+    double myAngleDeg = this->GetPhi().Deg();
+    double diffAngle = getDiffBetweenAnglesRad(ref_deg, myAngleDeg);
+    if (abs(diffAngle) > M_PI/2){
+        myAngleDeg = ((int)myAngleDeg + 4*180) % (2*180);
+        return getDiffBetweenAnglesRad(ref_deg, myAngleDeg);
+    }
+    else{
+        return diffAngle;
+    }
+}
+
+
+double Robo::getReferenceAngleErrRad(Position targetPos, bool ca = true){
     //get the error
     Position myPos = this->GetPos();
-    double ref_deg = getAngleWithCA(this->ca.getTotalPull(myPos, targetPos, posTeam, posOtherTeam, false), targetPos);
+    double ref_deg;
+    if (ca){
+        ref_deg = getRefAngleWithCA(this->ca.getTotalPull(myPos, targetPos, posTeam, posOtherTeam, false), targetPos);
+    } else{
+        ref_deg = getRefAngleWithoutCA(targetPos);
+    }
     double myAngle_deg = this->GetPhi().Deg();
     double err_rad;
     //and solving the angle gap-problem
@@ -127,7 +168,7 @@ double Robo::getAngleErrRad(Position targetPos){
 //    else{
 //        err_rad = (ref_deg - myAngle_deg) *(M_PI/180);
 //    }
-    err_rad = getRealDiffRad(ref_deg, myAngle_deg);
+    err_rad = getDiffBetweenAnglesRad(ref_deg, myAngle_deg);
     return err_rad;
 }
 
