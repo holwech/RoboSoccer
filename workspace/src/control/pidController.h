@@ -6,7 +6,6 @@ class Robo;
 class pidController{
     std::vector<double> prevErr;
     std::vector<double> prevInp;
-    Robo * robot_ptr;
     double Kp;
     double Ki;
     double Kd;
