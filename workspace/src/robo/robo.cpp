@@ -8,7 +8,7 @@
   */
 
 //Use Goto to set target position. Remember to also run the driveWithCA() 100 times a second
-void Robo::Goto(Position target){
+void Robo::GotoPos(Position target){
     this->targetPosition = target;
 }
 
@@ -84,6 +84,7 @@ void Robo::turn(Position targetPos){
 }
 //Drive functions must be run 100 times a second for robot to drive. Target position set by Goto()
 void Robo::driveWithCA() {
+    updatePositions();
     updatePids(targetPosition, true);
     // Get designated pid values
     double driveSpeed = pidDistance.getInput();
@@ -138,7 +139,7 @@ double Robo::getGoalieReferenceAngleErrRad(Position targetPos){
     double myAngleDeg = this->GetPhi().Deg();
     double diffAngle = getDiffBetweenAnglesRad(ref_deg, myAngleDeg);
     if (abs(diffAngle) > M_PI/2){
-        myAngleDeg = ((int)myAngleDeg + 4*180) % (2*180);
+        myAngleDeg = ((int)myAngleDeg - 180 + 4*180) % (2*180);
         return getDiffBetweenAnglesRad(ref_deg, myAngleDeg);
     }
     else{

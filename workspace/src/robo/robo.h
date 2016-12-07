@@ -20,7 +20,7 @@ public:
     pidController pidAngle;
     pidController pidDistance;
     CA ca;
-    void Goto(Position target);
+    void GotoPos(Position target);
     void goalieGoto(Position target);
     void driveWithCA();
     void updatePids(Position targetPos, bool ca);
