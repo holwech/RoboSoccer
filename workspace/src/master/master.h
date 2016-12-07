@@ -11,6 +11,7 @@
 #include "control/collision_avoidance.h"
 #include "robo/robo.h"
 #include "control/pidController.h"
+#include "config.cpp"
 
 enum ePlayModePlus {
     STATE_MENU,
@@ -23,6 +24,7 @@ enum ePlayModePlus {
 class Master {
 public:
     friend class Test;
+    friend class Test_player;
     Master(string& team,
            RTDBConn& DBC,
            Robo& robo0,
@@ -60,6 +62,12 @@ private:
     void penalty();
     void printInfo();
     ePlayMode state;
+
+    void updatePositions();
+    void send(Command command, int roboNum);
+    vector<Position> positions;
+    Position ballPos;
+    vector<Channel> channels;
 
     //Debug stuff
     timer debugTimer;

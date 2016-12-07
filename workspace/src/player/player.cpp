@@ -6,6 +6,7 @@ Player::Player(vector<Position>* positions, Position* ball, Channel* channel, Ro
 
 void Player::run() {
    while(1) {
+       robo->driveWithCA();
        switch(state) {
        case IDLE:
            break;

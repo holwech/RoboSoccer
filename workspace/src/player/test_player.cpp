@@ -1,6 +1,9 @@
 #include "test_player.h"
 
 
+Test_player::Test_player(Master& master) : master(master), player(&master.positions, &master.ballPos, &master.channels[0], &master.robo0) {
+}
+
 void Test_player::run(){
     while(1) {
         cout << "Choose test program: " << endl;
@@ -20,6 +23,7 @@ void Test_player::run(){
             break;
         case 2:
             cout << "Program 2 running..." << endl;
+            testThreads();
             break;
         default:
             stop = true;
@@ -32,3 +36,33 @@ void Test_player::run(){
     cout << "Leaving test menu" << endl;
 }
 
+
+void Test_player::testThreads() {
+    thread threadRobo0(&Player::run, player);
+    Command command1(ACTION_GOTO, Position(0.5, 0.5));
+    Command command2(ACTION_GOTO, Position(-0.5, 0.5));
+    Command command3(ACTION_GOTO, Position(-0.5, -0.5));
+    Command command4(ACTION_GOTO, Position(0.5, -0.5));
+    int step = 1;
+    while(1) {
+        master.updatePositions();
+        if (player.getState() == IDLE) {
+            switch(step) {
+            case 1:
+                master.send(command1, 0);
+                step++;
+                break;
+            case 2:
+                master.send(command2, 0);
+                step++;
+            case 3:
+                master.send(command3, 0);
+                step++;
+            case 4:
+                master.send(command4, 0);
+                step = 1;
+            }
+        }
+    }
+    threadRobo0.join();
+}

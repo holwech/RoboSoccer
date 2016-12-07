@@ -1,11 +1,6 @@
 #include "test.h"
-#include <limits>
-#include "robo/robo.h"
-#include "stdlib.h"
-#include"math.h"
-#include "player/test_player.h"
 
-Test::Test(Master& master) : master(master)
+Test::Test(Master& master) : master(master), ta(master)
 {
 }
 
@@ -23,7 +18,6 @@ void Test::specializedTestMenu(){
             stop = true;
             break;
         case 1:
-            Test_player ta;
             ta.run();
             break;
         default:
