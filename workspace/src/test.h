@@ -7,6 +7,11 @@
 #include "master/master.h"
 #include "control/pidController.h"
 #include "robo/robo.h"
+#include "test.h"
+#include "robo/robo.h"
+#include "stdlib.h"
+#include "math.h"
+#include "player/test_player.h"
 
 class Test
 {
@@ -28,6 +33,7 @@ private:
     void turning();
     void randomDrivingWithCA();
     Master master;
+    Test_player ta;
 };
 
 

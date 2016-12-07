@@ -35,19 +35,54 @@ struct Channel {
     }
 
     Command read() {
-        std::lock_guard<std::mutex> guard(mutex);
+        std::lock_guard<std::mutex> lock(mutex);
         this->seen = true;
 
         return this->command;
     }
     void write(Command command) {
-        std::lock_guard<std::mutex> guard(mutex);
+        std::lock_guard<std::mutex> lock(mutex);
         this->seen = false;
 
         this->command = command;
     }
+
+    // Move assignment
+    Channel(Channel&& other) {
+        std::lock_guard<std::mutex> lock(other.mutex);
+        command = std::move(other.command);
+        seen = std::move(other.seen);
+    }
+
+    // Copy assignment
+    Channel(const Channel& other) {
+        std::lock_guard<std::mutex> lock(other.mutex);
+        command = other.command;
+        seen = other.seen;
+    }
+
+    // Move assignment
+    Channel& operator = (Channel&& other) {
+        std::lock(mutex, other.mutex);
+        std::lock_guard<std::mutex> self_lock(mutex, std::adopt_lock);
+        std::lock_guard<std::mutex> other_lock(other.mutex, std::adopt_lock);
+        command = std::move(other.command);
+        seen = std::move(other.seen);
+        return *this;
+    }
+
+    // Copy assignment
+    Channel& operator = (const Channel& other) {
+        std::lock(mutex, other.mutex);
+        std::lock_guard<std::mutex> self_lock(mutex, std::adopt_lock);
+        std::lock_guard<std::mutex> other_lock(other.mutex, std::adopt_lock);
+        command = other.command;
+        seen = other.seen;
+        return *this;
+    }
+
 private:
-    std::mutex mutex;
+    mutable std::mutex mutex;
     Command command;
     bool seen;
 };

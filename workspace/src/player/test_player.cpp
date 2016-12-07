@@ -1,7 +1,7 @@
 #include "test_player.h"
 
 
-Test_player::Test_player(Master& master) : master(master), player(&master.positions, &master.ball, &master.channels[0], &master.robo0) {
+Test_player::Test_player(Master& master) : master(master), player(&master.positions, &master.ballPos, &master.channels[0], &master.robo0) {
 }
 
 void Test_player::run(){
@@ -23,6 +23,7 @@ void Test_player::run(){
             break;
         case 2:
             cout << "Program 2 running..." << endl;
+            testThreads();
             break;
         default:
             stop = true;
@@ -37,7 +38,7 @@ void Test_player::run(){
 
 
 void Test_player::testThreads() {
-    std::thread threadRobo0(player.run());
+    thread threadRobo0(&Player::run, player);
     Command command1(ACTION_GOTO, Position(0.5, 0.5));
     Command command2(ACTION_GOTO, Position(-0.5, 0.5));
     Command command3(ACTION_GOTO, Position(-0.5, -0.5));
