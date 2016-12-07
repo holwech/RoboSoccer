@@ -102,6 +102,7 @@ int main(void) {
         robo3.setVariables(robo4, robo5, robo0, robo1, robo2);
         robo4.setVariables(robo3, robo5, robo0, robo1, robo2);
         robo5.setVariables(robo3, robo4, robo0, robo1, robo2);
+        cout << "Variables set..." << endl;
         /** Create a ball object */
         RawBall ball(DBC);
         cout << "Ball ready..." << endl;
@@ -118,14 +119,18 @@ int main(void) {
         cout << "Master ready..." << endl;
 
         cout << "----- ----- ----- -----" << endl;
-        cout << "Enter test mode? (y/write anything to skip) ";
+        cout << "Enter test mode 1/2? (1/2/write anything to start actual program) ";
         string testMode;
         cin >> testMode;
 
-        if (testMode == "y") {
+        if (testMode == "1") {
             Test test(master);
             cout << "Test program starting..." << endl;
             test.specializedTestMenu();
+        } else if (testMode == "2") {
+            Test test(master);
+            cout << "Test program starting..." << endl;
+            test.testMenu();
         } else {
             cout << "Main program starting..." << endl;
             master.run();
