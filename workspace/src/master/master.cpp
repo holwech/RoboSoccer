@@ -19,11 +19,19 @@ Master::Master(string& team,
                 robo5(robo5),
                 ball(ball),
                 referee(referee),
+                positions(6),
                 debugTimer()
 {
     cout << "Constructing Master variables..." << endl;
     side = RIGHT_SIDE;
     state = REFEREE_INIT;
+    for (int i = 0; i <= 5; i++) {
+        channels.push_back(Channel());
+    }
+    cout << "Halla för" << endl;
+    updatePositions();
+
+    cout << "Halla etter" << endl;
 }
 
 
@@ -69,6 +77,19 @@ void Master::run() {
     }
 }
 
+void Master::send(Command command, int roboNum) {
+    channels[roboNum].write(command);
+}
+
+void Master::updatePositions() {
+    positions[0] = robo0.GetPos();
+    positions[1] = robo1.GetPos();
+    positions[2] = robo2.GetPos();
+    positions[3] = robo3.GetPos();
+    positions[4] = robo4.GetPos();
+    positions[5] = robo5.GetPos();
+    ballPos = ball.GetPos();
+}
 
 
 /** Runs the program for goalkeeper.

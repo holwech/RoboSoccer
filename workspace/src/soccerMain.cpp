@@ -119,19 +119,14 @@ int main(void) {
         cout << "Master ready..." << endl;
 
         cout << "----- ----- ----- -----" << endl;
-        cout << "Enter test mode 1/2? (1/2/write anything to start actual program) ";
+        cout << "Enter test mode y? (y/write anything to start actual program) ";
         string testMode;
         cin >> testMode;
 
-        if (testMode == "1") {
+        if (testMode == "y") {
             Test test(master);
             cout << "Test program starting..." << endl;
-
             test.specializedTestMenu();
-        } else if (testMode == "2") {
-            Test test(master);
-            cout << "Test program starting..." << endl;
-            test.testMenu();
         } else {
             cout << "Main program starting..." << endl;
             master.run();

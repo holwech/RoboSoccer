@@ -1,21 +1,31 @@
 #include "test.h"
+<<<<<<< HEAD
 #include <limits>
 #include "robo/robo.h"
 #include "stdlib.h"
 #include"math.h"
 #include "player/test_player.h"
 #include "robo/test_robo.h"
+=======
+>>>>>>> 11a20cb7b096079aae8197d2f06cc3eeb5c345e8
 
-Test::Test(Master& master) : master(master)
+Test::Test(Master& master) : master(master), ta(master)
 {
 }
 
 void Test::specializedTestMenu(){
     while(1) {
+        cout << "----- ----- ----- -----" << endl;
         cout << "Choose part to test: " << endl;
+<<<<<<< HEAD
         cout << "0: Return to program" << endl;
         cout << "1: Run robo test" << endl;
         cout << "2: Run attacker test" << endl;
+=======
+        cout << "0: Exit program" << endl;
+        cout << "1: Run old test menu" << endl;
+        cout << "2: Run player test menu" << endl;
+>>>>>>> 11a20cb7b096079aae8197d2f06cc3eeb5c345e8
         int program;
         cin >> program;
         bool stop = false;
@@ -25,12 +35,18 @@ void Test::specializedTestMenu(){
             stop = true;
             break;
         case 1:
+<<<<<<< HEAD
             {Test_robo tr(master);
             tr.run();
             break;
             }
         case 2:
             Test_player ta;
+=======
+            testMenu();
+            break;
+        case 2:
+>>>>>>> 11a20cb7b096079aae8197d2f06cc3eeb5c345e8
             ta.run();
             break;
         default:
@@ -46,8 +62,9 @@ void Test::specializedTestMenu(){
 
 void Test::testMenu() {
     while(1) {
+        cout << "----- ----- ----- -----" << endl;
         cout << "Choose test program: " << endl;
-        cout << "0: Return to program" << endl;
+        cout << "0: Go back" << endl;
         cout << "1: Print to screen" << endl;
         cout << "2: Go to (0, 0)" << endl;
         cout << "3: test all" << endl;

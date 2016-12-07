@@ -5,7 +5,9 @@ Player::Player(vector<Position>* positions, Position* ball, Channel* channel, Ro
 }
 
 void Player::run() {
+   cout << "Robo thread started" << endl;
    while(1) {
+       robo->driveWithCA();
        switch(state) {
        case IDLE:
            break;
@@ -39,12 +41,14 @@ void Player::readCommand() {
 
     switch(command.action) {
     case ACTION_GOTO:
+        cout << "GOTO: " << command.target.GetX() << ", " << command.target.GetY() << endl;
         setState(GOTO);
         robo->GotoPos(command.target);
     case ACTION_TEST:
         setState(TEST);
         break;
     default:
+        cout << "No case for this state... yet" << endl;
         break;
     }
 
@@ -53,6 +57,7 @@ void Player::readCommand() {
 
 void Player::goTo() {
     if (robo->GetPos().DistanceTo(command.target) < 0.2) {
+        cout << "State set to IDLE" << endl;
         state = IDLE;
     }
 }

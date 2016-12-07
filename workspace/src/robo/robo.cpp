@@ -1,7 +1,7 @@
 #include "robo.h"
 #define CA_SCALE 5 //How munch influenced by CA, lower is more. test: 20
 
-#define DEBUG true
+#define DEBUG false
 
 /** To complete task 2.1 part 1, we have to implement multithreading it seems
   * like. We will have problems controlling all robots at the same time without
