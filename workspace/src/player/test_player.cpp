@@ -6,8 +6,9 @@ Test_player::Test_player(Master& master) : master(master), player(&master.positi
 
 void Test_player::run(){
     while(1) {
+        cout << "----- ----- ----- -----" << endl;
         cout << "Choose test program: " << endl;
-        cout << "0: Return to program" << endl;
+        cout << "0: Go back" << endl;
         cout << "1: Print to screen" << endl;
         cout << "2: Simple thread test" << endl;
         int program;

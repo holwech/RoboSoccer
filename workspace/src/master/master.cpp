@@ -19,6 +19,7 @@ Master::Master(string& team,
                 robo5(robo5),
                 ball(ball),
                 referee(referee),
+                positions(6),
                 debugTimer()
 {
     cout << "Constructing Master variables..." << endl;
@@ -27,7 +28,10 @@ Master::Master(string& team,
     for (int i = 0; i <= 5; i++) {
         channels.push_back(Channel());
     }
+    cout << "Halla för" << endl;
     updatePositions();
+
+    cout << "Halla etter" << endl;
 }
 
 

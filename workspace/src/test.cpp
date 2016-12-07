@@ -6,9 +6,11 @@ Test::Test(Master& master) : master(master), ta(master)
 
 void Test::specializedTestMenu(){
     while(1) {
+        cout << "----- ----- ----- -----" << endl;
         cout << "Choose part to test: " << endl;
-        cout << "0: Return to program" << endl;
-        cout << "1: Run attacker test" << endl;
+        cout << "0: Exit program" << endl;
+        cout << "1: Run old test menu" << endl;
+        cout << "2: Run player test menu" << endl;
         int program;
         cin >> program;
         bool stop = false;
@@ -18,6 +20,9 @@ void Test::specializedTestMenu(){
             stop = true;
             break;
         case 1:
+            testMenu();
+            break;
+        case 2:
             ta.run();
             break;
         default:
@@ -33,8 +38,9 @@ void Test::specializedTestMenu(){
 
 void Test::testMenu() {
     while(1) {
+        cout << "----- ----- ----- -----" << endl;
         cout << "Choose test program: " << endl;
-        cout << "0: Return to program" << endl;
+        cout << "0: Go back" << endl;
         cout << "1: Print to screen" << endl;
         cout << "2: Go to (0, 0)" << endl;
         cout << "3: test all" << endl;
