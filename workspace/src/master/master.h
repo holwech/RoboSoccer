@@ -23,6 +23,7 @@ enum ePlayModePlus {
 class Master {
 public:
     friend class Test;
+    friend class Test_robo;
     Master(string& team,
            RTDBConn& DBC,
            Robo& robo0,

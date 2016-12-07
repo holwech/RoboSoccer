@@ -15,6 +15,7 @@ public:
     void testMenu();
     void specializedTestMenu();
 private:
+    void testDriveWithCA();
     void milestone21part1();
     void pullVector();
     void collisionAvoidance(Robo& roboMove, Robo& roboObs);

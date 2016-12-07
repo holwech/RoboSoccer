@@ -39,7 +39,10 @@ SOURCES += src/soccerMain.cpp \
     src/player/player.h \
     src/player/player.cpp \
     src/player/test_player.h \
-    src/player/test_player.cpp
+    src/player/test_player.cpp \
+    src/robo/test_robo.cpp \
+        src/robo/test_robo.h
+
 
 		
 ##############

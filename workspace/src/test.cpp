@@ -4,6 +4,7 @@
 #include "stdlib.h"
 #include"math.h"
 #include "player/test_player.h"
+#include "robo/test_robo.h"
 
 Test::Test(Master& master) : master(master)
 {
@@ -13,7 +14,8 @@ void Test::specializedTestMenu(){
     while(1) {
         cout << "Choose part to test: " << endl;
         cout << "0: Return to program" << endl;
-        cout << "1: Run attacker test" << endl;
+        cout << "1: Run robo test" << endl;
+        cout << "2: Run attacker test" << endl;
         int program;
         cin >> program;
         bool stop = false;
@@ -23,6 +25,11 @@ void Test::specializedTestMenu(){
             stop = true;
             break;
         case 1:
+            {Test_robo tr(master);
+            tr.run();
+            break;
+            }
+        case 2:
             Test_player ta;
             ta.run();
             break;
@@ -56,7 +63,7 @@ void Test::testMenu() {
         cout << "13: turning" << endl;
         cout << "14: map measurement" << endl;
         cout << "15: random driving" << endl;
-        cout << "16: thread driving test, single robot." << endl;
+        cout << "16: testDriveWithCA." << endl;
         int program;
         cin >> program;
         bool stop = false;
@@ -124,6 +131,10 @@ void Test::testMenu() {
             cout << "Running 15: Random driving" << endl;
             randomDrivingWithCA();
             break;
+        case 16:
+            cout << "Running 16: testDriveWithCA" << endl;
+            testDriveWithCA();
+            break;
 
         default:
             stop = true;
@@ -135,6 +146,26 @@ void Test::testMenu() {
     }
     cout << "leaving test menu" << endl;
 }
+
+void Test::testDriveWithCA(){
+    cout << "Reached function testDriveWithCA()..." << endl;
+    Position posA(0.5, 0.0);
+    Position posB(-0.5, 0.0);
+    Robo &testrobo = master.robo0;
+    testrobo.GotoPos(posA);
+    while(1){
+        testrobo.driveWithCA();
+        usleep(10000);
+        if (testrobo.GetPos().DistanceTo(posA) < 0.1){
+            testrobo.GotoPos(posB);
+        }
+        else if(testrobo.GetPos().DistanceTo(posB) < 0.1){
+            testrobo.GotoPos(posA);
+        }
+
+    }
+}
+
 
 void Test::turning() {
     cout << "----- Before -----" << endl;

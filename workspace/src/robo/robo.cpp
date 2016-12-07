@@ -12,10 +12,6 @@ void Robo::GotoPos(Position target){
     this->targetPosition = target;
 }
 
-void Robo::goalieGoto(Position target){
-
-}
-
 void Robo::setVariables(Robo& team1, Robo& team2, Robo& otherTeam1, Robo& otherTeam2, Robo& otherTeam3) {
     team.push_back(&team1);
     team.push_back(&team2);
@@ -47,6 +43,11 @@ void Robo::updatePids(Position targetPos, bool ca = true){
     }
 }
 
+void Robo::updatePidsGoalie(Position targetPos){
+    updateDistancePid(targetPos);
+    updateAnglePidGoalie(targetPos);
+}
+
 void Robo::updateDistancePid(Position targetPos){
     double dist_error = this->GetPos().DistanceTo(targetPos);
     if (dist_error < 0.03){
@@ -68,12 +69,14 @@ void Robo::updateAnglePidWithCA(Position targetPos){
 }
 
 void Robo::updateAnglePidGoalie(Position targetPos){
-    this->angleErrorRad = 9000;
+    this->angleErrorRad = getGoalieReferenceAngleErrRad(targetPos);
+    double sinAngleErrorRad = sin(this->angleErrorRad/2);
+    pidAngle.updateInput(sinAngleErrorRad);
 }
 
 //DRIVE - related functions
-void Robo::turn(Position targetPos){
-    this->updateAnglePidWithoutCA(targetPos);
+void Robo::turn(){
+    this->updateAnglePidWithoutCA(targetPosition);
     double angleInput = pidAngle.getInput();
     double rightWheel = +angleInput;
     double leftWheel = -angleInput;
@@ -82,6 +85,28 @@ void Robo::turn(Position targetPos){
     cout << "rightwheel: " << rightWheel << endl;
     this->MoveMs(leftWheel, rightWheel,100,10);
 }
+
+void Robo::goalieDrive(){
+    updatePidsGoalie(targetPosition);
+
+    double driveSpeed = pidDistance.getInput();
+    double angleInput = pidAngle.getInput();
+
+    if (ballBehindRobo){
+        driveSpeed *= -1;
+        //angleInput *= -1;
+    }
+    double rightWheel = driveSpeed+ angleInput;
+    double leftWheel = driveSpeed- angleInput;
+    if(DEBUG){
+        cout << "leftwheel: " << leftWheel << endl;
+        cout << "rightwheel: " << rightWheel << endl;
+    }
+    this->MoveMs(leftWheel,rightWheel, 100, 10);
+
+
+}
+
 //Drive functions must be run 100 times a second for robot to drive. Target position set by Goto()
 void Robo::driveWithCA() {
     updatePositions();
@@ -139,10 +164,12 @@ double Robo::getGoalieReferenceAngleErrRad(Position targetPos){
     double myAngleDeg = this->GetPhi().Deg();
     double diffAngle = getDiffBetweenAnglesRad(ref_deg, myAngleDeg);
     if (abs(diffAngle) > M_PI/2){
-        myAngleDeg = ((int)myAngleDeg - 180 + 4*180) % (2*180);
+        myAngleDeg = ((int)myAngleDeg + 180 + 4*180) % (2*180);
+        ballBehindRobo = true;
         return getDiffBetweenAnglesRad(ref_deg, myAngleDeg);
     }
     else{
+        ballBehindRobo = false;
         return diffAngle;
     }
 }

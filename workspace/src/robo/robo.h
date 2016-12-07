@@ -15,18 +15,19 @@ public:
     Robo(RTDBConn& DBC, const int deviceNr): RoboControl(DBC, deviceNr),
                                             pidAngle(50.0, 0.5, 1),
                                             pidDistance(80.0, 0.0, 0.0),
-                                            ca(){}
+                                            ca(), ballBehindRobo(false){}
     Robo(RoboControl& other): RoboControl(other){}
     pidController pidAngle;
     pidController pidDistance;
     CA ca;
     void GotoPos(Position target);
-    void goalieGoto(Position target);
     void driveWithCA();
+    void goalieDrive();
     void updatePids(Position targetPos, bool ca);
+    void updatePidsGoalie(Position targetPos);
     void setVariables(Robo& team1, Robo& team2, Robo& otherTeam1, Robo& otherTeam2, Robo& otherTeam3);
     void updatePositions();
-    void turn(Position targetPos);
+    void turn();
 private:
     Position targetPosition;
     double getDiffBetweenAnglesRad(double angle1, double angle2);
@@ -43,7 +44,7 @@ private:
     vector<Position> posTeam;
     vector<Position> posOtherTeam;
     double angleErrorRad;
-    int direction;
+    bool ballBehindRobo;
 };
 
 #endif // ROBO_H
