@@ -15,7 +15,7 @@ public:
     Robo(RTDBConn& DBC, const int deviceNr): RoboControl(DBC, deviceNr),
                                             pidAngle(50.0, 0.5, 1),
                                             pidDistance(80.0, 0.0, 0.0),
-                                            ca(),targetPosition(), team(3), otherTeam(3), posTeam(3), posOtherTeam(3), angleErrorRad(0.0), direction(0){}
+                                            ca(){}
     Robo(RoboControl& other): RoboControl(other){}
     pidController pidAngle;
     pidController pidDistance;
