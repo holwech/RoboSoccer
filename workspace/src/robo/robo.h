@@ -12,33 +12,38 @@
 class Robo: public RoboControl
 {
 public:
-    pidController pidAngle;
-    pidController pidDistance;
     Robo(RTDBConn& DBC, const int deviceNr): RoboControl(DBC, deviceNr),
                                             pidAngle(50.0, 0.5, 1),
-                                            pidDistance(80.0, 0.0, 0.0){}
+                                            pidDistance(80.0, 0.0, 0.0),
+                                            ca(){}
     Robo(RoboControl& other): RoboControl(other){}
+    pidController pidAngle;
+    pidController pidDistance;
     CA ca;
     void Goto(Position target);
     void goalieGoto(Position target);
     void driveWithCA();
-    void updatePids(Position targetPos);
+    void updatePids(Position targetPos, bool ca);
     void setVariables(Robo& team1, Robo& team2, Robo& otherTeam1, Robo& otherTeam2, Robo& otherTeam3);
     void updatePositions();
-    void turnWithPid(Position targetPos);
+    void turn(Position targetPos);
 private:
     Position targetPosition;
-//    double getObstacleAngleDiffRad(RoboControl& robo);
-    double getRealDiffRad(double angle1, double angle2);
-    double getAngleErrRad(Position targetPos);
-    double getAngleWithCA(Force obstacleForce, Position targetPos);
-    void updateAnglePid(Position targetPos);
+    double getDiffBetweenAnglesRad(double angle1, double angle2);
+    void updateAnglePidGoalie(Position targetPos);
+    double getGoalieReferenceAngleErrRad(Position targetPos);
+    double getReferenceAngleErrRad(Position targetPos, bool ca);
+    double getRefAngleWithCA(Force obstacleForce, Position targetPos);
+    double getRefAngleWithoutCA(Position targetPos);
+    void updateAnglePidWithCA(Position targetPos);
+    void updateAnglePidWithoutCA(Position targetPos);
     void updateDistancePid(Position targetPos);
     vector<Robo*> team;
     vector<Robo*> otherTeam;
     vector<Position> posTeam;
     vector<Position> posOtherTeam;
     double angleErrorRad;
+    int direction;
 };
 
 #endif // ROBO_H
