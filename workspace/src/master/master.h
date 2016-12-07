@@ -64,6 +64,7 @@ private:
     ePlayMode state;
 
     void updatePositions();
+    void send(Command command, int roboNum);
     vector<Position> positions;
     Position ballPos;
     vector<Channel> channels;

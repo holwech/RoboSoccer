@@ -40,11 +40,11 @@ struct Channel {
 
         return this->command;
     }
-    void write(Action newAction) {
+    void write(Command command) {
         std::lock_guard<std::mutex> guard(mutex);
         this->seen = false;
 
-        this->command.action = newAction;
+        this->command = command;
     }
 private:
     std::mutex mutex;

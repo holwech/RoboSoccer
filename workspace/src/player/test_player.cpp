@@ -38,5 +38,30 @@ void Test_player::run(){
 
 void Test_player::testThreads() {
     std::thread threadRobo0(player.run());
+    Command command1(ACTION_GOTO, Position(0.5, 0.5));
+    Command command2(ACTION_GOTO, Position(-0.5, 0.5));
+    Command command3(ACTION_GOTO, Position(-0.5, -0.5));
+    Command command4(ACTION_GOTO, Position(0.5, -0.5));
+    int step = 1;
+    while(1) {
+        master.updatePositions();
+        if (player.getState() == IDLE) {
+            switch(step) {
+            case 1:
+                master.send(command1, 0);
+                step++;
+                break;
+            case 2:
+                master.send(command2, 0);
+                step++;
+            case 3:
+                master.send(command3, 0);
+                step++;
+            case 4:
+                master.send(command4, 0);
+                step = 1;
+            }
+        }
+    }
     threadRobo0.join();
 }

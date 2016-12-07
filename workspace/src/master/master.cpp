@@ -73,6 +73,10 @@ void Master::run() {
     }
 }
 
+void Master::send(Command command, int roboNum) {
+    channels[roboNum].write(command);
+}
+
 void Master::updatePositions() {
     positions[0] = robo0.GetPos();
     positions[1] = robo1.GetPos();
