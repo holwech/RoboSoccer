@@ -21,8 +21,8 @@ typedef enum {
 struct Command {
     Action action;
     Position target;
-    Command() : action(ACTION_IDLE), target(Position(0.0, 0.0)) {}
     Command(Action action, Position target) : action(action), target(target) {}
+    Command() : action(ACTION_IDLE), target(Position(0.0, 0.0)) {}
 
     void set(Action action, Position target) {
         this->action = action;
@@ -31,7 +31,13 @@ struct Command {
 };
 
 struct Channel {
+    Channel(Command command) : command(command), seen(0) {
+    }
     Channel() : command(), seen(0) {
+    }
+
+    bool isRead() {
+        return seen;
     }
 
     Command read() {

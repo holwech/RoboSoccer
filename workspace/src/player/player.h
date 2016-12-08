@@ -33,6 +33,7 @@ enum PState {
  */
 class Player
 {
+    friend class Test_player;
 public:
     Player(vector<Position>* positions, Position* ball, Channel* channel, Robo* robo);
     void run();
@@ -42,9 +43,6 @@ public:
 private:
     void readCommand();
     void goTo();
-    Position defend();
-    Position goalKick();
-    Position goalKickToTeam();
     /** 0 is goalkeeper
      *  1 and 2 is team playes
      *  3-5 is other team

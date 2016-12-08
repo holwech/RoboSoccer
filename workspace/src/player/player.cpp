@@ -16,6 +16,7 @@ void Player::run() {
        case PASS:
            break;
        case GOTO:
+           goTo();
            break;
        case BEFORE_KICK:
            break;
@@ -30,6 +31,7 @@ void Player::run() {
        case TEST:
            break;
        default:
+           cout << "Case for state: " << state << endl;
            break;
        }
        readCommand();
@@ -37,6 +39,9 @@ void Player::run() {
 }
 
 void Player::readCommand() {
+    if (channel->isRead()) {
+        return;
+    }
     command = channel->read();
 
     switch(command.action) {
@@ -48,7 +53,7 @@ void Player::readCommand() {
         setState(TEST);
         break;
     default:
-        cout << "No case for this state... yet" << endl;
+        cout << "No case for this state: " << state << endl;
         break;
     }
 
@@ -93,19 +98,4 @@ PState Player::getPrevState() {
 void Player::setState(PState newState) {
     prevState = state;
     state = newState;
-}
-
-/** These functions should be called doing something else probably
- *  I was just lazy, so copy paste from goalkeeper
- **/
-Position Player::defend() {
-    return Position(0,0);
-}
-
-Position Player::goalKick() {
-    return Position(0,0);
-}
-
-Position Player::goalKickToTeam() {
-    return Position(0,0);
 }

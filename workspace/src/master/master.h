@@ -24,11 +24,8 @@ enum ePlayModePlus {
 class Master {
 public:
     friend class Test;
-<<<<<<< HEAD
     friend class Test_robo;
-=======
     friend class Test_player;
->>>>>>> 11a20cb7b096079aae8197d2f06cc3eeb5c345e8
     Master(string& team,
            RTDBConn& DBC,
            Robo& robo0,

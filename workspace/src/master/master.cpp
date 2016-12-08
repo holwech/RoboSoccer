@@ -26,12 +26,10 @@ Master::Master(string& team,
     side = RIGHT_SIDE;
     state = REFEREE_INIT;
     for (int i = 0; i <= 5; i++) {
-        channels.push_back(Channel());
+        Command newCommand(ACTION_IDLE, Position(0.2, 0.2));
+        channels.push_back(Channel(newCommand));
     }
-    cout << "Halla för" << endl;
     updatePositions();
-
-    cout << "Halla etter" << endl;
 }
 
 
