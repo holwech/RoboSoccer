@@ -37,6 +37,7 @@ struct Channel {
     }
 
     bool isRead() {
+        std::lock_guard<std::mutex> lock(mutex);
         return seen;
     }
 
@@ -47,10 +48,16 @@ struct Channel {
         return this->command;
     }
     void write(Command command) {
-        std::lock_guard<std::mutex> lock(mutex);
+        mutex.lock();
+        if (!this->seen) {
+            mutex.unlock();
+            while(!isRead()) {}
+            mutex.lock();
+        }
         this->seen = false;
 
         this->command = command;
+        mutex.unlock();
     }
 
     // Move assignment

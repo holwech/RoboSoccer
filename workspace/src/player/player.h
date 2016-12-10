@@ -39,10 +39,14 @@ public:
     void run();
     PState getState();
     PState getPrevState();
-    void setState(PState newState);
+    Player(Player&& other);
+    Player(const Player& other);
+    Player& operator = (Player&& other);
+    Player& operator = (const Player& other);
 private:
     void readCommand();
     void goTo();
+    void setState(PState newState);
     /** 0 is goalkeeper
      *  1 and 2 is team playes
      *  3-5 is other team
@@ -52,7 +56,8 @@ private:
     Channel* channel;
     Command command;
     Robo* robo;
-    PState prevState;
-    PState state;
+    atomic<PState> prevState;
+    atomic<PState> state;
+    mutable std::mutex mutex;
 };
 #endif // PLAYER_H

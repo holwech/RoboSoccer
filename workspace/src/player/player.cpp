@@ -35,10 +35,13 @@ void Player::run() {
            break;
        }
        readCommand();
+       usleep(10);
+       //cout << "State: " << state << endl;
    }
 }
 
 void Player::readCommand() {
+    std::lock_guard<std::mutex> lock(mutex);
     if (channel->isRead()) {
         return;
     }
@@ -46,11 +49,18 @@ void Player::readCommand() {
 
     switch(command.action) {
     case ACTION_GOTO:
+        cout << "Robo in state GOTO" << endl;
         cout << "GOTO: " << command.target.GetX() << ", " << command.target.GetY() << endl;
         setState(GOTO);
         robo->GotoPos(command.target);
+        break;
     case ACTION_TEST:
         setState(TEST);
+        break;
+    case ACTION_IDLE:
+        cout << "Robo in state IDLE" << endl;
+        setState(IDLE);
+        robo->GotoPos(robo->GetPos());
         break;
     default:
         cout << "No case for this state: " << state << endl;
@@ -63,7 +73,7 @@ void Player::readCommand() {
 void Player::goTo() {
     if (robo->GetPos().DistanceTo(command.target) < 0.2) {
         cout << "State set to IDLE" << endl;
-        state = IDLE;
+        setState(IDLE);
     }
 }
 
@@ -88,14 +98,65 @@ void moveSquare() {
 */
 
 PState Player::getState() {
-    return state;
+    return state.load();
 }
 
 PState Player::getPrevState() {
-    return prevState;
+    return prevState.load();
 }
 
 void Player::setState(PState newState) {
-    prevState = state;
-    state = newState;
+    prevState.store(state);
+    state.store(newState);
+}
+
+
+Player::Player(Player&& other) {
+    std::lock_guard<std::mutex> lock(other.mutex);
+    positions = std::move(other.positions);
+    ball = std::move(other.ball);
+    channel = std::move(other.channel);
+    command = std::move(other.command);
+    robo = std::move(other.robo);
+    prevState.store(std::move(other.prevState.load()));
+    state.store(std::move(state.load()));
+}
+
+Player::Player(const Player& other) {
+    std::lock_guard<std::mutex> lock(other.mutex);
+    positions = other.positions;
+    ball = other.ball;
+    channel = other.channel;
+    command = other.command;
+    robo = other.robo;
+    prevState.store(other.prevState.load());
+    state.store(state.load());
+}
+
+Player& Player::operator = (Player&& other) {
+    std::lock(mutex, other.mutex);
+    std::lock_guard<std::mutex> self_lock(mutex, std::adopt_lock);
+    std::lock_guard<std::mutex> other_lock(other.mutex, std::adopt_lock);
+    positions = std::move(other.positions);
+    ball = std::move(other.ball);
+    channel = std::move(other.channel);
+    command = std::move(other.command);
+    robo = std::move(other.robo);
+    prevState.store(std::move(other.prevState.load()));
+    state.store(std::move(state.load()));
+    return *this;
+}
+
+Player& Player::operator = (const Player& other) {
+    std::lock(mutex, other.mutex);
+    std::lock_guard<std::mutex> self_lock(mutex, std::adopt_lock);
+    std::lock_guard<std::mutex> other_lock(other.mutex, std::adopt_lock);
+    positions = other.positions;
+    ball = other.ball;
+    channel = other.channel;
+    command = other.command;
+    robo = other.robo;
+    prevState.store(other.prevState.load());
+    state.store(state.load());
+    return *this;
 }

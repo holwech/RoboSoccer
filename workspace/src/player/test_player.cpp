@@ -1,7 +1,7 @@
 #include "test_player.h"
 
 
-Test_player::Test_player(Master& master) : master(master), player(&master.positions, &master.ballPos, &master.channels[0], &master.robo0) {
+Test_player::Test_player(Master& master) : master(&master), player(&master.positions, &master.ballPos, &master.channels[0], &master.robo0) {
 }
 
 void Test_player::run(){
@@ -24,7 +24,7 @@ void Test_player::run(){
             break;
         case 2:
             cout << "Program 2 running..." << endl;
-            testThreads();
+            testThreads2();
             break;
         default:
             stop = true;
@@ -38,6 +38,18 @@ void Test_player::run(){
 }
 
 
+void Test_player::testThreads2() {
+    thread threadRobo0(&Player::run, &player);
+    Command command1(ACTION_GOTO, Position(0.5, 0.5));
+    Command command2(ACTION_GOTO, Position(-0.5, 0.5));
+    master->send(command1, 0);
+    while(player.getState() != IDLE) {  }
+    master->send(command2, 0);
+    while(1);
+    cout << "DONE" << endl;
+    threadRobo0.join();
+}
+
 void Test_player::testThreads() {
     thread threadRobo0(&Player::run, player);
     Command command1(ACTION_GOTO, Position(0.5, 0.5));
@@ -45,23 +57,40 @@ void Test_player::testThreads() {
     Command command3(ACTION_GOTO, Position(-0.5, -0.5));
     Command command4(ACTION_GOTO, Position(0.5, -0.5));
     int step = 1;
+    master->send(command1, 0);
+    usleep(10000);
+    while(player.getState() != IDLE) {
+
+    }
+    master->send(command2, 0);
+    cout << "DONE!" << endl;
+    while(1) {}
     while(1) {
-        master.updatePositions();
+        master->updatePositions();
         if (player.getState() == IDLE) {
             switch(step) {
             case 1:
-                master.send(command1, 0);
+                cout << "Sending 1" << endl;
+                master->send(command1, 0);
                 step++;
                 break;
             case 2:
-                master.send(command2, 0);
+                cout << "Sending 2" << endl;
+                master->send(command2, 0);
                 step++;
+                break;
             case 3:
-                master.send(command3, 0);
+                cout << "Sending 3" << endl;
+                master->send(command3, 0);
                 step++;
+                break;
             case 4:
-                master.send(command4, 0);
+                cout << "Sending 4" << endl;
+                master->send(command4, 0);
                 step = 1;
+                break;
+            default:
+                cout << "Switch in testThreads is fuked up" << endl;
             }
         }
     }

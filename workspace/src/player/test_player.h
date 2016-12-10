@@ -8,9 +8,10 @@ public:
     void run();
     Test_player(Master& master);
 private:
-    Master master;
+    Master *master;
     Player player;
     void testThreads();
+    void testThreads2();
 };
 
 #endif // TEST_PLAYER_H

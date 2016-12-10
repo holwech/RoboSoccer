@@ -1,6 +1,6 @@
 #include "test.h"
 
-Test::Test(Master& master) : master(master), ta(master)
+Test::Test(Master& master) : master(&master), ta(master)
 {
 }
 
@@ -70,7 +70,7 @@ void Test::testMenu() {
             break;
         case 2:
             cout << "running 2: go to (0, 0)" << endl;
-            master.robo0.GotoXY(0.0, 0.0);
+            master->robo0.GotoXY(0.0, 0.0);
             break;
         case 3:
             cout << "running 3: test all" << endl;
@@ -82,11 +82,11 @@ void Test::testMenu() {
             break;
         case 5:
             cout << "Running 5: Collision avoidance (2.1 - part 1)" << endl;
-            collisionAvoidance(master.robo0, master.robo1);
+            collisionAvoidance(master->robo0, master->robo1);
             break;
         case 6:
             cout << "Running 6: Milestone 2.1 part 2" << endl;
-            pidCollision(master.robo0, master.ball);
+            pidCollision(master->robo0, master->ball);
             break;
         case 7:
             cout << "Running 7: Pull vector" << endl;
@@ -98,7 +98,7 @@ void Test::testMenu() {
             break;
         case 9:
             cout << "Running 9: Goalkeeper's kick" << endl;
-            do_goalkeeper_kick(master.robo0, master.robo3, master.robo4, master.robo5, master.ball);
+            do_goalkeeper_kick(master->robo0, master->robo3, master->robo4, master->robo5, master->ball);
             break;
         case 10:
             cout << "Running 10: Milestone 2.1 part 1" << endl;
@@ -118,7 +118,7 @@ void Test::testMenu() {
             break;
         case 14:
             cout << "Running 14: Map measurement" << endl;
-            cout << "Coordinates of ball: " << master.ball.GetX() << " " << master.ball.GetY() << endl;
+            cout << "Coordinates of ball: " << master->ball.GetX() << " " << master->ball.GetY() << endl;
             break;
         case 15:
             cout << "Running 15: Random driving" << endl;
@@ -144,7 +144,7 @@ void Test::testDriveWithCA(){
     cout << "Reached function testDriveWithCA()..." << endl;
     Position posA(0.5, 0.0);
     Position posB(-0.5, 0.0);
-    Robo &testrobo = master.robo0;
+    Robo &testrobo = master->robo0;
     testrobo.GotoPos(posA);
     while(1){
         testrobo.driveWithCA();
@@ -162,14 +162,14 @@ void Test::testDriveWithCA(){
 
 void Test::turning() {
     cout << "----- Before -----" << endl;
-    cout << "Robo orientation: " << master.robo0.GetPhi().Deg() << endl;
+    cout << "Robo orientation: " << master->robo0.GetPhi().Deg() << endl;
 
-    master.robo0.TurnAbs(Angle(170));
+    master->robo0.TurnAbs(Angle(170));
     usleep(5000000);
     cout << "Turn complete" << endl;
 
     cout << "----- After -----" << endl;
-    cout << "Robo orientation: " << master.robo0.GetPhi().Deg() << endl;
+    cout << "Robo orientation: " << master->robo0.GetPhi().Deg() << endl;
 }
 
 static void switchTargetPosition(Position &roboPos, vector<Position> &positions){
@@ -232,43 +232,43 @@ void Test::milestone21part1() {
     cout << "3: { " << positions[2].GetX() << ", " << positions[2].GetY() << " }" << endl;
     cout << "4: { " << positions[3].GetX() << ", " << positions[3].GetY() << " }" << endl;
 
-    master.robo0.updatePids(positions[0], true);
-    master.robo1.updatePids(positions[1], true);
-    master.robo2.updatePids(positions[3], true);
+    master->robo0.updatePids(positions[0], true);
+    master->robo1.updatePids(positions[1], true);
+    master->robo2.updatePids(positions[3], true);
     Position robo0Pos = positions[0];
     Position robo1Pos = positions[1];
     Position robo2Pos = positions[3];
     Position randomPos;
     newRandomPosition(randomPos, distY(mtY), distX(mtX));
-    master.robo3.GotoXY(randomPos.GetX(), randomPos.GetY(), 40);
+    master->robo3.GotoXY(randomPos.GetX(), randomPos.GetY(), 40);
     while(1){
         usleep(10000);
-        master.robo0.updatePids(robo0Pos, true);
-        master.robo1.updatePids(robo1Pos, true);
-        master.robo2.updatePids(robo2Pos, true);
-        //master.robo3.updatePids(randomPos);
-        master.robo0.updatePositions();
-        master.robo1.updatePositions();
-        master.robo2.updatePositions();
-        //master.robo3.updatePositions();
-        master.robo0.driveWithCA();
-        master.robo1.driveWithCA();
-        master.robo2.driveWithCA();
-        //master.robo3.driveWithCA();
+        master->robo0.updatePids(robo0Pos, true);
+        master->robo1.updatePids(robo1Pos, true);
+        master->robo2.updatePids(robo2Pos, true);
+        //master->robo3.updatePids(randomPos);
+        master->robo0.updatePositions();
+        master->robo1.updatePositions();
+        master->robo2.updatePositions();
+        //master->robo3.updatePositions();
+        master->robo0.driveWithCA();
+        master->robo1.driveWithCA();
+        master->robo2.driveWithCA();
+        //master->robo3.driveWithCA();
 
 
-        if( master.robo0.GetPos().DistanceTo(robo0Pos) < 0.2 ){
+        if( master->robo0.GetPos().DistanceTo(robo0Pos) < 0.2 ){
             switchTargetPosition(robo0Pos, positions);
         }
-        if(master.robo1.GetPos().DistanceTo(robo1Pos) < 0.2){
+        if(master->robo1.GetPos().DistanceTo(robo1Pos) < 0.2){
             switchTargetPosition(robo1Pos, positions);
         }
-        if(master.robo2.GetPos().DistanceTo(robo2Pos) < 0.2){
+        if(master->robo2.GetPos().DistanceTo(robo2Pos) < 0.2){
             switchTargetPosition(robo2Pos, positions);
         }
-        if(master.robo3.GetPos().DistanceTo(randomPos) < 0.2){
+        if(master->robo3.GetPos().DistanceTo(randomPos) < 0.2){
             newRandomPosition(randomPos, distY(mtY), distX(mtX));
-            master.robo3.GotoXY(randomPos.GetX(), randomPos.GetY(), 40);
+            master->robo3.GotoXY(randomPos.GetX(), randomPos.GetY(), 40);
         }
     }
 }
@@ -293,48 +293,48 @@ void Test::randomDrivingWithCA() {
 
     while(1){
         usleep(10000);
-        master.robo0.updatePids(rPos0, true);
-        master.robo1.updatePids(rPos1, true);
-        master.robo2.updatePids(rPos2, true);
-        master.robo3.updatePids(rPos3, true);
-        master.robo4.updatePids(rPos4, true);
-        master.robo5.updatePids(rPos5, true);
-        master.robo0.updatePositions();
-        master.robo1.updatePositions();
-        master.robo2.updatePositions();
-        master.robo3.updatePositions();
-        master.robo4.updatePositions();
-        master.robo5.updatePositions();
-        master.robo0.driveWithCA();
-        master.robo1.driveWithCA();
-        master.robo2.driveWithCA();
-        master.robo3.driveWithCA();
-        master.robo4.driveWithCA();
-        master.robo5.driveWithCA();
+        master->robo0.updatePids(rPos0, true);
+        master->robo1.updatePids(rPos1, true);
+        master->robo2.updatePids(rPos2, true);
+        master->robo3.updatePids(rPos3, true);
+        master->robo4.updatePids(rPos4, true);
+        master->robo5.updatePids(rPos5, true);
+        master->robo0.updatePositions();
+        master->robo1.updatePositions();
+        master->robo2.updatePositions();
+        master->robo3.updatePositions();
+        master->robo4.updatePositions();
+        master->robo5.updatePositions();
+        master->robo0.driveWithCA();
+        master->robo1.driveWithCA();
+        master->robo2.driveWithCA();
+        master->robo3.driveWithCA();
+        master->robo4.driveWithCA();
+        master->robo5.driveWithCA();
 
-        if(master.robo0.GetPos().DistanceTo(rPos0) < 0.2){
+        if(master->robo0.GetPos().DistanceTo(rPos0) < 0.2){
             newRandomPosition(rPos0, distY(mtY), distX(mtX));
-            master.robo0.GotoXY(rPos0.GetX(), rPos0.GetY(), 40);
+            master->robo0.GotoXY(rPos0.GetX(), rPos0.GetY(), 40);
         }
-        if(master.robo1.GetPos().DistanceTo(rPos1) < 0.2){
+        if(master->robo1.GetPos().DistanceTo(rPos1) < 0.2){
             newRandomPosition(rPos1, distY(mtY), distX(mtX));
-            master.robo1.GotoXY(rPos1.GetX(), rPos1.GetY(), 40);
+            master->robo1.GotoXY(rPos1.GetX(), rPos1.GetY(), 40);
         }
-        if(master.robo2.GetPos().DistanceTo(rPos2) < 0.2){
+        if(master->robo2.GetPos().DistanceTo(rPos2) < 0.2){
             newRandomPosition(rPos2, distY(mtY), distX(mtX));
-            master.robo2.GotoXY(rPos2.GetX(), rPos2.GetY(), 40);
+            master->robo2.GotoXY(rPos2.GetX(), rPos2.GetY(), 40);
         }
-        if(master.robo3.GetPos().DistanceTo(rPos3) < 0.2){
+        if(master->robo3.GetPos().DistanceTo(rPos3) < 0.2){
             newRandomPosition(rPos3, distY(mtY), distX(mtX));
-            master.robo3.GotoXY(rPos3.GetX(), rPos3.GetY(), 40);
+            master->robo3.GotoXY(rPos3.GetX(), rPos3.GetY(), 40);
         }
-        if(master.robo4.GetPos().DistanceTo(rPos4) < 0.2){
+        if(master->robo4.GetPos().DistanceTo(rPos4) < 0.2){
             newRandomPosition(rPos4, distY(mtY), distX(mtX));
-            master.robo4.GotoXY(rPos4.GetX(), rPos4.GetY(), 40);
+            master->robo4.GotoXY(rPos4.GetX(), rPos4.GetY(), 40);
         }
-        if(master.robo5.GetPos().DistanceTo(rPos5) < 0.2){
+        if(master->robo5.GetPos().DistanceTo(rPos5) < 0.2){
             newRandomPosition(rPos5, distY(mtY), distX(mtX));
-            master.robo5.GotoXY(rPos5.GetX(), rPos5.GetY(), 40);
+            master->robo5.GotoXY(rPos5.GetX(), rPos5.GetY(), 40);
         }
     }
 
@@ -343,10 +343,10 @@ void Test::randomDrivingWithCA() {
 void Test::getPassSide() {
     cout << "Remember to set debug to true in the getPassSide function" << endl;
     while (1) {
-        Position basePos = master.robo0.GetPos();
-        Position target = master.ball.GetPos();
-        Position obstacle = master.robo1.GetPos();
-        double diffAngle = master.ca.getPassSide(basePos, target, obstacle);
+        Position basePos = master->robo0.GetPos();
+        Position target = master->ball.GetPos();
+        Position obstacle = master->robo1.GetPos();
+        double diffAngle = master->ca.getPassSide(basePos, target, obstacle);
         diffAngle = diffAngle;
         usleep(1000);
     }
@@ -358,11 +358,11 @@ void Test::pullVector() {
     timer debugTimer;
     debugTimer.start();
     while (1) {
-        Position basePos = master.robo0.GetPos();
-        Position target = master.ball.GetPos();
-        Position obstacle = master.robo1.GetPos();
-        double passSide = master.ca.getPassSide(basePos, target, obstacle);
-        Force pull = master.ca.getPull(basePos, target, obstacle);
+        Position basePos = master->robo0.GetPos();
+        Position target = master->ball.GetPos();
+        Position obstacle = master->robo1.GetPos();
+        double passSide = master->ca.getPassSide(basePos, target, obstacle);
+        Force pull = master->ca.getPull(basePos, target, obstacle);
         if (debugTimer.getTime() > 0.01) {
             cout << "----- ----- -----" << endl;
             cout << "Current position, X: " << basePos.GetX() << " Y: " << basePos.GetY() << endl;
@@ -444,40 +444,40 @@ void Test::collisionAvoidance(Robo& roboMove, Robo& roboObs) {
 
 void Test::beforePenalty() {
     cout << "Currently not working, loser" << endl;
-    master.robo0.GotoXY(0.3,0, 60, true);
-    master.robo1.GotoXY(1.2, -0.8, 100, false);
-    master.robo2.GotoXY(1.2, 0.8, 100, false);
+    master->robo0.GotoXY(0.3,0, 60, true);
+    master->robo1.GotoXY(1.2, -0.8, 100, false);
+    master->robo2.GotoXY(1.2, 0.8, 100, false);
 }
 void Test::penalty(){
     cout<< "this is the test for Penalty shooting"<<endl;
-    Position pos1(master.ball.GetX()+0.5,master.ball.GetY());
-    Position pos2(master.ball.GetX()+0.3,master.ball.GetY());
-    Position pos3(master.ball.GetX()+0.1,master.ball.GetY());
+    Position pos1(master->ball.GetX()+0.5,master->ball.GetY());
+    Position pos2(master->ball.GetX()+0.3,master->ball.GetY());
+    Position pos3(master->ball.GetX()+0.1,master->ball.GetY());
     int attpos=0;
     while (attpos==0){
 
         cout << "Moving to pos 1"<< endl << endl;
-        master.robo0.CruisetoXY(pos1.GetX(), pos1.GetY(), 150, true);
+        master->robo0.CruisetoXY(pos1.GetX(), pos1.GetY(), 150, true);
         usleep(5000);
-        if (master.robo0.GetPos().DistanceTo(pos1) < 0.05) attpos=1;
+        if (master->robo0.GetPos().DistanceTo(pos1) < 0.05) attpos=1;
     }
     while (attpos==1){
 
         cout << "Moving to pos2" << endl << endl;
-        master.robo0.GotoXY(pos2.GetX(), pos2.GetY(), 120, true);
+        master->robo0.GotoXY(pos2.GetX(), pos2.GetY(), 120, true);
         usleep(5000);
-        if (master.robo0.GetPos().DistanceTo(pos2) < 0.1) attpos=2;
+        if (master->robo0.GetPos().DistanceTo(pos2) < 0.1) attpos=2;
    }
     while (attpos==2){
 
         cout << "Moving to " << pos3 << endl << endl;
-        master.robo0.CruisetoXY(pos3.GetX(), pos3.GetY(), 100, true);
+        master->robo0.CruisetoXY(pos3.GetX(), pos3.GetY(), 100, true);
         usleep(5000);
-        if (master.robo0.GetPos().DistanceTo(pos3) < 0.1) attpos=3;
+        if (master->robo0.GetPos().DistanceTo(pos3) < 0.1) attpos=3;
    }
     if (attpos==3){
         cout << "Moving forward" << endl;
-        master.robo0.MoveMs(200,200,2000);
+        master->robo0.MoveMs(200,200,2000);
         usleep(5000);
         attpos=4;
     }
@@ -486,7 +486,7 @@ void Test::penalty(){
 
 void Test::goalkeeper() {
     while(1) {
-        master.runGoalkeeper();
+        master->runGoalkeeper();
     }
 }
 
