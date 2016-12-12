@@ -168,3 +168,206 @@ Player& Player::operator = (const Player& other) {
     state.store(state.load());
     return *this;
 }
+
+
+void kick_the_ball(Robo& kicker, RawBall& ourball)
+{
+
+  Position target_of_kick(1.27, -0.5);
+  Position pos_before_kick(0, 0);
+  Position aux_pos_before_kick(0, 0);
+  int control = 0;
+  //int control2 = 0;
+  Angle ang;
+  //int start_turn = 0;
+
+  //double initrobox, initroboy;
+  //Angle ang;
+  double delta = 0.09;
+
+
+  while (1)
+  {
+
+
+    if (target_of_kick.GetX() > ourball.GetX())
+    {
+
+      pos_before_kick.SetX(ourball.GetX() - delta);
+
+      if (target_of_kick.GetY() > ourball.GetY())
+      {
+        pos_before_kick.SetY(ourball.GetY() - delta * fabs(target_of_kick.GetY() - ourball.GetY()) / fabs(target_of_kick.GetX() - ourball.GetX()));
+      }
+      else
+      {
+        pos_before_kick.SetY(ourball.GetY() + delta * fabs(target_of_kick.GetY() - ourball.GetY()) / fabs(target_of_kick.GetX() - ourball.GetX()));
+      }
+
+
+      if (ourball.GetX() > kicker.GetX())
+      {
+
+        if (kicker.GetPos().DistanceTo(pos_before_kick.GetPos()) > 0.1)
+        {
+          kicker.driveWithCA();
+          kicker.GotoPos(pos_before_kick.GetPos());
+          cout << "Test 1" << endl;
+
+
+        }
+
+      }
+      else
+      {
+
+        if (ourball.GetY() > 0)
+        {
+
+          aux_pos_before_kick.SetX(ourball.GetX());
+          aux_pos_before_kick.SetY(ourball.GetY() - 0.15);
+
+        }
+        else
+        {
+
+          aux_pos_before_kick.SetX(ourball.GetX());
+          aux_pos_before_kick.SetY(ourball.GetY() + 0.15);
+
+        }
+
+
+        if (kicker.GetPos().DistanceTo(aux_pos_before_kick.GetPos()) > 0.1)
+        {
+
+          kicker.driveWithCA();
+          kicker.GotoPos(aux_pos_before_kick);
+          if (kicker.GetPos().DistanceTo(aux_pos_before_kick.GetPos()) < 0.12)
+          {
+            control = 1;
+          }
+
+        }
+
+        if (kicker.GetPos().DistanceTo(pos_before_kick.GetPos()) > 0.1 && control == 1)
+        {
+
+          kicker.driveWithCA();
+          kicker.GotoPos(pos_before_kick);
+          cout << "Test 2" << endl;
+        }
+
+      }
+
+    }
+    else
+    {
+
+
+      pos_before_kick.SetX(ourball.GetX() + delta);
+
+      if (target_of_kick.GetY() > ourball.GetY())
+      {
+        pos_before_kick.SetY(ourball.GetY() - delta * fabs(target_of_kick.GetY() - ourball.GetY()) / fabs(target_of_kick.GetX() - ourball.GetX()));
+      }
+      else
+      {
+        pos_before_kick.SetY(ourball.GetY() + delta * fabs(target_of_kick.GetY() - ourball.GetY()) / fabs(target_of_kick.GetX() - ourball.GetX()));
+      }
+
+
+      if (kicker.GetX() > ourball.GetX())
+      {
+
+        if (kicker.GetPos().DistanceTo(pos_before_kick.GetPos()) > 0.1)
+        {
+
+          kicker.driveWithCA();
+          kicker.GotoPos(pos_before_kick.GetPos());
+          cout << "Test 3" << endl;
+        }
+      }
+      else
+      {
+
+
+        if (ourball.GetY() > 0)
+        {
+
+          aux_pos_before_kick.SetX(ourball.GetX());
+          aux_pos_before_kick.SetY(ourball.GetY() - 0.15);
+
+
+        }
+        else
+        {
+
+          aux_pos_before_kick.SetX(ourball.GetX());
+          aux_pos_before_kick.SetY(ourball.GetY() + 0.15);
+
+
+        }
+
+
+        if (kicker.GetPos().DistanceTo(aux_pos_before_kick.GetPos()) > 0.1)
+        {
+
+          kicker.driveWithCA();
+          kicker.GotoPos(aux_pos_before_kick);
+          if (kicker.GetPos().DistanceTo(aux_pos_before_kick.GetPos()) < 0.12)
+          {
+            control = 1;
+          }
+
+        }
+
+        if (kicker.GetPos().DistanceTo(pos_before_kick.GetPos()) > 0.1 && control == 1)
+        {
+
+          kicker.driveWithCA();
+          kicker.GotoPos(pos_before_kick);
+          cout << "Test 4" << endl;
+        }
+
+      }
+    }
+  }
+/*
+
+  if (kicker.GetPos().DistanceTo(pos_before_kick.GetPos()) <= 0.1) /////////
+  {
+  ang = kicker.GetPos().AngleOfLineToPos(target_of_kick);
+  cout << ang.Deg() << endl;
+  if (kicker.GetPos().DistanceTo(pos_before_kick.GetPos()) <= 0.20)
+  {
+
+      ang = kicker.GetPos().AngleOfLineToPos(target_of_kick);
+      cout << ang.Deg() << endl;
+      int i = 1;
+
+      for (i = 1; i < 10000; i++)
+      {
+        kicker.TurnAbs(ang);
+
+      }
+  }
+
+    while((ang.Deg()-kicker.GetPhi().Deg())*(ang.Deg()-kicker.GetPhi().Deg()) > 0.1)
+    {
+        if(fabs(kicker.GetSpeedLeft()==kicker.GetSpeedRight()) < 0.01)
+        {
+            usleep(2000);
+            break;
+        }
+    }
+
+
+    cout << "Turn complete" << endl;
+
+    kicker.MoveMs(250, 250, 500);
+} ///////// */
+
+
+
+
+}
