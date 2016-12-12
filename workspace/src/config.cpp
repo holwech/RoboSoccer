@@ -21,12 +21,15 @@ typedef enum {
 struct Command {
     Action action;
     Position target;
-    Command(Action action, Position target) : action(action), target(target) {}
-    Command() : action(ACTION_IDLE), target(Position(0.0, 0.0)) {}
+    Position base;
+    Command(Action action,  Position base, Position target) : action(action), target(target), base(base) {}
+    Command(Action action, Position target) : action(action), target(target), base(Position(0.0, 0.0)) {}
+    Command() : action(ACTION_IDLE), target(Position(0.0, 0.0)), base(Position(0.0, 0.0)) {}
 
-    void set(Action action, Position target) {
+    void set(Action action, Position target, Position base) {
         this->action = action;
         this->target = target;
+        this->base = base;
     }
 };
 

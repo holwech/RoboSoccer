@@ -38,7 +38,6 @@ class Player
 public:
     Player(vector<Position>* positions, RawBall* ball, Channel* channel, Robo* robo);
     void run();
-    void before_kick(Robo& kicker, RawBall& ourball, Position target_of_kick); //Get to position before kick -> can be used for attacker's kick and pass
     PState getState();
     PState getPrevState();
     Player(Player&& other);
@@ -63,13 +62,20 @@ private:
     atomic<PState> state;
     mutable std::mutex mutex;
 
+    /** Variables */
+    void before_kick(Position kick_position, Position target_of_kick); //Get to position before kick -> can be used for attacker's kick and pass
+    Position pos_before_kick;
+    Position aux_pos_before_kick;
+    int control;
+    Angle ang;
+    double delta;
 
     /** Goalkeeper variables */
     void goalkeeperkick();
     double ballangle;
     double ballx;
     double bally;
-    double delta;
+    double gk_delta;
     timer timergk;
 
 };

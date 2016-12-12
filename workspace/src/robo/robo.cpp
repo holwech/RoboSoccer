@@ -54,7 +54,7 @@ void Robo::updateDistancePid(Position targetPos){
         pidDistance.updateInput(dist_error);
     }
     else{
-        pidDistance.updateInput(1.1);
+        pidDistance.updateInput(0.8);
     }
 }
 void Robo::updateAnglePidWithoutCA(Position targetPos){
