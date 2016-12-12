@@ -23,6 +23,7 @@ void Player::run() {
            goTo();
            break;
        case BEFORE_KICK:
+
            break;
        case KICK:
            break;
@@ -167,10 +168,9 @@ Player& Player::operator = (const Player& other) {
 }
 
 
-void kick_the_ball(Robo& kicker, RawBall& ourball)
+void Player::before_kick(Robo& kicker, RawBall& ourball, Position target_of_kick)
 {
-
-  Position target_of_kick(1.27, -0.5);
+  // Position target_of_kick(1.27, -0.5);
   Position pos_before_kick(0, 0);
   Position aux_pos_before_kick(0, 0);
   int control = 0;
@@ -183,8 +183,7 @@ void kick_the_ball(Robo& kicker, RawBall& ourball)
   double delta = 0.09;
 
 
-  while (1)
-  {
+  // while (1){
 
 
     if (target_of_kick.GetX() > ourball.GetX())
@@ -328,7 +327,7 @@ void kick_the_ball(Robo& kicker, RawBall& ourball)
 
       }
     }
-  }
+  //} //For while(1)
 /*
 
   if (kicker.GetPos().DistanceTo(pos_before_kick.GetPos()) <= 0.1) /////////
