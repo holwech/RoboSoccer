@@ -36,7 +36,7 @@ class Player
 {
     friend class Test_player;
 public:
-    Player(vector<Position>* positions, Position* ball, Channel* channel, Robo* robo);
+    Player(vector<Position>* positions, RawBall* ball, Channel* channel, Robo* robo);
     void run();
     PState getState();
     PState getPrevState();
@@ -54,7 +54,7 @@ private:
      *  3-5 is other team
      */
     vector<Position>* positions;
-    Position* ball;
+    RawBall* ball;
     Channel* channel;
     Command command;
     Robo* robo;

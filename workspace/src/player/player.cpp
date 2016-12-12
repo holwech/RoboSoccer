@@ -1,7 +1,7 @@
 #include "player.h"
 #include "player/goalkeeper.cpp"
 
-Player::Player(vector<Position>* positions, Position* ball, Channel* channel, Robo* robo) :  positions(positions), ball(ball), channel(channel), robo(robo) {
+Player::Player(vector<Position>* positions, RawBall* ball, Channel* channel, Robo* robo) :  positions(positions), ball(ball), channel(channel), robo(robo) {
     state = IDLE;
     ballangle = 0;
     ballx = 0;
@@ -66,6 +66,9 @@ void Player::readCommand() {
         cout << "Robo in state IDLE" << endl;
         setState(IDLE);
         robo->GotoPos(robo->GetPos());
+        break;
+    case ACTION_DEFEND:
+        setState(DEFEND);
         break;
     default:
         cout << "No case for this state: " << state << endl;

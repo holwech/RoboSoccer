@@ -1,7 +1,7 @@
 #include "test_player.h"
 
 
-Test_player::Test_player(Master& master) : master(&master), player(&master.positions, &master.ballPos, &master.channels[0], &master.robo0) {
+Test_player::Test_player(Master& master) : master(&master), player(&master.positions, &master.ball, &master.channels[0], &master.robo0) {
 }
 
 void Test_player::run(){
