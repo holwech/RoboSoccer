@@ -36,7 +36,7 @@ class Player
 {
     friend class Test_player;
 public:
-    Player(vector<Position>* positions, Position* ball, Channel* channel, Robo* robo);
+    Player(vector<Position>* positions, RawBall* ball, Channel* channel, Robo* robo);
     void run();
     void before_kick(Robo& kicker, RawBall& ourball, Position target_of_kick); //Get to position before kick -> can be used for attacker's kick and pass
     PState getState();
@@ -55,7 +55,7 @@ private:
      *  3-5 is other team
      */
     vector<Position>* positions;
-    Position* ball;
+    RawBall* ball;
     Channel* channel;
     Command command;
     Robo* robo;
