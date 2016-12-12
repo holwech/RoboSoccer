@@ -26,6 +26,10 @@ void Test_player::run(){
             cout << "Program 2 running..." << endl;
             testThreads2();
             break;
+        case 3:
+            cout << "Goalkeeper defending" <<endl;
+            goalkeeperingame();
+            break;
         default:
             stop = true;
             break;
@@ -94,5 +98,13 @@ void Test_player::testThreads() {
             }
         }
     }
+    threadRobo0.join();
+}
+void Test_player::goalkeeperingame(){
+    thread threadRobo0(&Player::run, &player);
+    Command command1(ACTION_DEFEND, Position(0.5, 0.5));
+    master->send(command1, 0);
+    while(1);
+    cout << "DONE" << endl;
     threadRobo0.join();
 }

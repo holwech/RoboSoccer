@@ -126,19 +126,14 @@ void Master::runGoalkeeper() {
 
     for(i=0;i<100;i++)
     {
-    ballangle = ball.GetPhi().Deg()+ballangle;
+    ballangle = ball.GetPhi().Deg()+ballangle/100;
     }
-    ballangle =  ballangle/100;
 
     for(i=0;i<100;i++)
     {
-    ballx = ballx + ball.GetX();
-    bally = bally + ball.GetY();
+    ballx = ballx + ball.GetX()/100;
+    bally = bally + ball.GetY()/100;
     }
-
-    ballx = ballx/100;
-    bally = bally/100;
-
     double goalkeeperx = (team == "blue" || referee.GetPlayMode() == PENALTY || referee.GetPlayMode() == BEFORE_PENALTY) ? 1.36 : -1.36;
     double goalkeepery;
 
@@ -285,4 +280,79 @@ void Master::printInfo() {
     cout << "= State: " << stateNames[state] << endl;
     cout << "====================" << endl;
 }
+void Master::runGoalkeeperingame() {
+    int i= 0;
+    double ballangle = 0;
+    double ballx = 0;
+    double bally= 0;
+    double delta;
+    timer timergk;
+    if (side == RIGHT_SIDE){
+    for(i=0;i<100;i++)
+    {
+    ballangle = ball.GetPhi().Deg()+ballangle/100;
+    }
 
+    for(i=0;i<100;i++)
+    {
+    ballx = ballx + ball.GetX()/100;
+    bally = bally + ball.GetY()/100;
+    }
+    double goalkeeperx = (team == "blue" || referee.GetPlayMode() == PENALTY || referee.GetPlayMode() == BEFORE_PENALTY) ? 1.36 : -1.36;
+    double goalkeepery;
+
+    goalkeepery = tan(ballangle*3.141593/180)*(goalkeeperx-ballx)+bally;
+
+    if (goalkeepery ==bally)
+        goalkeepery = 0;
+    if(goalkeepery>0.269)
+        goalkeepery = 0.269;
+    if(goalkeepery<-0.245)
+        goalkeepery = -0.245;
+
+     robo0.CruisetoXY(goalkeeperx,goalkeepery,150);
+
+     delta = sqrt((robo0.GetX()-goalkeeperx)*(robo0.GetX()-goalkeeperx)+(robo0.GetY()-goalkeepery)*(robo0.GetY()-goalkeepery));
+
+     if(delta<0.03)
+      robo0.StopAction();
+
+     while(robo0.GetPos().DistanceTo(ball.GetPos())<0.2)
+         robo0.GotoXY(ball.GetX(),ball.GetY(),160);}
+     else{
+        for(i=0;i<100;i++)
+        {
+        ballangle = ball.GetPhi().Deg()+ballangle/100;
+        }
+        for(i=0;i<100;i++)
+        {
+        ballx = ballx + ball.GetX()/100;
+        bally = bally + ball.GetY()/100;
+        }
+        double goalkeeperx = (team == "blue" || referee.GetPlayMode() == PENALTY || referee.GetPlayMode() == BEFORE_PENALTY) ? 1.36 : -1.36;
+        double goalkeepery;
+        goalkeepery = tan(ballangle*3.141593/180)*(goalkeeperx-ballx)+bally;
+        if (goalkeepery ==bally)
+            goalkeepery = 0;
+        if(goalkeepery>0.269)
+            goalkeepery = 0.269;
+        if(goalkeepery<-0.245)
+            goalkeepery = -0.245;
+        if(ballangle<90&&ballangle>-90)
+            goalkeepery=0;
+
+        robo0.CruisetoXY(goalkeeperx,goalkeepery,150);
+
+        delta = sqrt((robo0.GetX()-goalkeeperx)*(robo0.GetX()-goalkeeperx)+(robo0.GetY()-goalkeepery)*(robo0.GetY()-goalkeepery));
+
+        if(delta<0.03)
+            robo0.StopAction();
+        timergk.start();
+        while((robo0.GetPos().DistanceTo(ball.GetPos()))<0.2&&(timergk.getTime()>2))
+        {
+        robo0.GotoXY(ball.GetX(),ball.GetY(),160);
+        timergk.reset();
+        }
+
+    }
+}

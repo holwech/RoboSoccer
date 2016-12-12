@@ -62,6 +62,7 @@ private:
     void beforePenalty();
     void penalty();
     void printInfo();
+    void runGoalkeeperingame();
     ePlayMode state;
 
     void updatePositions();

@@ -1,7 +1,11 @@
 #include "player.h"
+#include "player/goalkeeper.cpp"
 
 Player::Player(vector<Position>* positions, Position* ball, Channel* channel, Robo* robo) :  positions(positions), ball(ball), channel(channel), robo(robo) {
     state = IDLE;
+    ballangle = 0;
+    ballx = 0;
+    bally = 0;
 }
 
 void Player::run() {
@@ -25,6 +29,7 @@ void Player::run() {
        case BLOCK_BALL:
            break;
        case DEFEND:
+           defend();
            break;
        case KICK_OUT:
            break;

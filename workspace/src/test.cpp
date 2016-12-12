@@ -57,6 +57,7 @@ void Test::testMenu() {
         cout << "14: map measurement" << endl;
         cout << "15: random driving" << endl;
         cout << "16: testDriveWithCA." << endl;
+        cout << "17: goalkeeper in game" <<endl;
         int program;
         cin >> program;
         bool stop = false;
@@ -128,7 +129,10 @@ void Test::testMenu() {
             cout << "Running 16: testDriveWithCA" << endl;
             testDriveWithCA();
             break;
-
+        case 17:
+            cout << "Running 17: test goalkeeper in the game" <<endl;
+            goalkeeperingame();
+            break;
         default:
             stop = true;
             break;
@@ -1004,7 +1008,11 @@ void Test::do_goalkeeper_kick(Robo& robogoalkicker, Robo& robo_blue_1, Robo& rob
 */
 
 }
-
+void Test::goalkeeperingame() {
+    while(1) {
+        master->runGoalkeeperingame();
+    }
+}
 void Test::testAll() {
     cout << "Running all available tests" << endl;
     cout << "Make sure that the robots are ready \n and the ball is on the field." << endl;

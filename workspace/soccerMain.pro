@@ -41,7 +41,8 @@ SOURCES += src/soccerMain.cpp \
     src/player/test_player.h \
     src/player/test_player.cpp \
     src/robo/test_robo.cpp \
-        src/robo/test_robo.h
+    src/robo/test_robo.h \
+    src/player/goalkeeper.cpp
 
 
 		
@@ -55,3 +56,4 @@ dox.depends = FORCE
 
 # somewhere else in the *.pro file
 QMAKE_EXTRA_TARGETS += dox
+

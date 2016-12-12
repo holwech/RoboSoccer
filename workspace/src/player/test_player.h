@@ -12,6 +12,7 @@ private:
     Player player;
     void testThreads();
     void testThreads2();
+    void goalkeeperingame();
 };
 
 #endif // TEST_PLAYER_H

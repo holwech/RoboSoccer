@@ -6,6 +6,7 @@
 #include "robo/robo.h"
 #include "atomic"
 #include "config.cpp"
+#include "timer.h"
 
 
 /** These functions should be called doing something else probably
@@ -47,6 +48,7 @@ private:
     void readCommand();
     void goTo();
     void setState(PState newState);
+    void defend();
     /** 0 is goalkeeper
      *  1 and 2 is team playes
      *  3-5 is other team
@@ -59,5 +61,15 @@ private:
     atomic<PState> prevState;
     atomic<PState> state;
     mutable std::mutex mutex;
+
+
+    /** Goalkeeper variables */
+    void goalkeeperkick();
+    double ballangle;
+    double ballx;
+    double bally;
+    double delta;
+    timer timergk;
+
 };
 #endif // PLAYER_H

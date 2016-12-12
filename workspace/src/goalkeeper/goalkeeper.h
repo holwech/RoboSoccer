@@ -24,7 +24,7 @@ class Goalkeeper
 {
     friend class TestGoalkeeper;
 public:
-    Goalkeeper(vector<Robo*>& robot, RawBall& ball) : robot(robot), ball(ball) {};
+    Goalkeeper(vector<Robo*>& robot, RawBall& ball) : robot(robot), ball(ball) {}
     Position nextMove();
     GState getState();
     GState getPrevState();
