@@ -86,8 +86,8 @@ void Player::readCommand() {
         cout << "No case for this state: " << state << endl;
         break;
     }
-
 }
+
 
 
 

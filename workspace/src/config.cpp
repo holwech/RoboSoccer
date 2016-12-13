@@ -55,7 +55,7 @@ struct Channel {
         while(!seen.load()) { }
         mutex.lock();
         seen.store(false);
-        command = command;
+        this->command = command;
         mutex.unlock();
     }
 

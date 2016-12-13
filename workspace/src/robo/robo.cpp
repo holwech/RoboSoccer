@@ -56,7 +56,7 @@ void Robo::updatePidsGoalie(Position targetPos){
 
 void Robo::updateDistancePid(Position targetPos){
     double dist_error = this->GetPos().DistanceTo(targetPos);
-    if (dist_error < 0.03){
+    if (dist_error < 0.06){
         pidDistance.updateInput(dist_error);
     }
     else{
