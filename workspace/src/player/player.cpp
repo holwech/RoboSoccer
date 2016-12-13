@@ -33,6 +33,7 @@ void Player::run() {
            before_kick(command.pos1, command.pos2);
            break;
        case KICK:
+           kick(100);
            break;
        case BLOCK_BALL:
            break;
@@ -81,6 +82,10 @@ void Player::readCommand() {
     case ACTION_BEFORE_KICK:
         cout << "Robo in state BEFORE_KICK" << endl;
         setState(BEFORE_KICK);
+        break;
+    case ACTION_KICK:
+        cout << "Robo in state KICK" << endl;
+        setState(KICK);
         break;
     default:
         cout << "No case for this state: " << state << endl;

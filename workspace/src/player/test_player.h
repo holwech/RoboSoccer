@@ -14,6 +14,7 @@ private:
     void testThreads2();
     void goalkeeperingame();
     void testBeforeKick();
+    void testKick();
 };
 
 #endif // TEST_PLAYER_H

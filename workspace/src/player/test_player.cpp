@@ -13,6 +13,7 @@ void Test_player::run(){
         cout << "2: Simple thread test" << endl;
         cout << "3: Goalkeeper defending" <<endl;
         cout << "4: Test before kick" << endl;
+        cout << "5: Test kick" << endl;
         int program;
         cin >> program;
         bool stop = false;
@@ -35,6 +36,10 @@ void Test_player::run(){
         case 4:
             cout << "Program 4 running" << endl;
             testBeforeKick();
+            break;
+        case 5:
+            cout << "Program 5 running" << endl;
+            testKick();
             break;
         default:
             stop = true;
@@ -123,5 +128,12 @@ void Test_player::testBeforeKick(){
     Command command1(ACTION_BEFORE_KICK, master->ball.GetPos(), Position(1.27, -0.5));
     master->send(command1, 0);
     cout << "DONE" << endl;
+    threadRobo0.join();
+}
+void Test_player::testKick(){
+    thread threadRobo0(&Player::run, std::ref(player));
+    Command command1(ACTION_KICK, master->ball.GetPos());
+    master->send(command1, 0);
+    while(1);
     threadRobo0.join();
 }

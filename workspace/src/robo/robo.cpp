@@ -9,7 +9,8 @@
   */
 
 //Use Goto to set target position. Remember to also run the driveWithCA() 100 times a second
-void Robo::GotoPos(Position target){
+void Robo::GotoPos(Position target, int speed){
+    this->speed = speed;
     this->targetPosition = target;
 }
 
@@ -60,7 +61,7 @@ void Robo::updateDistancePid(Position targetPos){
         pidDistance.updateInput(dist_error);
     }
     else{
-        pidDistance.updateInput(0.8);
+        pidDistance.updateInput(speed);
     }
 }
 void Robo::updateAnglePidWithoutCA(Position targetPos){
@@ -81,8 +82,8 @@ void Robo::updateAnglePidGoalie(Position targetPos){
 }
 
 //DRIVE - related functions
-void Robo::turn(){
-    this->updateAnglePidWithoutCA(targetPosition);
+void Robo::turn(Position targetPos){
+    this->updateAnglePidWithoutCA(targetPos);
     double angleInput = pidAngle.getInput();
     double rightWheel = +angleInput;
     double leftWheel = -angleInput;

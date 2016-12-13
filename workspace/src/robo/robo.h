@@ -20,14 +20,14 @@ public:
     pidController pidAngle;
     pidController pidDistance;
     CA ca;
-    void GotoPos(Position target);
+    void GotoPos(Position target, int speed = 1);
     void driveWithCA();
     void goalieDrive();
     void updatePids(Position targetPos, bool ca);
     void updatePidsGoalie(Position targetPos);
     void setVariables(Robo& team1, Robo& team2, Robo& otherTeam1, Robo& otherTeam2, Robo& otherTeam3);
     void updatePositions();
-    void turn();
+    void turn(Position targetPos);
     bool isArrived();
 private:
     Position targetPosition;
@@ -46,6 +46,7 @@ private:
     vector<Position> posOtherTeam;
     double angleErrorRad;
     bool ballBehindRobo;
+    int speed;
 };
 
 #endif // ROBO_H

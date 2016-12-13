@@ -13,9 +13,19 @@ void Player::goTo(Position target) {
     }
 }
 
+void Player::kick(int power){ //power 0 -> 100
+    double distToBall = robo->GetPos().DistanceTo(ball->GetPos());
+    if(distToBall < 0.12){
+        robo->GotoPos(ball->GetPos());
+    }
+    else{
+        robo->GotoPos(ball->GetPos(), 2);
+    }
+}
 
 void Player::before_kick(Position kick_position, Position target_of_kick)
 {
+  // while (1){
 
     if (target_of_kick.GetX() > kick_position.GetX())
     {
