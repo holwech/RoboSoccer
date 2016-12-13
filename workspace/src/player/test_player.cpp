@@ -49,7 +49,7 @@ void Test_player::run(){
 
 
 void Test_player::testThreads2() {
-    thread threadRobo0(&Player::run, &player);
+    thread threadRobo0(&Player::run, std::ref(player));
     Command command1(ACTION_GOTO, Position(0.5, 0.5));
     Command command2(ACTION_GOTO, Position(-0.5, 0.5));
     cout << "Sending command 1" << endl;
@@ -63,7 +63,7 @@ void Test_player::testThreads2() {
 }
 
 void Test_player::testThreads() {
-    thread threadRobo0(&Player::run, player);
+    thread threadRobo0(&Player::run, std::ref(player));
     Command command1(ACTION_GOTO, Position(0.5, 0.5));
     Command command2(ACTION_GOTO, Position(-0.5, 0.5));
     Command command3(ACTION_GOTO, Position(-0.5, -0.5));
@@ -108,8 +108,9 @@ void Test_player::testThreads() {
     }
     threadRobo0.join();
 }
+
 void Test_player::goalkeeperingame(){
-    thread threadRobo0(&Player::run, &player);
+    thread threadRobo0(&Player::run, std::ref(player));
     Command command1(ACTION_DEFEND, Position(0.5, 0.5));
     master->send(command1, 0);
     while(1);
@@ -118,10 +119,9 @@ void Test_player::goalkeeperingame(){
 }
 
 void Test_player::testBeforeKick(){
-    thread threadRobo0(&Player::run, &player);
+    thread threadRobo0(&Player::run, std::ref(player));
     Command command1(ACTION_BEFORE_KICK, master->ball.GetPos(), Position(1.27, -0.5));
     master->send(command1, 0);
-    while(1);
     cout << "DONE" << endl;
     threadRobo0.join();
 }

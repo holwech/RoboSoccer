@@ -48,7 +48,7 @@ void Player::run() {
            break;
        }
        readCommand();
-       usleep(10);
+       usleep(10000);
        //cout << "State: " << state << endl;
    }
 }
@@ -86,8 +86,8 @@ void Player::readCommand() {
         cout << "No case for this state: " << state << endl;
         break;
     }
-
 }
+
 
 
 
