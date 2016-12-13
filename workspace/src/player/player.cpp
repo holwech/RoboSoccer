@@ -1,5 +1,7 @@
 #include "player.h"
-#include "player/goalkeeper.cpp"
+#include "player/goalkeeper_actions.cpp"
+#include "player/general_actions.cpp"
+#include "player/attacker_actions.cpp"
 
 Player::Player(vector<Position>* positions, RawBall* ball, Channel* channel, Robo* robo) :  positions(positions), ball(ball), channel(channel), robo(robo) {
     state = IDLE;
@@ -18,16 +20,17 @@ void Player::run() {
        robo->driveWithCA();
        switch(state) {
        case IDLE:
+           idle();
            break;
        case BEFORE_PASS:
            break;
        case PASS:
            break;
        case GOTO:
-           goTo();
+           goTo(command.pos1);
            break;
        case BEFORE_KICK:
-           before_kick(command.base, command.target);
+           before_kick(command.pos1, command.pos2);
            break;
        case KICK:
            break;
@@ -60,9 +63,8 @@ void Player::readCommand() {
     switch(command.action) {
     case ACTION_GOTO:
         cout << "Robo in state GOTO" << endl;
-        cout << "GOTO: " << command.target.GetX() << ", " << command.target.GetY() << endl;
+        cout << "GOTO: " << command.pos1.GetX() << ", " << command.pos1.GetY() << endl;
         setState(GOTO);
-        robo->GotoPos(command.target);
         break;
     case ACTION_TEST:
         setState(TEST);
@@ -73,9 +75,11 @@ void Player::readCommand() {
         robo->GotoPos(robo->GetPos());
         break;
     case ACTION_DEFEND:
+        cout << "Robo in state DEFENED" << endl;
         setState(DEFEND);
         break;
     case ACTION_BEFORE_KICK:
+        cout << "Robo in state BEFORE_KICK" << endl;
         setState(BEFORE_KICK);
         break;
     default:
@@ -86,34 +90,10 @@ void Player::readCommand() {
 }
 
 
-void Player::goTo() {
-    if (robo->GetPos().DistanceTo(command.target) < 0.2) {
-        cout << "State set to IDLE" << endl;
-        setState(IDLE);
-    }
-}
 
-/**
-void moveSquare() {
-    Position pos1 = {0.5, 0.5};
-    Position pos2 = {-0.5, 0.5};
-    Position pos3 = {-0.5, -0.5};
-    Position pos4 = {0.5, -0.5};
-    int step = 0;
-    Position targetPos;
-    while(1) {
-        robo->updatePids(targetPos);
-        robo->updatePositions();
-        robo->driveWithCA();
-        if(master.robo.GetPos().DistanceTo(targetPos) < 0.2){
-
-        }
-    }
-
-}
-*/
 
 PState Player::getState() {
+    std::lock_guard<std::mutex> lock(mutex);
     return state.load();
 }
 
@@ -178,182 +158,3 @@ Player& Player::operator = (const Player& other) {
 }
 
 
-void Player::before_kick(Position kick_position, Position target_of_kick)
-{
-
-
-  // while (1){
-
-
-    if (target_of_kick.GetX() > kick_position.GetX())
-    {
-
-      pos_before_kick.SetX(kick_position.GetX() - delta);
-
-      if (target_of_kick.GetY() > kick_position.GetY())
-      {
-        pos_before_kick.SetY(kick_position.GetY() - delta * fabs(target_of_kick.GetY() - kick_position.GetY()) / fabs(target_of_kick.GetX() - kick_position.GetX()));
-      }
-      else
-      {
-        pos_before_kick.SetY(kick_position.GetY() + delta * fabs(target_of_kick.GetY() - kick_position.GetY()) / fabs(target_of_kick.GetX() - kick_position.GetX()));
-      }
-
-
-      if (kick_position.GetX() > robo->GetX())
-      {
-
-        if (robo->GetPos().DistanceTo(pos_before_kick) > 0.1)
-        {
-          robo->GotoPos(pos_before_kick);
-          cout << "Test 1" << endl;
-
-
-        }
-
-      }
-      else
-      {
-
-        if (kick_position.GetY() > 0)
-        {
-
-          aux_pos_before_kick.SetX(kick_position.GetX());
-          aux_pos_before_kick.SetY(kick_position.GetY() - 0.15);
-
-        }
-        else
-        {
-
-          aux_pos_before_kick.SetX(kick_position.GetX());
-          aux_pos_before_kick.SetY(kick_position.GetY() + 0.15);
-
-        }
-
-
-        if (robo->GetPos().DistanceTo(aux_pos_before_kick.GetPos()) > 0.1)
-        {
-
-          robo->GotoPos(aux_pos_before_kick);
-          if (robo->GetPos().DistanceTo(aux_pos_before_kick.GetPos()) < 0.12)
-          {
-            control = 1;
-          }
-
-        }
-
-        if (robo->GetPos().DistanceTo(pos_before_kick.GetPos()) > 0.1 && control == 1)
-        {
-          robo->GotoPos(pos_before_kick);
-          cout << "Test 2" << endl;
-        }
-
-      }
-
-    }
-    else
-    {
-
-
-      pos_before_kick.SetX(kick_position.GetX() + delta);
-
-      if (target_of_kick.GetY() > kick_position.GetY())
-      {
-        pos_before_kick.SetY(kick_position.GetY() - delta * fabs(target_of_kick.GetY() - kick_position.GetY()) / fabs(target_of_kick.GetX() - kick_position.GetX()));
-      }
-      else
-      {
-        pos_before_kick.SetY(kick_position.GetY() + delta * fabs(target_of_kick.GetY() - kick_position.GetY()) / fabs(target_of_kick.GetX() - kick_position.GetX()));
-      }
-
-
-      if (robo->GetX() > kick_position.GetX())
-      {
-
-        if (robo->GetPos().DistanceTo(pos_before_kick.GetPos()) > 0.1)
-        {
-          robo->GotoPos(pos_before_kick.GetPos());
-          cout << "Test 3" << endl;
-        }
-      }
-      else
-      {
-
-
-        if (kick_position.GetY() > 0)
-        {
-
-          aux_pos_before_kick.SetX(kick_position.GetX());
-          aux_pos_before_kick.SetY(kick_position.GetY() - 0.15);
-
-
-        }
-        else
-        {
-
-          aux_pos_before_kick.SetX(kick_position.GetX());
-          aux_pos_before_kick.SetY(kick_position.GetY() + 0.15);
-
-
-        }
-
-
-        if (robo->GetPos().DistanceTo(aux_pos_before_kick.GetPos()) > 0.1)
-        {
-          robo->GotoPos(aux_pos_before_kick);
-          if (robo->GetPos().DistanceTo(aux_pos_before_kick.GetPos()) < 0.12)
-          {
-            control = 1;
-          }
-
-        }
-
-        if (robo->GetPos().DistanceTo(pos_before_kick.GetPos()) > 0.1 && control == 1)
-        {
-
-          robo->GotoPos(pos_before_kick);
-          cout << "Test 4" << endl;
-        }
-
-      }
-    }
-  //} //For while(1)
-/*
-
-  if (robo->GetPos().DistanceTo(pos_before_kick.GetPos()) <= 0.1) /////////
-  {
-  ang = robo->GetPos().AngleOfLineToPos(target_of_kick);
-  cout << ang.Deg() << endl;
-  if (robo->GetPos().DistanceTo(pos_before_kick.GetPos()) <= 0.20)
-  {
-
-      ang = robo->GetPos().AngleOfLineToPos(target_of_kick);
-      cout << ang.Deg() << endl;
-      int i = 1;
-
-      for (i = 1; i < 10000; i++)
-      {
-        robo->TurnAbs(ang);
-
-      }
-  }
-
-    while((ang.Deg()-robo->GetPhi().Deg())*(ang.Deg()-robo->GetPhi().Deg()) > 0.1)
-    {
-        if(fabs(robo->GetSpeedLeft()==robo->GetSpeedRight()) < 0.01)
-        {
-            usleep(2000);
-            break;
-        }
-    }
-
-
-    cout << "Turn complete" << endl;
-
-    robo->MoveMs(250, 250, 500);
-} ///////// */
-
-
-
-
-}

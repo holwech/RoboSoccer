@@ -20,16 +20,17 @@ typedef enum {
 
 struct Command {
     Action action;
-    Position target;
-    Position base;
-    Command(Action action,  Position base, Position target) : action(action), target(target), base(base) {}
-    Command(Action action, Position target) : action(action), target(target), base(Position(0.0, 0.0)) {}
-    Command() : action(ACTION_IDLE), target(Position(0.0, 0.0)), base(Position(0.0, 0.0)) {}
+    Position pos1;
+    Position pos2;
+    Command(Action action) : action(action), pos1(Position(0.0, 0.0)), pos2(Position(0.0, 0.0)) {}
+    Command(Action action,  Position pos1, Position pos2) : action(action), pos1(pos1), pos2(pos2) {}
+    Command(Action action, Position pos1) : action(action), pos1(pos1), pos2(Position(0.0, 0.0)) {}
+    Command() : action(ACTION_IDLE), pos1(Position(0.0, 0.0)), pos2(Position(0.0, 0.0)) {}
 
-    void set(Action action, Position target, Position base) {
+    void set(Action action, Position pos1, Position pos2) {
         this->action = action;
-        this->target = target;
-        this->base = base;
+        this->pos1 = pos1;
+        this->pos2 = pos2;
     }
 };
 
@@ -41,25 +42,20 @@ struct Channel {
 
     bool isRead() {
         std::lock_guard<std::mutex> lock(mutex);
-        return seen;
+        return seen.load();
     }
 
     Command read() {
         std::lock_guard<std::mutex> lock(mutex);
-        this->seen = true;
+        seen.store(true);
 
-        return this->command;
+        return command;
     }
     void write(Command command) {
+        while(!seen.load()) { }
         mutex.lock();
-        if (!this->seen) {
-            mutex.unlock();
-            while(!isRead()) {}
-            mutex.lock();
-        }
-        this->seen = false;
-
-        this->command = command;
+        seen.store(false);
+        command = command;
         mutex.unlock();
     }
 
@@ -67,14 +63,14 @@ struct Channel {
     Channel(Channel&& other) {
         std::lock_guard<std::mutex> lock(other.mutex);
         command = std::move(other.command);
-        seen = std::move(other.seen);
+        seen.store(std::move(other.seen.load()));
     }
 
     // Copy assignment
     Channel(const Channel& other) {
         std::lock_guard<std::mutex> lock(other.mutex);
         command = other.command;
-        seen = other.seen;
+        seen.store(other.seen.load());
     }
 
     // Move assignment
@@ -83,7 +79,7 @@ struct Channel {
         std::lock_guard<std::mutex> self_lock(mutex, std::adopt_lock);
         std::lock_guard<std::mutex> other_lock(other.mutex, std::adopt_lock);
         command = std::move(other.command);
-        seen = std::move(other.seen);
+        seen.store(std::move(other.seen.load()));
         return *this;
     }
 
@@ -93,14 +89,14 @@ struct Channel {
         std::lock_guard<std::mutex> self_lock(mutex, std::adopt_lock);
         std::lock_guard<std::mutex> other_lock(other.mutex, std::adopt_lock);
         command = other.command;
-        seen = other.seen;
+        seen.store(other.seen.load());
         return *this;
     }
 
 private:
     mutable std::mutex mutex;
     Command command;
-    bool seen;
+    atomic<bool> seen;
 };
 
 

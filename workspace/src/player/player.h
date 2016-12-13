@@ -46,9 +46,7 @@ public:
     Player& operator = (const Player& other);
 private:
     void readCommand();
-    void goTo();
     void setState(PState newState);
-    void defend();
     /** 0 is goalkeeper
      *  1 and 2 is team playes
      *  3-5 is other team
@@ -62,7 +60,9 @@ private:
     atomic<PState> state;
     mutable std::mutex mutex;
 
-    /** Variables */
+    /** General Variables and Functions*/
+    void idle();
+    void goTo(Position target);
     void before_kick(Position kick_position, Position target_of_kick); //Get to position before kick -> can be used for attacker's kick and pass
     Position pos_before_kick;
     Position aux_pos_before_kick;
@@ -70,13 +70,16 @@ private:
     Angle ang;
     double delta;
 
-    /** Goalkeeper variables */
+    /** Goalkeeper variables and Functions */
+    void defend();
     void goalkeeperkick();
     double ballangle;
     double ballx;
     double bally;
     double gk_delta;
     timer timergk;
+
+    /** Attacker variables and functions */
 
 };
 #endif // PLAYER_H

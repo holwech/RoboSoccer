@@ -26,7 +26,7 @@ Master::Master(string& team,
     side = RIGHT_SIDE;
     state = REFEREE_INIT;
     for (int i = 0; i <= 5; i++) {
-        Command newCommand(ACTION_GOTO, Position(0.2, 0.2));
+        Command newCommand(ACTION_IDLE);
         channels.push_back(Channel(newCommand));
     }
     updatePositions();

@@ -27,10 +27,6 @@ SOURCES += src/soccerMain.cpp \
     src/control/collision_avoidance.cpp \
     src/control/pidController.h \
     src/control/pidController.cpp \
-    src/goalkeeper/goalkeeper.h \
-    src/goalkeeper/goalkeeper.cpp \
-    src/goalkeeper/test_goalkeeper.h \
-    src/goalkeeper/test_goalkeeper.cpp \
     src/timer.h \
     src/timer.cpp \
     src/test.h \
@@ -42,7 +38,9 @@ SOURCES += src/soccerMain.cpp \
     src/player/test_player.cpp \
     src/robo/test_robo.cpp \
     src/robo/test_robo.h \
-    src/player/goalkeeper.cpp
+    src/player/goalkeeper_actions.cpp \
+    src/player/general_actions.cpp \
+    src/player/attacker_actions.cpp
 
 
 		

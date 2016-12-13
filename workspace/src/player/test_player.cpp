@@ -52,8 +52,10 @@ void Test_player::testThreads2() {
     thread threadRobo0(&Player::run, &player);
     Command command1(ACTION_GOTO, Position(0.5, 0.5));
     Command command2(ACTION_GOTO, Position(-0.5, 0.5));
+    cout << "Sending command 1" << endl;
     master->send(command1, 0);
     while(player.getState() != IDLE) {  }
+    cout << "Sending command 2" << endl;
     master->send(command2, 0);
     while(1);
     cout << "DONE" << endl;
