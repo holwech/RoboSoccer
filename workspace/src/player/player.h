@@ -73,9 +73,6 @@ private:
     /** Goalkeeper variables and Functions */
     void defend();
     void goalkeeperkick();
-    double ballangle;
-    double ballx;
-    double bally;
     double gk_delta;
     timer timergk;
 

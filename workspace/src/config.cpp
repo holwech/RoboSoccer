@@ -16,6 +16,7 @@ typedef enum {
     ACTION_DEFEND,
     ACTION_KICK_OUT,
     ACTION_TEST,
+    ACTION_GOALKEEPER_KICK
 } Action;
 
 struct Command {

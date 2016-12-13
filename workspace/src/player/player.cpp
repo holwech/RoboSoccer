@@ -5,9 +5,6 @@
 
 Player::Player(vector<Position>* positions, RawBall* ball, Channel* channel, Robo* robo) :  positions(positions), ball(ball), channel(channel), robo(robo) {
     state = IDLE;
-    ballangle = 0;
-    ballx = 0;
-    bally = 0;
     control = 0;
     delta = 0.09;
     aux_pos_before_kick = Position(0.0, 0.0);
@@ -17,7 +14,8 @@ Player::Player(vector<Position>* positions, RawBall* ball, Channel* channel, Rob
 void Player::run() {
    cout << "Robo thread started" << endl;
    while(1) {
-       robo->driveWithCA();
+       //robo->driveWithCA();
+       robo->goalieDrive();
        switch(state) {
        case IDLE:
            idle();
