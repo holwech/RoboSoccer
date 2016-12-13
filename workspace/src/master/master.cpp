@@ -38,12 +38,13 @@ void Master::run() {
 
     cout << "Starting state machine..." << endl;
     debugTimer.start();
+    debugTimer.setInterval(2.0);
     printInfo();
     while(1) {
         /** Timer for printing info about the system, so that it doesn't spam the
           * terminal.
           */
-        if (debugTimer.getTime() > 2) {
+        if (debugTimer.getTime() > debugTimer.getInterval()) {
             printInfo();
             debugTimer.reset();
         }
@@ -287,6 +288,8 @@ void Master::runGoalkeeperingame() {
     double bally= 0;
     double delta;
     timer timergk;
+    timergk.start();
+    timergk.setInterval(2.0);
     if (side == RIGHT_SIDE){
     for(i=0;i<100;i++)
     {
@@ -348,7 +351,7 @@ void Master::runGoalkeeperingame() {
         if(delta<0.03)
             robo0.StopAction();
         timergk.start();
-        while((robo0.GetPos().DistanceTo(ball.GetPos()))<0.2&&(timergk.getTime()>2))
+        while((robo0.GetPos().DistanceTo(ball.GetPos()))<0.2&&(timergk.getTime()> timergk.getInterval()))
         {
         robo0.GotoXY(ball.GetX(),ball.GetY(),160);
         timergk.reset();

@@ -58,6 +58,7 @@ void Test::testMenu() {
         cout << "15: random driving" << endl;
         cout << "16: testDriveWithCA." << endl;
         cout << "17: goalkeeper in game" <<endl;
+        cout << "18: timerTest" << endl;
         int program;
         cin >> program;
         bool stop = false;
@@ -133,6 +134,10 @@ void Test::testMenu() {
             cout << "Running 17: test goalkeeper in the game" <<endl;
             goalkeeperingame();
             break;
+        case 18:
+            cout << "Running 18: timerTest" << endl;
+            timerTest();
+            break;
         default:
             stop = true;
             break;
@@ -142,6 +147,45 @@ void Test::testMenu() {
         }
     }
     cout << "leaving test menu" << endl;
+}
+
+
+void Test::timerTest() {
+    timer testTimer;
+    timer testTimer2;
+    testTimer.start();
+    testTimer.setInterval(1000);
+    testTimer2.start();
+    testTimer2.setInterval(10000);
+    while(testTimer2.getTime() < testTimer2.getInterval()) {
+        if (testTimer.getTime() > testTimer.getInterval()) {
+            cout << "Time is: " << testTimer.getTime().count() << endl;
+            testTimer.reset();
+        }
+    }
+    cout << "Reset OK" << endl;
+    testTimer.stop();
+    if (testTimer2.isRunning()) {
+        cout << "isRunning OK" << endl;
+    }
+    testTimer2.reset();
+    while(testTimer2.getTime() < testTimer2.getInterval()) {
+        if (testTimer.getTime() > testTimer.getInterval()) {
+            cout << "Stop FAILED" << endl;
+            cout << "Time is: " << testTimer.getTime().count() << endl;
+            break;
+        }
+    }
+    testTimer2.reset();
+    testTimer.start();
+    while(testTimer2.getTime() < testTimer2.getInterval()) {
+        if (testTimer.getTime() > testTimer.getInterval()) {
+            cout << "Start OK" << endl;
+            cout << "Time is: " << testTimer.getTime().count() << endl;
+            break;
+        }
+    }
+    cout << "Timer OK" << endl;
 }
 
 void Test::testDriveWithCA(){
@@ -361,13 +405,14 @@ void Test::getPassSide() {
 void Test::pullVector() {
     timer debugTimer;
     debugTimer.start();
+    debugTimer.setInterval(1.0);
     while (1) {
         Position basePos = master->robo0.GetPos();
         Position target = master->ball.GetPos();
         Position obstacle = master->robo1.GetPos();
         double passSide = master->ca.getPassSide(basePos, target, obstacle);
         Force pull = master->ca.getPull(basePos, target, obstacle);
-        if (debugTimer.getTime() > 0.01) {
+        if (debugTimer.getTime() > debugTimer.getInterval()) {
             cout << "----- ----- -----" << endl;
             cout << "Current position, X: " << basePos.GetX() << " Y: " << basePos.GetY() << endl;
             cout << "Pass side: " << passSide << endl;
@@ -394,6 +439,7 @@ void Test::collisionAvoidance(Robo& roboMove, Robo& roboObs) {
     CA ca;
     timer debugTimer;
     debugTimer.start();
+    debugTimer.setInterval(0.5);
 
     cout << "Moving or stationary obstacle? (m/s) ";
     string answer;
@@ -436,7 +482,7 @@ void Test::collisionAvoidance(Robo& roboMove, Robo& roboObs) {
         Position roboMovePos = roboMove.GetPos();
         Position roboObsPos = roboObs.GetPos();
         Force force = ca.getForce(roboMovePos.GetX(), roboMovePos.GetY(), roboObsPos.GetX(), roboObsPos.GetY());
-        if (debugTimer.getTime() > 0.5) {
+        if (debugTimer.getTime() > debugTimer.getInterval()) {
             cout << "----- ----- -----" << endl;
             cout << "PosX: " << roboMovePos.GetX() << " PosY: " << roboMovePos.GetY() << endl;
             cout << "ForceX: " << force.X << " ForceY: " << force.Y << endl;

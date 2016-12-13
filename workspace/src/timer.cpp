@@ -3,17 +3,17 @@
 timer::timer() {
         resetted = true;
         running = false;
-        beg = 0;
-        end = 0;
+        beg = std::chrono::system_clock::now();
+        end = std::chrono::system_clock::now();
 }
 
 
 void timer::start() {
         if(! running) {
                 if(resetted)
-                        beg = (unsigned long) clock();
+                        beg = std::chrono::system_clock::now();
                 else
-                        beg -= end - (unsigned long) clock();
+                        beg -= end - std::chrono::system_clock::now();
                 running = true;
                 resetted = false;
         }
@@ -22,7 +22,7 @@ void timer::start() {
 
 void timer::stop() {
         if(running) {
-                end = (unsigned long) clock();
+                end = std::chrono::system_clock::now();
                 running = false;
         }
 }
@@ -33,8 +33,8 @@ void timer::reset() {
         if(wereRunning)
                 stop();
         resetted = true;
-        beg = 0;
-        end = 0;
+        beg = std::chrono::system_clock::now();
+        end = std::chrono::system_clock::now();
         if(wereRunning)
                 start();
 }
@@ -45,14 +45,21 @@ bool timer::isRunning() {
 }
 
 //Returns seconds, I think
-unsigned long timer::getTime() {
-        if(running)
-                return ((unsigned long) clock() - beg) / CLOCKS_PER_SEC;
-        else
-                return end - beg;
+std::chrono::duration<double, std::milli> timer::getTime() {
+    if(running) {
+        std::chrono::duration<double, std::milli> t_ms = std::chrono::system_clock::now() - beg;
+        return t_ms;
+    } else {
+        std::chrono::duration<double, std::milli> t_ms = end - beg;
+        return t_ms;
+    }
 }
 
 
-bool timer::isOver(unsigned long seconds) {
-        return seconds >= getTime();
+void timer::setInterval(double newInterval) {
+    interval = std::chrono::duration<double, std::milli>(newInterval);
+}
+
+std::chrono::duration<double, std::milli> timer::getInterval() {
+    return interval;
 }

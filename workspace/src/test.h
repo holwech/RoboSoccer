@@ -34,6 +34,7 @@ private:
     void turning();
     void randomDrivingWithCA();
     void goalkeeperingame();
+    void timerTest();
     Master *master;
     Test_player ta;
 };
