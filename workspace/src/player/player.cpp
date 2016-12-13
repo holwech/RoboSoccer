@@ -48,7 +48,7 @@ void Player::run() {
            break;
        }
        readCommand();
-       usleep(10);
+       usleep(10000);
        //cout << "State: " << state << endl;
    }
 }

@@ -26,6 +26,7 @@ void pidController::changeParams(double newKp, double newKi, double newKd){
     Ki = newKi;
     Kd = newKd;
 }
+
 void pidController::saveNewErr(double diff){
     if(error_sign == diff/fabs(diff) || error_sign == 0){
         double tempErrA = diff;

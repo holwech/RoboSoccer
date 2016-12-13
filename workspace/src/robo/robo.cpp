@@ -2,6 +2,7 @@
 #define CA_SCALE 5 //How munch influenced by CA, lower is more. test: 20
 
 #define DEBUG false
+#define ARRIVED_DIST 0.04
 
 /** To complete task 2.1 part 1, we have to implement multithreading it seems
   * like. We will have problems controlling all robots at the same time without
@@ -11,6 +12,11 @@
 void Robo::GotoPos(Position target){
     this->targetPosition = target;
 }
+
+bool Robo::isArrived(){
+    return this->GetPos().DistanceTo(targetPosition) < ARRIVED_DIST;
+}
+
 
 void Robo::setVariables(Robo& team1, Robo& team2, Robo& otherTeam1, Robo& otherTeam2, Robo& otherTeam3) {
     team.push_back(&team1);

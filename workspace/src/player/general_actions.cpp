@@ -17,141 +17,130 @@ void Player::goTo(Position target) {
 void Player::before_kick(Position kick_position, Position target_of_kick)
 {
 
-
-  // while (1){
-
-
     if (target_of_kick.GetX() > kick_position.GetX())
     {
-
-      pos_before_kick.SetX(kick_position.GetX() - delta);
-
-      if (target_of_kick.GetY() > kick_position.GetY())
-      {
-        pos_before_kick.SetY(kick_position.GetY() - delta * fabs(target_of_kick.GetY() - kick_position.GetY()) / fabs(target_of_kick.GetX() - kick_position.GetX()));
-      }
-      else
-      {
-        pos_before_kick.SetY(kick_position.GetY() + delta * fabs(target_of_kick.GetY() - kick_position.GetY()) / fabs(target_of_kick.GetX() - kick_position.GetX()));
-      }
-
-
-      if (kick_position.GetX() > robo->GetX())
-      {
-
-        if (robo->GetPos().DistanceTo(pos_before_kick) > 0.1)
+        pos_before_kick.SetX(kick_position.GetX() - delta);
+        if (target_of_kick.GetY() > kick_position.GetY())
         {
-          robo->GotoPos(pos_before_kick);
-          cout << "Test 1" << endl;
-
-
+            pos_before_kick.SetY(kick_position.GetY() - delta * fabs(target_of_kick.GetY() - kick_position.GetY()) / fabs(target_of_kick.GetX() - kick_position.GetX()));
+        }
+        else
+        {
+            pos_before_kick.SetY(kick_position.GetY() + delta * fabs(target_of_kick.GetY() - kick_position.GetY()) / fabs(target_of_kick.GetX() - kick_position.GetX()));
         }
 
-      }
-      else
-      {
 
-        if (kick_position.GetY() > 0)
+        if (kick_position.GetX() > robo->GetX())
         {
 
-          aux_pos_before_kick.SetX(kick_position.GetX());
-          aux_pos_before_kick.SetY(kick_position.GetY() - 0.15);
+            if (robo->GetPos().DistanceTo(pos_before_kick) > 0.1)
+            {
+                robo->GotoPos(pos_before_kick);
+                cout << "Test 1" << endl;
+
+
+            }
 
         }
         else
         {
 
-          aux_pos_before_kick.SetX(kick_position.GetX());
-          aux_pos_before_kick.SetY(kick_position.GetY() + 0.15);
+            if (kick_position.GetY() > 0)
+            {
+
+                aux_pos_before_kick.SetX(kick_position.GetX());
+                aux_pos_before_kick.SetY(kick_position.GetY() - 0.15);
+
+            }
+            else
+            {
+
+                aux_pos_before_kick.SetX(kick_position.GetX());
+                aux_pos_before_kick.SetY(kick_position.GetY() + 0.15);
+
+            }
+
+
+            if (robo->GetPos().DistanceTo(aux_pos_before_kick.GetPos()) > 0.1)
+            {
+
+                robo->GotoPos(aux_pos_before_kick);
+                if (robo->GetPos().DistanceTo(aux_pos_before_kick.GetPos()) < 0.12)
+                {
+                    control = 1;
+                }
+
+            }
+
+            if (robo->GetPos().DistanceTo(pos_before_kick.GetPos()) > 0.1 && control == 1)
+            {
+                robo->GotoPos(pos_before_kick);
+                cout << "Test 2" << endl;
+            }
 
         }
-
-
-        if (robo->GetPos().DistanceTo(aux_pos_before_kick.GetPos()) > 0.1)
-        {
-
-          robo->GotoPos(aux_pos_before_kick);
-          if (robo->GetPos().DistanceTo(aux_pos_before_kick.GetPos()) < 0.12)
-          {
-            control = 1;
-          }
-
-        }
-
-        if (robo->GetPos().DistanceTo(pos_before_kick.GetPos()) > 0.1 && control == 1)
-        {
-          robo->GotoPos(pos_before_kick);
-          cout << "Test 2" << endl;
-        }
-
-      }
 
     }
     else
     {
+        pos_before_kick.SetX(kick_position.GetX() + delta);
 
-
-      pos_before_kick.SetX(kick_position.GetX() + delta);
-
-      if (target_of_kick.GetY() > kick_position.GetY())
-      {
-        pos_before_kick.SetY(kick_position.GetY() - delta * fabs(target_of_kick.GetY() - kick_position.GetY()) / fabs(target_of_kick.GetX() - kick_position.GetX()));
-      }
-      else
-      {
-        pos_before_kick.SetY(kick_position.GetY() + delta * fabs(target_of_kick.GetY() - kick_position.GetY()) / fabs(target_of_kick.GetX() - kick_position.GetX()));
-      }
-
-
-      if (robo->GetX() > kick_position.GetX())
-      {
-
-        if (robo->GetPos().DistanceTo(pos_before_kick.GetPos()) > 0.1)
+        if (target_of_kick.GetY() > kick_position.GetY())
         {
-          robo->GotoPos(pos_before_kick.GetPos());
-          cout << "Test 3" << endl;
+            pos_before_kick.SetY(kick_position.GetY() - delta * fabs(target_of_kick.GetY() - kick_position.GetY()) / fabs(target_of_kick.GetX() - kick_position.GetX()));
         }
-      }
-      else
-      {
+        else
+        {
+            pos_before_kick.SetY(kick_position.GetY() + delta * fabs(target_of_kick.GetY() - kick_position.GetY()) / fabs(target_of_kick.GetX() - kick_position.GetX()));
+        }
 
 
-        if (kick_position.GetY() > 0)
+        if (robo->GetX() > kick_position.GetX())
         {
 
-          aux_pos_before_kick.SetX(kick_position.GetX());
-          aux_pos_before_kick.SetY(kick_position.GetY() - 0.15);
-
-
+            if (robo->GetPos().DistanceTo(pos_before_kick.GetPos()) > 0.1)
+            {
+                robo->GotoPos(pos_before_kick.GetPos());
+                cout << "Test 3" << endl;
+            }
         }
         else
         {
 
-          aux_pos_before_kick.SetX(kick_position.GetX());
-          aux_pos_before_kick.SetY(kick_position.GetY() + 0.15);
 
+            if (kick_position.GetY() > 0)
+            {
+
+                aux_pos_before_kick.SetX(kick_position.GetX());
+                aux_pos_before_kick.SetY(kick_position.GetY() - 0.15);
+
+
+            }
+            else
+            {
+
+                aux_pos_before_kick.SetX(kick_position.GetX());
+                aux_pos_before_kick.SetY(kick_position.GetY() + 0.15);
+
+            }
+            if (robo->GetPos().DistanceTo(aux_pos_before_kick.GetPos()) > 0.1)
+            {
+                robo->GotoPos(aux_pos_before_kick);
+                if (robo->GetPos().DistanceTo(aux_pos_before_kick.GetPos()) < 0.12)
+                {
+                    control = 1;
+                }
+
+            }
+
+            if (robo->GetPos().DistanceTo(pos_before_kick.GetPos()) > 0.1 && control == 1)
+            {
+
+                robo->GotoPos(pos_before_kick);
+                cout << "Test 4" << endl;
+            }
 
         }
-
-
-        if (robo->GetPos().DistanceTo(aux_pos_before_kick.GetPos()) > 0.1)
-        {
-          robo->GotoPos(aux_pos_before_kick);
-          if (robo->GetPos().DistanceTo(aux_pos_before_kick.GetPos()) < 0.12)
-          {
-            control = 1;
-          }
-
-        }
-
-        if (robo->GetPos().DistanceTo(pos_before_kick.GetPos()) > 0.1 && control == 1)
-        {
-
-          robo->GotoPos(pos_before_kick);
-          cout << "Test 4" << endl;
-        }
-
-      }
     }
   //} //For while(1)
 /*

@@ -28,6 +28,7 @@ public:
     void setVariables(Robo& team1, Robo& team2, Robo& otherTeam1, Robo& otherTeam2, Robo& otherTeam3);
     void updatePositions();
     void turn();
+    bool isArrived();
 private:
     Position targetPosition;
     double getDiffBetweenAnglesRad(double angle1, double angle2);

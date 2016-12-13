@@ -102,7 +102,7 @@ void Test_player::testThreads() {
                 step = 1;
                 break;
             default:
-                cout << "Switch in testThreads is fuked up" << endl;
+                cout << "Switch in testThreads is fucked up" << endl;
             }
         }
     }
