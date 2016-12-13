@@ -50,11 +50,13 @@ void Test_player::run(){
 
 void Test_player::testThreads2() {
     thread threadRobo0(&Player::run, std::ref(player));
+    usleep(1000);
     Command command1(ACTION_GOTO, Position(0.5, 0.5));
     Command command2(ACTION_GOTO, Position(-0.5, 0.5));
     cout << "Sending command 1" << endl;
     master->send(command1, 0);
-    while(player.getState() != IDLE) {  }
+    player.setBusy(true);
+    while(player.isBusy()) {  }
     cout << "Sending command 2" << endl;
     master->send(command2, 0);
     while(1);

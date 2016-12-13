@@ -40,6 +40,8 @@ public:
     void run();
     PState getState();
     PState getPrevState();
+    bool isBusy();
+    void setBusy(bool flag);
     Player(Player&& other);
     Player(const Player& other);
     Player& operator = (Player&& other);
@@ -47,6 +49,7 @@ public:
 private:
     void readCommand();
     void setState(PState newState);
+    void done();
     /** 0 is goalkeeper
      *  1 and 2 is team playes
      *  3-5 is other team
@@ -58,6 +61,7 @@ private:
     Robo* robo;
     atomic<PState> prevState;
     atomic<PState> state;
+    atomic<bool> busy;
     mutable std::mutex mutex;
 
     /** General Variables and Functions*/

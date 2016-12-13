@@ -12,6 +12,7 @@ Player::Player(vector<Position>* positions, RawBall* ball, Channel* channel, Rob
     delta = 0.09;
     aux_pos_before_kick = Position(0.0, 0.0);
     pos_before_kick = Position(0.0, 0.0);
+    busy.store(false);
 }
 
 void Player::run() {
@@ -71,8 +72,8 @@ void Player::readCommand() {
         break;
     case ACTION_IDLE:
         cout << "Robo in state IDLE" << endl;
-        setState(IDLE);
         robo->GotoPos(robo->GetPos());
+        setState(IDLE);
         break;
     case ACTION_DEFEND:
         cout << "Robo in state DEFENED" << endl;
@@ -88,8 +89,19 @@ void Player::readCommand() {
     }
 }
 
+void Player::done() {
+    setState(IDLE);
+    setBusy(false);
+}
 
+bool Player::isBusy() {
+    return busy.load();
+}
 
+void Player::setBusy(bool flag) {
+   busy.store(flag);
+   cout << "Busy set to: " << busy.load() << endl;
+}
 
 
 PState Player::getState() {

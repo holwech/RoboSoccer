@@ -7,7 +7,7 @@ void Player::idle() {
 void Player::goTo(Position target) {
     if (robo->GetPos().DistanceTo(target) < 0.2) {
         cout << "State set to IDLE" << endl;
-        setState(IDLE);
+        done();
     } else {
         robo->GotoPos(target);
     }
