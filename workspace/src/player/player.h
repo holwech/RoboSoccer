@@ -62,6 +62,7 @@ private:
     atomic<PState> prevState;
     atomic<PState> state;
     atomic<bool> busy;
+    int side;
     mutable std::mutex mutex;
 
     /** General Variables and Functions*/
@@ -85,6 +86,7 @@ private:
     timer timergk;
 
     /** Attacker variables and functions */
+    void blockBall(int xcord);
 
 };
 #endif // PLAYER_H

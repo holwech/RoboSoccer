@@ -10,6 +10,7 @@ Player::Player(vector<Position>* positions, RawBall* ball, Channel* channel, Rob
     bally = 0;
     control = 0;
     delta = 0.09;
+    side = 1;
     aux_pos_before_kick = Position(0.0, 0.0);
     pos_before_kick = Position(0.0, 0.0);
     busy.store(false);
@@ -37,6 +38,7 @@ void Player::run() {
            kick(100);
            break;
        case BLOCK_BALL:
+           blockBall(command.pos1.GetX());
            break;
        case DEFEND:
            defend();
@@ -87,6 +89,10 @@ void Player::readCommand() {
     case ACTION_KICK:
         cout << "Robo in state KICK" << endl;
         setState(KICK);
+        break;
+    case ACTION_BLOCK_BALL:
+        cout << "Robo in state BLOCK_BALL" << endl;
+        setState(BLOCK_BALL);
         break;
     default:
         cout << "No case for this state: " << state << endl;
