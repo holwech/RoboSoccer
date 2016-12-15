@@ -15,7 +15,7 @@ public:
     Robo(RTDBConn& DBC, const int deviceNr): RoboControl(DBC, deviceNr),
                                             pidAngle(50.0, 0.5, 1),
                                             pidDistance(80.0, 0.0, 0.0),
-                                            ca(), ballBehindRobo(false){}
+                                            ca(), ballBehindRobo(false), onlyTurn(false){}
     Robo(RoboControl& other): RoboControl(other){}
     pidController pidAngle;
     pidController pidDistance;
@@ -30,8 +30,8 @@ public:
     void turn(Position targetPos);
     bool isArrived();
 private:
-    bool onlyTurn;
     Position targetPosition;
+    void makeTurn();
     double getDiffBetweenAnglesRad(double angle1, double angle2);
     void updateAnglePidGoalie(Position targetPos);
     double getGoalieReferenceAngleErrRad(Position targetPos);
@@ -47,6 +47,7 @@ private:
     vector<Position> posOtherTeam;
     double angleErrorRad;
     bool ballBehindRobo;
+    bool onlyTurn;
     int speed;
 };
 
