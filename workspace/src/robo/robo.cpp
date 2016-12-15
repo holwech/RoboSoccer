@@ -15,6 +15,13 @@ void Robo::GotoPos(Position target, int speed){
     this->targetPosition = target;
 }
 
+
+void Robo::turn(Position targetPos){
+    this->onlyTurn = true;
+    this->targetPosition = targetPos;
+}
+
+
 bool Robo::isArrived(){
     return this->GetPos().DistanceTo(targetPosition) < ARRIVED_DIST;
 }
@@ -81,45 +88,45 @@ void Robo::updateAnglePidGoalie(Position targetPos){
     double sinAngleErrorRad = sin(this->angleErrorRad/2);
     pidAngle.updateInput(sinAngleErrorRad);
 }
+void Robo::makeTurn(){
+    this->updateAnglePidWithoutCA(targetPosition);
+    double angleInput = pidAngle.getInput();
+    double rightWheel = +angleInput;
+    double leftWheel = -angleInput;
 
-//DRIVE - related functions
-void Robo::turn(Position targetPos){
-    this->onlyTurn = true;
-    this->targetPosition = targetPos;
+    cout << "leftwheel: " << leftWheel << endl;
+    cout << "rightwheel: " << rightWheel << endl;
+    this->MoveMs(leftWheel, rightWheel,100,10);
 }
 
+//DRIVE - related functions
 void Robo::goalieDrive(){
-    updatePidsGoalie(targetPosition);
+    if(onlyTurn){
+        makeTurn();
+    }else{
+        updatePidsGoalie(targetPosition);
 
-    double driveSpeed = pidDistance.getInput();
-    double angleInput = pidAngle.getInput();
+        double driveSpeed = pidDistance.getInput();
+        double angleInput = pidAngle.getInput();
 
-    if (ballBehindRobo){
-        driveSpeed *= -1;
-        //angleInput *= -1;
+        if (ballBehindRobo){
+            driveSpeed *= -1;
+            //angleInput *= -1;
+        }
+        double rightWheel = driveSpeed+ angleInput;
+        double leftWheel = driveSpeed- angleInput;
+        if(DEBUG){
+            cout << "leftwheel: " << leftWheel << endl;
+            cout << "rightwheel: " << rightWheel << endl;
+        }
+        this->MoveMs(leftWheel,rightWheel, 100, 10);
     }
-    double rightWheel = driveSpeed+ angleInput;
-    double leftWheel = driveSpeed- angleInput;
-    if(DEBUG){
-        cout << "leftwheel: " << leftWheel << endl;
-        cout << "rightwheel: " << rightWheel << endl;
-    }
-    this->MoveMs(leftWheel,rightWheel, 100, 10);
-
-
 }
 
 //Drive functions must be run 100 times a second for robot to drive. Target position set by Goto()
 void Robo::driveWithCA() {
     if(onlyTurn){
-        this->updateAnglePidWithoutCA(targetPosition);
-        double angleInput = pidAngle.getInput();
-        double rightWheel = +angleInput;
-        double leftWheel = -angleInput;
-
-        cout << "leftwheel: " << leftWheel << endl;
-        cout << "rightwheel: " << rightWheel << endl;
-        this->MoveMs(leftWheel, rightWheel,100,10);
+       makeTurn();
     }
     else{
         updatePositions();
