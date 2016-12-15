@@ -30,6 +30,7 @@ public:
     void turn(Position targetPos);
     bool isArrived();
 private:
+    bool onlyTurn;
     Position targetPosition;
     double getDiffBetweenAnglesRad(double angle1, double angle2);
     void updateAnglePidGoalie(Position targetPos);

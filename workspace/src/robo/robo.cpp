@@ -10,6 +10,7 @@
 
 //Use Goto to set target position. Remember to also run the driveWithCA() 100 times a second
 void Robo::GotoPos(Position target, int speed){
+    onlyTurn = false;
     this->speed = speed;
     this->targetPosition = target;
 }
@@ -83,14 +84,8 @@ void Robo::updateAnglePidGoalie(Position targetPos){
 
 //DRIVE - related functions
 void Robo::turn(Position targetPos){
-    this->updateAnglePidWithoutCA(targetPos);
-    double angleInput = pidAngle.getInput();
-    double rightWheel = +angleInput;
-    double leftWheel = -angleInput;
-
-    cout << "leftwheel: " << leftWheel << endl;
-    cout << "rightwheel: " << rightWheel << endl;
-    this->MoveMs(leftWheel, rightWheel,100,10);
+    this->onlyTurn = true;
+    this->targetPosition = targetPos;
 }
 
 void Robo::goalieDrive(){
@@ -116,22 +111,34 @@ void Robo::goalieDrive(){
 
 //Drive functions must be run 100 times a second for robot to drive. Target position set by Goto()
 void Robo::driveWithCA() {
-    updatePositions();
-    updatePids(targetPosition, true);
-    // Get designated pid values
-    double driveSpeed = pidDistance.getInput();
-    double angleInput = pidAngle.getInput();
+    if(onlyTurn){
+        this->updateAnglePidWithoutCA(targetPosition);
+        double angleInput = pidAngle.getInput();
+        double rightWheel = +angleInput;
+        double leftWheel = -angleInput;
 
-    // the cos will make it drive fastest in the right direction, and also back up and turn if behind you
-    double rightWheel = driveSpeed*cos(this->angleErrorRad) + angleInput;
-    double leftWheel = driveSpeed*cos(this->angleErrorRad) - angleInput;
-    if(DEBUG){
         cout << "leftwheel: " << leftWheel << endl;
         cout << "rightwheel: " << rightWheel << endl;
+        this->MoveMs(leftWheel, rightWheel,100,10);
     }
-    this->MoveMs(leftWheel,rightWheel, 100, 10);
-    //out << endl <<robo1.GetPos().AngleOfLineToPos(ball.GetPos())-robo1.GetPhi() << endl;
-    //robo1.TurnAbs(robo1.GetPos().AngleOfLineToPos(ball.GetPos())-robo1.GetPhi());
+    else{
+        updatePositions();
+        updatePids(targetPosition, true);
+        // Get designated pid values
+        double driveSpeed = pidDistance.getInput();
+        double angleInput = pidAngle.getInput();
+
+        // the cos will make it drive fastest in the right direction, and also back up and turn if behind you
+        double rightWheel = driveSpeed*cos(this->angleErrorRad) + angleInput;
+        double leftWheel = driveSpeed*cos(this->angleErrorRad) - angleInput;
+        if(DEBUG){
+            cout << "leftwheel: " << leftWheel << endl;
+            cout << "rightwheel: " << rightWheel << endl;
+        }
+        this->MoveMs(leftWheel,rightWheel, 100, 10);
+        //out << endl <<robo1.GetPos().AngleOfLineToPos(ball.GetPos())-robo1.GetPhi() << endl;
+        //robo1.TurnAbs(robo1.GetPos().AngleOfLineToPos(ball.GetPos())-robo1.GetPhi());
+    }
 }
 
 double Robo::getDiffBetweenAnglesRad(double angle1, double angle2){
