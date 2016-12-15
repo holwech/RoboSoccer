@@ -132,7 +132,7 @@ void Test_player::goalkeeperingame(){
 
 void Test_player::testBeforeKick(){
     thread threadRobo0(&Player::run, std::ref(player));
-    Command command1(ACTION_BEFORE_KICK, master->ball.GetPos(), Position(1.27, -0.5));
+    Command command1(ACTION_BEFORE_KICK, master->ball.GetPos(), Position(1.29, 0));
     master->send(command1, 0);
     cout << "DONE" << endl;
     threadRobo0.join();

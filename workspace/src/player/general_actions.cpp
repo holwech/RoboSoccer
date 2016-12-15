@@ -14,14 +14,16 @@ void Player::goTo(Position target) {
 }
 
 void Player::kick(int power){ //power 0 -> 100
-    double distToBall = robo->GetPos().DistanceTo(ball->GetPos());
-    if(distToBall < 0.12){
+  double distToBall = robo->GetPos().DistanceTo(ball->GetPos());
+
+  if(distToBall < 0.12){
         robo->GotoPos(ball->GetPos());
-        //robo->MoveMs(250, 250, 500);
     }
     else{
-        robo->GotoPos(ball->GetPos(), 2);
+        robo->GotoPos(ball->GetPos(),2);
+
     }
+
 }
 
 void Player::before_kick(Position kick_position, Position target_of_kick)
@@ -39,6 +41,23 @@ void Player::before_kick(Position kick_position, Position target_of_kick)
         {
             pos_before_kick.SetY(kick_position.GetY() + delta * fabs(target_of_kick.GetY() - kick_position.GetY()) / fabs(target_of_kick.GetX() - kick_position.GetX()));
         }
+
+        if(abs(delta * fabs(target_of_kick.GetY() - kick_position.GetY()) / fabs(target_of_kick.GetX() - kick_position.GetX())) > 0.1){
+
+            delta = 0.8*delta;
+
+            pos_before_kick.SetX(kick_position.GetX() - delta);
+            if (target_of_kick.GetY() > kick_position.GetY())
+            {
+                pos_before_kick.SetY(kick_position.GetY() - delta * fabs(target_of_kick.GetY() - kick_position.GetY()) / fabs(target_of_kick.GetX() - kick_position.GetX()));
+            }
+            else
+            {
+                pos_before_kick.SetY(kick_position.GetY() + delta * fabs(target_of_kick.GetY() - kick_position.GetY()) / fabs(target_of_kick.GetX() - kick_position.GetX()));
+            }
+
+        }
+
 
 
         if (kick_position.GetX() > robo->GetX())
@@ -59,15 +78,15 @@ void Player::before_kick(Position kick_position, Position target_of_kick)
             if (kick_position.GetY() > 0)
             {
 
-                aux_pos_before_kick.SetX(kick_position.GetX());
-                aux_pos_before_kick.SetY(kick_position.GetY() - 0.15);
+                aux_pos_before_kick.SetX(kick_position.GetX() - 0.35);
+                aux_pos_before_kick.SetY(kick_position.GetY() - 0.35);
 
             }
             else
             {
 
-                aux_pos_before_kick.SetX(kick_position.GetX());
-                aux_pos_before_kick.SetY(kick_position.GetY() + 0.15);
+                aux_pos_before_kick.SetX(kick_position.GetX() - 0.35);
+                aux_pos_before_kick.SetY(kick_position.GetY() + 0.35);
 
             }
 
@@ -105,6 +124,23 @@ void Player::before_kick(Position kick_position, Position target_of_kick)
             pos_before_kick.SetY(kick_position.GetY() + delta * fabs(target_of_kick.GetY() - kick_position.GetY()) / fabs(target_of_kick.GetX() - kick_position.GetX()));
         }
 
+        if(abs(delta * fabs(target_of_kick.GetY() - kick_position.GetY()) / fabs(target_of_kick.GetX() - kick_position.GetX())) > 0.1){
+
+            delta = 0.8*delta;
+
+            pos_before_kick.SetX(kick_position.GetX() + delta);
+
+            if (target_of_kick.GetY() > kick_position.GetY())
+            {
+                pos_before_kick.SetY(kick_position.GetY() - delta * fabs(target_of_kick.GetY() - kick_position.GetY()) / fabs(target_of_kick.GetX() - kick_position.GetX()));
+            }
+            else
+            {
+                pos_before_kick.SetY(kick_position.GetY() + delta * fabs(target_of_kick.GetY() - kick_position.GetY()) / fabs(target_of_kick.GetX() - kick_position.GetX()));
+            }
+        }
+
+
 
         if (robo->GetX() > kick_position.GetX())
         {
@@ -122,16 +158,16 @@ void Player::before_kick(Position kick_position, Position target_of_kick)
             if (kick_position.GetY() > 0)
             {
 
-                aux_pos_before_kick.SetX(kick_position.GetX());
-                aux_pos_before_kick.SetY(kick_position.GetY() - 0.15);
+                aux_pos_before_kick.SetX(kick_position.GetX() + 0.35);
+                aux_pos_before_kick.SetY(kick_position.GetY() - 0.35);
 
 
             }
             else
             {
 
-                aux_pos_before_kick.SetX(kick_position.GetX());
-                aux_pos_before_kick.SetY(kick_position.GetY() + 0.15);
+                aux_pos_before_kick.SetX(kick_position.GetX() + 0.35);
+                aux_pos_before_kick.SetY(kick_position.GetY() + 0.35);
 
             }
             if (robo->GetPos().DistanceTo(aux_pos_before_kick.GetPos()) > 0.1)
@@ -155,15 +191,10 @@ void Player::before_kick(Position kick_position, Position target_of_kick)
     }
 
 
-  if(robo->GetPos().DistanceTo(pos_before_kick.GetPos()) <= 0.1) //&& (ang.Deg()-robo->GetPhi().Deg())*(ang.Deg()-robo->GetPhi().Deg()) > 3)
+  if(robo->GetPos().DistanceTo(pos_before_kick.GetPos()) <= 0.1)
     {
 
-
-      //ang = robo->GetPos().AngleOfLineToPos(target_of_kick);
-      //cout << ang.Deg() << endl;
-      //robo->turn(target_of_kick);
-
-      //robo->MoveMs(250, 250, 500);
+      robo->turn(target_of_kick);
 
       }
 
