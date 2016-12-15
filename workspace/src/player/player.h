@@ -72,6 +72,7 @@ private:
     void kick(int power);//power 0 -> 100
     Position pos_before_kick;
     Position aux_pos_before_kick;
+    double counter;
     int control;
     Angle ang;
     double delta;

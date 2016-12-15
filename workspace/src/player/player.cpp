@@ -14,6 +14,7 @@ Player::Player(vector<Position>* positions, RawBall* ball, Channel* channel, Rob
     aux_pos_before_kick = Position(0.0, 0.0);
     pos_before_kick = Position(0.0, 0.0);
     busy.store(false);
+    counter = 0;
 }
 
 void Player::run() {

@@ -17,6 +17,7 @@ void Player::kick(int power){ //power 0 -> 100
     double distToBall = robo->GetPos().DistanceTo(ball->GetPos());
     if(distToBall < 0.12){
         robo->GotoPos(ball->GetPos());
+        //robo->MoveMs(250, 250, 500);
     }
     else{
         robo->GotoPos(ball->GetPos(), 2);
@@ -25,9 +26,9 @@ void Player::kick(int power){ //power 0 -> 100
 
 void Player::before_kick(Position kick_position, Position target_of_kick)
 {
-  // while (1){
 
-    if (target_of_kick.GetX() > kick_position.GetX())
+
+  if (target_of_kick.GetX() > kick_position.GetX())
     {
         pos_before_kick.SetX(kick_position.GetX() - delta);
         if (target_of_kick.GetY() > kick_position.GetY())
@@ -152,43 +153,19 @@ void Player::before_kick(Position kick_position, Position target_of_kick)
 
         }
     }
-  //} //For while(1)
-/*
 
-  if (robo->GetPos().DistanceTo(pos_before_kick.GetPos()) <= 0.1) /////////
-  {
-  ang = robo->GetPos().AngleOfLineToPos(target_of_kick);
-  cout << ang.Deg() << endl;
-  if (robo->GetPos().DistanceTo(pos_before_kick.GetPos()) <= 0.20)
-  {
 
-      ang = robo->GetPos().AngleOfLineToPos(target_of_kick);
-      cout << ang.Deg() << endl;
-      int i = 1;
+  if(robo->GetPos().DistanceTo(pos_before_kick.GetPos()) <= 0.1) //&& (ang.Deg()-robo->GetPhi().Deg())*(ang.Deg()-robo->GetPhi().Deg()) > 3)
+    {
 
-      for (i = 1; i < 10000; i++)
-      {
-        robo->TurnAbs(ang);
+
+      //ang = robo->GetPos().AngleOfLineToPos(target_of_kick);
+      //cout << ang.Deg() << endl;
+      //robo->turn(target_of_kick);
+
+      //robo->MoveMs(250, 250, 500);
 
       }
-  }
-
-    while((ang.Deg()-robo->GetPhi().Deg())*(ang.Deg()-robo->GetPhi().Deg()) > 0.1)
-    {
-        if(fabs(robo->GetSpeedLeft()==robo->GetSpeedRight()) < 0.01)
-        {
-            usleep(2000);
-            break;
-        }
-    }
-
-
-    cout << "Turn complete" << endl;
-
-    robo->MoveMs(250, 250, 500);
-} ///////// */
-
-
 
 
 }
