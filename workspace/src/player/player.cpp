@@ -36,7 +36,7 @@ void Player::run() {
            before_kick(command.pos1, command.pos2);
            break;
        case KICK:
-           kick(100);
+           kick(command.pos1);
            break;
        case BLOCK_BALL:
            blockBall(command.pos1.GetX());

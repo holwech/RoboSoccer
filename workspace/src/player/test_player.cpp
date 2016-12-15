@@ -1,7 +1,7 @@
 #include "test_player.h"
+#define TESTROBOT robo1
 
-
-Test_player::Test_player(Master& master) : master(&master), player(&master.positions, &master.ball, &master.channels[0], &master.robo0) {
+Test_player::Test_player(Master& master) : master(&master), player(&master.positions, &master.ball, &master.channels[0], &master.TESTROBOT) {
 }
 
 void Test_player::run(){
@@ -140,7 +140,7 @@ void Test_player::testBeforeKick(){
 
 void Test_player::testKick(){
     thread threadRobo0(&Player::run, std::ref(player));
-    Command command1(ACTION_KICK, master->ball.GetPos());
+    Command command1(ACTION_KICK, Position(1.2,0) );
     master->send(command1, 0);
     while(1);
     threadRobo0.join();

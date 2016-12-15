@@ -69,7 +69,7 @@ private:
     void idle();
     void goTo(Position target);
     void before_kick(Position kick_position, Position target_of_kick); //Get to position before kick -> can be used for attacker's kick and pass
-    void kick(int power);//power 0 -> 100
+    void kick(Position target);
     Position pos_before_kick;
     Position aux_pos_before_kick;
     double counter;

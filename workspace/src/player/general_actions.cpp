@@ -13,16 +13,13 @@ void Player::goTo(Position target) {
     }
 }
 
-void Player::kick(int power){ //power 0 -> 100
-  double distToBall = robo->GetPos().DistanceTo(ball->GetPos());
+void Player::kick(Position target){
 
-  if(distToBall < 0.12){
-        robo->GotoPos(ball->GetPos());
-    }
-    else{
+
+
         robo->GotoPos(ball->GetPos(),2);
 
-    }
+
 
 }
 
@@ -65,7 +62,7 @@ void Player::before_kick(Position kick_position, Position target_of_kick)
 
             if (robo->GetPos().DistanceTo(pos_before_kick) > 0.1)
             {
-                robo->GotoPos(pos_before_kick);
+                robo->GotoPos(pos_before_kick,1.5);
                 cout << "Test 1" << endl;
 
 
@@ -94,7 +91,7 @@ void Player::before_kick(Position kick_position, Position target_of_kick)
             if (robo->GetPos().DistanceTo(aux_pos_before_kick.GetPos()) > 0.1)
             {
 
-                robo->GotoPos(aux_pos_before_kick);
+                robo->GotoPos(aux_pos_before_kick,1.5);
                 if (robo->GetPos().DistanceTo(aux_pos_before_kick.GetPos()) < 0.12)
                 {
                     control = 1;
@@ -104,7 +101,7 @@ void Player::before_kick(Position kick_position, Position target_of_kick)
 
             if (robo->GetPos().DistanceTo(pos_before_kick.GetPos()) > 0.1 && control == 1)
             {
-                robo->GotoPos(pos_before_kick);
+                robo->GotoPos(pos_before_kick,1.5);
                 cout << "Test 2" << endl;
             }
 
@@ -147,7 +144,7 @@ void Player::before_kick(Position kick_position, Position target_of_kick)
 
             if (robo->GetPos().DistanceTo(pos_before_kick.GetPos()) > 0.1)
             {
-                robo->GotoPos(pos_before_kick.GetPos());
+                robo->GotoPos(pos_before_kick.GetPos(),1.5);
                 cout << "Test 3" << endl;
             }
         }
@@ -172,7 +169,7 @@ void Player::before_kick(Position kick_position, Position target_of_kick)
             }
             if (robo->GetPos().DistanceTo(aux_pos_before_kick.GetPos()) > 0.1)
             {
-                robo->GotoPos(aux_pos_before_kick);
+                robo->GotoPos(aux_pos_before_kick,1.5);
                 if (robo->GetPos().DistanceTo(aux_pos_before_kick.GetPos()) < 0.12)
                 {
                     control = 1;
@@ -183,7 +180,7 @@ void Player::before_kick(Position kick_position, Position target_of_kick)
             if (robo->GetPos().DistanceTo(pos_before_kick.GetPos()) > 0.1 && control == 1)
             {
 
-                robo->GotoPos(pos_before_kick);
+                robo->GotoPos(pos_before_kick,1.5);
                 cout << "Test 4" << endl;
             }
 
