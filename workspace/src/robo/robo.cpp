@@ -13,12 +13,15 @@ void Robo::GotoPos(Position target, int speed){
     onlyTurn = false;
     this->speed = speed;
     this->targetPosition = target;
+    this->AbortGotoXY();
+    this->pidAngle.changeParams(ANGLE_KP_DRIVE, ANGLE_KI_DRIVE, ANGLE_KD_DRIVE);
 }
 
 
 void Robo::turn(Position targetPos){
     this->onlyTurn = true;
     this->targetPosition = targetPos;
+    this->pidAngle.changeParams(ANGLE_KP_TURN, ANGLE_KI_TURN, ANGLE_KD_TURN);
 }
 
 

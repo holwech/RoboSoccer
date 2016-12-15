@@ -9,11 +9,19 @@
 #include "math.h"
 #include "control/collision_avoidance.h"
 
+#define ANGLE_KP_TURN 40
+#define ANGLE_KI_TURN 3
+#define ANGLE_KD_TURN 1
+
+#define ANGLE_KP_DRIVE 50.0
+#define ANGLE_KI_DRIVE 0.5
+#define ANGLE_KD_DRIVE 1
+
 class Robo: public RoboControl
 {
 public:
     Robo(RTDBConn& DBC, const int deviceNr): RoboControl(DBC, deviceNr),
-                                            pidAngle(50.0, 0.5, 1),
+                                            pidAngle(ANGLE_KP_DRIVE, ANGLE_KI_DRIVE, ANGLE_KD_DRIVE),
                                             pidDistance(80.0, 0.0, 0.0),
                                             ca(), ballBehindRobo(false), onlyTurn(false){}
     Robo(RoboControl& other): RoboControl(other){}
