@@ -29,27 +29,9 @@ bool Robo::isArrived(){
     return this->GetPos().DistanceTo(targetPosition) < ARRIVED_DIST;
 }
 
-
-void Robo::setVariables(Robo& team1, Robo& team2, Robo& otherTeam1, Robo& otherTeam2, Robo& otherTeam3) {
-    team.push_back(&team1);
-    team.push_back(&team2);
-    otherTeam.push_back(&otherTeam1);
-    otherTeam.push_back(&otherTeam2);
-    otherTeam.push_back(&otherTeam3);
-
-    posTeam.push_back(team[0]->GetPos());
-    posTeam.push_back(team[1]->GetPos());
-    posOtherTeam.push_back(otherTeam[0]->GetPos());
-    posOtherTeam.push_back(otherTeam[1]->GetPos());
-    posOtherTeam.push_back(otherTeam[2]->GetPos());
-}
-
-void Robo::updatePositions() {
-   posTeam[0] = team[0]->GetPos();
-   posTeam[1] = team[1]->GetPos();
-   posOtherTeam[0] = otherTeam[0]->GetPos();
-   posOtherTeam[1] = otherTeam[1]->GetPos();
-   posOtherTeam[2] = otherTeam[2]->GetPos();
+void Robo::updatePositions(vector<Position>& team, vector<Position>& otherTeam) {
+    this->team = team;
+    this->otherTeam = otherTeam;
 }
 //PID - related functions
 void Robo::updatePids(Position targetPos, bool ca = true){

@@ -71,51 +71,47 @@ int main(void) {
         RTDBConn DBC(client_name.data(), 0.1, "");
 
         /** Init robot(s) */
-        int rfNumber0, rfNumber1, rfNumber2, rfNumber3, rfNumber4, rfNumber5;
+        vector<int> rfNumber;
         if (teamColorAnswer == "b") {
-            rfNumber0 = 0;
-            rfNumber1 = 1;
-            rfNumber2 = 2;
-            rfNumber3 = 3;
-            rfNumber4 = 4;
-            rfNumber5 = 5;
+            rfNumber.push_back(0);
+            rfNumber.push_back(1);
+            rfNumber.push_back(2);
+            rfNumber.push_back(3);
+            rfNumber.push_back(4);
+            rfNumber.push_back(5);
         } else {
-            rfNumber0 = 3;
-            rfNumber1 = 4;
-            rfNumber2 = 5;
-            rfNumber3 = 0;
-            rfNumber4 = 1;
-            rfNumber5 = 2;
+            rfNumber.push_back(3);
+            rfNumber.push_back(4);
+            rfNumber.push_back(5);
+            rfNumber.push_back(0);
+            rfNumber.push_back(1);
+            rfNumber.push_back(2);
         }
-        Robo robo0(DBC, rfNumber0);
-        Robo robo1(DBC, rfNumber1);
-        Robo robo2(DBC, rfNumber2);
-        Robo robo3(DBC, rfNumber3);
-        Robo robo4(DBC, rfNumber4);
-        Robo robo5(DBC, rfNumber5);
-        cout << "Robots are ready..." << endl;
-
-        robo0.setVariables(robo1, robo2, robo3, robo4, robo5);
-        robo1.setVariables(robo0, robo2, robo3, robo4, robo5);
-        robo2.setVariables(robo0, robo1, robo3, robo4, robo5);
-        //following only needed for milestone 2
-        robo3.setVariables(robo4, robo5, robo0, robo1, robo2);
-        robo4.setVariables(robo3, robo5, robo0, robo1, robo2);
-        robo5.setVariables(robo3, robo4, robo0, robo1, robo2);
-        cout << "Variables set..." << endl;
-        /** Create a ball object */
-        RawBall ball(DBC);
-        cout << "Ball ready..." << endl;
-
-
-        Referee referee(DBC);
-        referee.Init();
-        cout << "Referee ready..." << endl; 
 
         // Give objects time to initialize or something.
         // Don't know why this fixes things, but it does.
-        usleep(1000);
-        Master master(teamColorAnswer, DBC, robo0, robo1, robo2, robo3, robo4, robo5, ball, referee);
+        usleep(100000);
+
+        RawBall ball(DBC);
+        cout << "Ball ready..." << endl;
+
+        Referee referee(DBC);
+        cout << "Referee ready..." << endl;
+
+        vector<Robo> robo = {
+            Robo(DBC, rfNumber[0]),
+            Robo(DBC, rfNumber[1]),
+            Robo(DBC, rfNumber[2]),
+            Robo(DBC, rfNumber[3]),
+            Robo(DBC, rfNumber[4]),
+            Robo(DBC, rfNumber[5])
+        };
+        cout << "Robots constructed..." << endl;
+
+        cout << "Robots ready..." << endl;
+
+
+        Master master(teamColorAnswer, DBC, ball, referee, robo, rfNumber);
         cout << "Master ready..." << endl;
 
         cout << "----- ----- ----- -----" << endl;
@@ -126,7 +122,7 @@ int main(void) {
         if (testMode == "y") {
             Test test(master);
             cout << "Test program starting..." << endl;
-            test.specializedTestMenu();
+            test.menu();
         } else {
             cout << "Main program starting..." << endl;
             master.run();

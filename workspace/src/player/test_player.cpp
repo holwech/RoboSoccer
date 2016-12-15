@@ -1,5 +1,5 @@
 #include "test_player.h"
-#define TESTROBOT robo1
+#define TESTROBOT robo[1]
 
 Test_player::Test_player(Master& master) : master(&master), player(&master.positions, &master.ball, &master.channels[0], &master.TESTROBOT) {
 }

@@ -26,43 +26,18 @@ public:
     friend class Test;
     friend class Test_robo;
     friend class Test_player;
-    Master(string& team,
-           RTDBConn& DBC,
-           Robo& robo0,
-           Robo& robo1,
-           Robo& robo2,
-           Robo& robo3,
-           Robo& robo4,
-           Robo& robo5,
-           RawBall& ball,
-           Referee& referee);
+    Master(string& team, RTDBConn& DBC, RawBall& ball, Referee& referee, vector<Robo>& robo, vector<int>& rfNumbers);
     void run();
 private:
     int client_nr;
     string team;
     eSide side;
     RTDBConn DBC;
-    Robo robo0;
-    Robo robo1;
-    Robo robo2;
-    Robo robo3;
-    Robo robo4;
-    Robo robo5;
     RawBall ball;
     Referee referee;
-    CA ca;
+    vector<Robo> robo;
     bool shotCompleted;
     bool shooterInitFirstStepDone;
-    void updateFieldSide();
-    void testMenu();
-    void runPenalty();
-    void penaltyShoot();
-    void runGoalkeeper();
-    void runStartPos();
-    void beforePenalty();
-    void penalty();
-    void printInfo();
-    void runGoalkeeperingame();
     ePlayMode state;
 
     void updatePositions();

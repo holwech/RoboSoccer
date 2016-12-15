@@ -33,8 +33,7 @@ public:
     void goalieDrive();
     void updatePids(Position targetPos, bool ca);
     void updatePidsGoalie(Position targetPos);
-    void setVariables(Robo& team1, Robo& team2, Robo& otherTeam1, Robo& otherTeam2, Robo& otherTeam3);
-    void updatePositions();
+    void updatePositions(vector<Position>& team, vector<Position>& otherTeam);
     void turn(Position targetPos);
     bool isArrived();
 private:

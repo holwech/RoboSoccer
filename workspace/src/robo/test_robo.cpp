@@ -37,7 +37,7 @@ void Test_robo::testDriveWithCA(){
     cout << "Reached function testDriveWithCA()..." << endl;
     Position posA(0.5, 0.0);
     Position posB(-0.5, 0.0);
-    Robo &testrobo = master.robo0;
+    Robo &testrobo = master.robo[0];
     testrobo.GotoPos(posA);
     while(1){
         testrobo.driveWithCA();
@@ -56,7 +56,7 @@ void Test_robo::testGoalieDrive(){
     cout << "Reached function testDriveWithCA()..." << endl;
     Position posA(0.5, 0.0);
     Position posB(-0.5, 0.0);
-    Robo &testrobo = master.robo0;
+    Robo &testrobo = master.robo[0];
     testrobo.GotoPos(posA);
     while(1){
         testrobo.goalieDrive();
