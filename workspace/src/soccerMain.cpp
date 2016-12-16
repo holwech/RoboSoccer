@@ -90,28 +90,9 @@ int main(void) {
 
         // Give objects time to initialize or something.
         // Don't know why this fixes things, but it does.
-        usleep(100000);
-
-        RawBall ball(DBC);
-        cout << "Ball ready..." << endl;
-
-        Referee referee(DBC);
-        cout << "Referee ready..." << endl;
-
-        vector<Robo> robo = {
-            Robo(DBC, rfNumber[0]),
-            Robo(DBC, rfNumber[1]),
-            Robo(DBC, rfNumber[2]),
-            Robo(DBC, rfNumber[3]),
-            Robo(DBC, rfNumber[4]),
-            Robo(DBC, rfNumber[5])
-        };
-        cout << "Robots constructed..." << endl;
-
-        cout << "Robots ready..." << endl;
 
 
-        Master master(teamColorAnswer, DBC, ball, referee, robo, rfNumber);
+        Master master(teamColorAnswer, DBC, rfNumber);
         cout << "Master ready..." << endl;
 
         cout << "----- ----- ----- -----" << endl;

@@ -2,7 +2,6 @@
 #define TEST_H
 #include "robo_control.h"
 #include "master/master.h"
-#include "player/test_player.h"
 #include "robo/test_robo.h"
 
 class Test
@@ -12,7 +11,6 @@ public:
     void menu();
 private:
     Master *master;
-    Test_player ta;
     Test_robo tr;
 };
 

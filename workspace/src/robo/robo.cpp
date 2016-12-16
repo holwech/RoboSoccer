@@ -29,9 +29,16 @@ bool Robo::isArrived(){
     return this->GetPos().DistanceTo(targetPosition) < ARRIVED_DIST;
 }
 
-void Robo::updatePositions(vector<Position>& team, vector<Position>& otherTeam) {
-    this->team = team;
-    this->otherTeam = otherTeam;
+void Robo::updatePositions(vector<Position> positions) {
+    for(int p = 0; p < (int)positions.size(); p++) {
+        if (p == rfNumber) {
+           // do nothing
+        } else if (p > 2) {
+            posTeam[p] = positions[p];
+        } else {
+            posOtherTeam[p] = positions[p];
+        }
+    }
 }
 //PID - related functions
 void Robo::updatePids(Position targetPos, bool ca = true){
@@ -114,7 +121,6 @@ void Robo::driveWithCA() {
        makeTurn();
     }
     else{
-        updatePositions();
         updatePids(targetPosition, true);
         // Get designated pid values
         double driveSpeed = pidDistance.getInput();

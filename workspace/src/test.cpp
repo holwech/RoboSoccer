@@ -1,6 +1,6 @@
 #include "test.h"
 
-Test::Test(Master& master) : master(&master), ta(master), tr(master)
+Test::Test(Master& master) : master(&master), tr(master)
 {
 }
 
@@ -9,8 +9,7 @@ void Test::menu(){
         cout << "----- ----- ----- -----" << endl;
         cout << "Choose part to test: " << endl;
         cout << "0: Exit program" << endl;
-        cout << "1: Run player test menu" << endl;
-        cout << "2: Run robo test menu" << endl;
+        cout << "1: Run robo test menu" << endl;
         int program;
         cin >> program;
         bool stop = false;
@@ -19,9 +18,6 @@ void Test::menu(){
             stop = true;
             break;
         case 1:
-            ta.run();
-            break;
-        case 2:
             tr.run();
             break;
         default:

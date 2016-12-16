@@ -5,12 +5,9 @@
 #include <iostream>
 #include <vector>
 #include "kogmo_rtdb.hxx"
-#include "robo/robo.h"
 #include "referee.h"
+#include "player/player.h"
 #include "timer.h"
-#include "control/collision_avoidance.h"
-#include "robo/robo.h"
-#include "control/pidController.h"
 #include "config.cpp"
 
 enum ePlayModePlus {
@@ -26,28 +23,22 @@ public:
     friend class Test;
     friend class Test_robo;
     friend class Test_player;
-    Master(string& team, RTDBConn& DBC, RawBall& ball, Referee& referee, vector<Robo>& robo, vector<int>& rfNumbers);
+    Master(string& team, RTDBConn& DBC, vector<int>& rfNumber);
     void run();
 private:
     int client_nr;
     string team;
     eSide side;
-    RTDBConn DBC;
     RawBall ball;
     Referee referee;
-    vector<Robo> robo;
-    bool shotCompleted;
-    bool shooterInitFirstStepDone;
     ePlayMode state;
-
     void updatePositions();
     void send(Command command, int roboNum);
+    vector<Channel> channel;
+    vector<Player> player;
     vector<Position> positions;
     Position ballPos;
-    vector<Channel> channels;
 
-    //Debug stuff
-    timer debugTimer;
 };
 
 #endif // MASTER_H

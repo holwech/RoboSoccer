@@ -3,7 +3,7 @@
 #include "player/general_actions.cpp"
 #include "player/attacker_actions.cpp"
 
-Player::Player(vector<Position>* positions, RawBall* ball, Channel* channel, Robo* robo) :  positions(positions), ball(ball), channel(channel), robo(robo) {
+Player::Player(Channel* channel, RTDBConn& DBC, int deviceNr) :  positions(6), ball(DBC), channel(channel), robo(DBC, deviceNr) {
     state = IDLE;
     ballangle = 0;
     ballx = 0;
@@ -20,7 +20,7 @@ Player::Player(vector<Position>* positions, RawBall* ball, Channel* channel, Rob
 void Player::run() {
    cout << "Robo thread started" << endl;
    while(1) {
-       robo->driveWithCA();
+       updateRobo();
        switch(state) {
        case IDLE:
            idle();
@@ -76,7 +76,7 @@ void Player::readCommand() {
         break;
     case ACTION_IDLE:
         cout << "Robo in state IDLE" << endl;
-        robo->GotoPos(robo->GetPos());
+        robo.GotoPos(robo.GetPos());
         setState(IDLE);
         break;
     case ACTION_DEFEND:
@@ -99,6 +99,20 @@ void Player::readCommand() {
         cout << "No case for this state: " << state << endl;
         break;
     }
+}
+
+void Player::update(vector<Position> pos) {
+    positions = pos;
+}
+
+Position Player::getPos() {
+    return robo.GetPos();
+}
+
+void Player::updateRobo() {
+    robo.updatePositions(positions);
+   robo.driveWithCA();
+    cout << "Crashing at updateRobo" << endl;
 }
 
 void Player::done() {

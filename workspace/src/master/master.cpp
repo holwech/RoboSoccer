@@ -1,20 +1,30 @@
 #include "master.h"
-Master::Master(string& team, RTDBConn& DBC, RawBall& ball, Referee& referee, vector<Robo>& robo, vector<int>& rfNumbers) :
-                team(team), DBC(DBC), ball(ball), referee(referee), robo(robo), positions(6), debugTimer() {
+Master::Master(string& team, RTDBConn& DBC, vector<int>& rfNumber) :
+                team(team),
+                ball(DBC),
+                referee(DBC),
+                channel({
+                    Channel(Command(ACTION_IDLE)),
+                    Channel(Command(ACTION_IDLE)),
+                    Channel(Command(ACTION_IDLE)),
+                    Channel(Command(ACTION_IDLE)),
+                    Channel(Command(ACTION_IDLE)),
+                    Channel(Command(ACTION_IDLE))
+                }),
+                player({
+                    Player(&channel[0], DBC, rfNumber[0]),
+                    Player(&channel[1], DBC, rfNumber[1]),
+                    Player(&channel[2], DBC, rfNumber[2]),
+                    Player(&channel[3], DBC, rfNumber[3]),
+                    Player(&channel[4], DBC, rfNumber[4]),
+                    Player(&channel[5], DBC, rfNumber[5])
+                }),
+                positions(6) {
     usleep(10000);
-    cout << "Setting master variables..." << endl;
     side = RIGHT_SIDE;
     state = REFEREE_INIT;
 
-    usleep(1000);
 
-    for (int i = 0; i <= 5; i++) {
-        Command newCommand(ACTION_IDLE);
-        channels.push_back(Channel(newCommand));
-    }
-    cout << "Channels initialized..." << endl;
-
-    updatePositions();
 }
 
 
@@ -51,24 +61,15 @@ void Master::run() {
     }
 }
 
-vector<Position> Master::teamPositions() {
-    return vector<Position>(positions[0], positions[1]);
-}
-
-vector<Position> Master::otherTeamPositions() {
-    return vector<Position>(positions[2], positions[1]);
-}
-
 void Master::send(Command command, int roboNum) {
-    channels[roboNum].write(command);
+    channel[roboNum].write(command);
 }
 
 void Master::updatePositions() {
-    positions[0] = robo[0].GetPos();
-    positions[1] = robo[1].GetPos();
-    positions[2] = robo[2].GetPos();
-    positions[3] = robo[3].GetPos();
-    positions[4] = robo[4].GetPos();
-    positions[5] = robo[5].GetPos();
-    ballPos = ball.GetPos();
+    positions[0] = player[0].getPos();
+    positions[1] = player[1].getPos();
+    positions[2] = player[2].getPos();
+    positions[3] = player[3].getPos();
+    positions[4] = player[4].getPos();
+    positions[5] = player[5].getPos();
 }

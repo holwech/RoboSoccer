@@ -1,15 +1,15 @@
 #include "player/player.h"
 
 void Player::idle() {
-    robo->GotoPos(robo->GetPos());
+    robo.GotoPos(robo.GetPos());
 }
 
 void Player::goTo(Position target) {
-    if (robo->GetPos().DistanceTo(target) < 0.2) {
+    if (robo.GetPos().DistanceTo(target) < 0.2) {
         cout << "State set to IDLE" << endl;
         done();
     } else {
-        robo->GotoPos(target);
+        robo.GotoPos(target);
     }
 }
 
@@ -17,7 +17,7 @@ void Player::kick(Position target){
 
 
 
-        robo->GotoPos(ball->GetPos(),2);
+        robo.GotoPos(ball.GetPos(),2);
 
 
 
@@ -57,12 +57,12 @@ void Player::before_kick(Position kick_position, Position target_of_kick)
 
 
 
-        if (kick_position.GetX() > robo->GetX())
+        if (kick_position.GetX() > robo.GetX())
         {
 
-            if (robo->GetPos().DistanceTo(pos_before_kick) > 0.1)
+            if (robo.GetPos().DistanceTo(pos_before_kick) > 0.1)
             {
-                robo->GotoPos(pos_before_kick,1.5);
+                robo.GotoPos(pos_before_kick,1.5);
                 cout << "Test 1" << endl;
 
 
@@ -88,20 +88,20 @@ void Player::before_kick(Position kick_position, Position target_of_kick)
             }
 
 
-            if (robo->GetPos().DistanceTo(aux_pos_before_kick.GetPos()) > 0.1)
+            if (robo.GetPos().DistanceTo(aux_pos_before_kick.GetPos()) > 0.1)
             {
 
-                robo->GotoPos(aux_pos_before_kick,1.5);
-                if (robo->GetPos().DistanceTo(aux_pos_before_kick.GetPos()) < 0.12)
+                robo.GotoPos(aux_pos_before_kick,1.5);
+                if (robo.GetPos().DistanceTo(aux_pos_before_kick.GetPos()) < 0.12)
                 {
                     control = 1;
                 }
 
             }
 
-            if (robo->GetPos().DistanceTo(pos_before_kick.GetPos()) > 0.1 && control == 1)
+            if (robo.GetPos().DistanceTo(pos_before_kick.GetPos()) > 0.1 && control == 1)
             {
-                robo->GotoPos(pos_before_kick,1.5);
+                robo.GotoPos(pos_before_kick,1.5);
                 cout << "Test 2" << endl;
             }
 
@@ -139,12 +139,12 @@ void Player::before_kick(Position kick_position, Position target_of_kick)
 
 
 
-        if (robo->GetX() > kick_position.GetX())
+        if (robo.GetX() > kick_position.GetX())
         {
 
-            if (robo->GetPos().DistanceTo(pos_before_kick.GetPos()) > 0.1)
+            if (robo.GetPos().DistanceTo(pos_before_kick.GetPos()) > 0.1)
             {
-                robo->GotoPos(pos_before_kick.GetPos(),1.5);
+                robo.GotoPos(pos_before_kick.GetPos(),1.5);
                 cout << "Test 3" << endl;
             }
         }
@@ -167,20 +167,20 @@ void Player::before_kick(Position kick_position, Position target_of_kick)
                 aux_pos_before_kick.SetY(kick_position.GetY() + 0.35);
 
             }
-            if (robo->GetPos().DistanceTo(aux_pos_before_kick.GetPos()) > 0.1)
+            if (robo.GetPos().DistanceTo(aux_pos_before_kick.GetPos()) > 0.1)
             {
-                robo->GotoPos(aux_pos_before_kick,1.5);
-                if (robo->GetPos().DistanceTo(aux_pos_before_kick.GetPos()) < 0.12)
+                robo.GotoPos(aux_pos_before_kick,1.5);
+                if (robo.GetPos().DistanceTo(aux_pos_before_kick.GetPos()) < 0.12)
                 {
                     control = 1;
                 }
 
             }
 
-            if (robo->GetPos().DistanceTo(pos_before_kick.GetPos()) > 0.1 && control == 1)
+            if (robo.GetPos().DistanceTo(pos_before_kick.GetPos()) > 0.1 && control == 1)
             {
 
-                robo->GotoPos(pos_before_kick,1.5);
+                robo.GotoPos(pos_before_kick,1.5);
                 cout << "Test 4" << endl;
             }
 
@@ -188,10 +188,10 @@ void Player::before_kick(Position kick_position, Position target_of_kick)
     }
 
 
-  if(robo->GetPos().DistanceTo(pos_before_kick.GetPos()) <= 0.1)
+  if(robo.GetPos().DistanceTo(pos_before_kick.GetPos()) <= 0.1)
     {
 
-      robo->turn(target_of_kick);
+      robo.turn(target_of_kick);
 
       }
 
