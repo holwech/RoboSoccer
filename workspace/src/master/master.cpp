@@ -20,7 +20,6 @@ Master::Master(string& team, RTDBConn& DBC, vector<int>& rfNumber) :
                     Player(&channel[5], DBC, rfNumber[5])
                 }),
                 positions(6) {
-    usleep(10000);
     side = RIGHT_SIDE;
     state = REFEREE_INIT;
 
@@ -33,10 +32,7 @@ void Master::run() {
 
     cout << "Starting state machine..." << endl;
     while(1) {
-        /** Timer for printing info about the system, so that it doesn't spam the
-          * terminal.
-          */
-        state = referee.GetPlayMode();
+        updatePositions();
         switch(state) {
         case REFEREE_INIT:
             break;
@@ -66,10 +62,10 @@ void Master::send(Command command, int roboNum) {
 }
 
 void Master::updatePositions() {
-    positions[0] = player[0].getPos();
-    positions[1] = player[1].getPos();
-    positions[2] = player[2].getPos();
-    positions[3] = player[3].getPos();
-    positions[4] = player[4].getPos();
-    positions[5] = player[5].getPos();
+    for (int i = 0; i < 6; i++) {
+        positions[i] = player[i].getPos();
+    }
+    for (int i = 0; i < 6; i++) {
+        player[i].update(positions);
+    }
 }

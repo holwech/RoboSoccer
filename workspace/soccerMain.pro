@@ -34,8 +34,6 @@ SOURCES += src/soccerMain.cpp \
     src/config.cpp \
     src/player/player.h \
     src/player/player.cpp \
-    src/robo/test_robo.cpp \
-    src/robo/test_robo.h \
     src/player/goalkeeper_actions.cpp \
     src/player/general_actions.cpp \
     src/player/attacker_actions.cpp

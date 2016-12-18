@@ -7,13 +7,10 @@
 //============================================================================
 
 
-#include <time.h>
 #include <iostream>
 #include <vector>
 #include "kogmo_rtdb.hxx"
-#include "robo/robo.h"
 #include "master/master.h"
-#include "referee.h"
 #include "test.h"
 
 using namespace std;

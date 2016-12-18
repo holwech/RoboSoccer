@@ -6,6 +6,7 @@
 #include <vector>
 #include "kogmo_rtdb.hxx"
 #include "referee.h"
+#include "raw_ball.h"
 #include "player/player.h"
 #include "timer.h"
 #include "config.cpp"
@@ -21,8 +22,6 @@ enum ePlayModePlus {
 class Master {
 public:
     friend class Test;
-    friend class Test_robo;
-    friend class Test_player;
     Master(string& team, RTDBConn& DBC, vector<int>& rfNumber);
     void run();
 private:

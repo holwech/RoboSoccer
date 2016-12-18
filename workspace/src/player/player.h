@@ -49,6 +49,7 @@ public:
     Player& operator = (Player&& other);
     Player& operator = (const Player& other);
 private:
+    Position position(int robot);
     void readCommand();
     void setState(PState newState);
     void updateRobo();
@@ -57,6 +58,8 @@ private:
      *  1 and 2 is team playes
      *  3-5 is other team
      */
+    RTDBConn& DBC;
+    int deviceNr;
     vector<Position> positions;
     RawBall ball;
     Channel* channel;
