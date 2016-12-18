@@ -10,13 +10,17 @@
 
 //Use Goto to set target position. Remember to also run the driveWithCA() 100 times a second
 void Robo::GotoPos(Position target, int speed){
-	if(onlyTurn){
+    /*if(onlyTurn){
 		onlyTurn = false;
 		this->pidAngle.changeParams(ANGLE_KP_DRIVE, ANGLE_KI_DRIVE, ANGLE_KD_DRIVE);
 	}
     this->speed = speed;
     this->targetPosition = target;
-    this->AbortGotoXY();
+    this->AbortGotoXY();*/
+
+    onlyTurn = false;
+    this->speed = speed;
+    this->targetPosition = target;
 }
 
 
