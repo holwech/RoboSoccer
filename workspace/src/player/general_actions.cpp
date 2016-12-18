@@ -14,12 +14,18 @@ void Player::goTo(Position target) {
 }
 
 void Player::kick(Position target){
+<<<<<<< HEAD
 
 
 
         robo.GotoPos(ball.GetPos(),2);
 
 
+=======
+    if (robo->GetPos().DistanceTo(ball->GetPos()) < 0.2){
+        robo->MoveMs(200,200,100);
+    }
+>>>>>>> devel
 
 }
 
