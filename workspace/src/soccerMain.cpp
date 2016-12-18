@@ -92,19 +92,9 @@ int main(void) {
         Master master(teamColorAnswer, DBC, rfNumber);
         cout << "Master ready..." << endl;
 
-        cout << "----- ----- ----- -----" << endl;
-        cout << "Enter test mode y? (y/write anything to start actual program) ";
-        string testMode;
-        cin >> testMode;
 
-        if (testMode == "y") {
-            Test test(master);
-            cout << "Test program starting..." << endl;
-            test.menu();
-        } else {
-            cout << "Main program starting..." << endl;
-            master.run();
-        }
+        cout << "Main program starting..." << endl;
+        master.run();
         cout << "Exiting..." << endl;
 
     } catch (DBError err) {

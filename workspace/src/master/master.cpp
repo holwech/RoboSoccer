@@ -40,14 +40,21 @@ void Master::run() {
     }
 
     cout << "Starting state machine..." << endl;
+    while (1) {
+       exampleTactic();
+    }
+    /* The referee getPlayMode is not working right now for some reason
+     * Therefore the state machine has been replaced by a simple for loop for now
     while(1) {
         updatePositions();
+        state = referee.GetPlayMode();
         switch(state) {
         case REFEREE_INIT:
             break;
         case BEFORE_KICK_OFF:
             break;
         case KICK_OFF:
+            exampleTactic();
             break;
         case BEFORE_PENALTY:
             break;
@@ -64,26 +71,42 @@ void Master::run() {
             break;
         }
     }
+    */
     threadRobo0.join();
     threadRobo1.join();
     threadRobo2.join();
 }
 
+void Master::exampleTactic() {
+    Position target = Position(1.0, 0.0);
+    if (player[0].getState() == IDLE && !player[0].isBusy()) {
+        send(Command(ACTION_BEFORE_KICK, ball.GetPos(), target), 0);
+    } else if (player[0].getPrevState() == BEFORE_KICK && !player[0].isBusy()){
+        send(Command(ACTION_KICK, target), 0);
+    } else if (player[0].getPrevState() == KICK && !player[0].isBusy()) {
+        send(Command(ACTION_GOTO, target), 0);
+    }
+}
+
+
 void Master::manual() {
     int answer;
     int robot;
+    double posX, posY, speed;
     while(1) {
         cout << "Choose an action" << endl;
         cout << "	0. EXIT" << endl;
         cout << "	1. ACTION_GOTO" << endl;
+        cout << "	2. BEFORE_KICK" << endl;
+        cout << "	3. KICK" << endl;
+        cout << "	4. DEFEND" << endl;
         cin >> answer;
-        cout << "Which robot? (0-5)" << endl;
+        cout << "Which robot? (0-2)" << endl;
         cin >> robot;
         switch(answer) {
         case 0:
             return;
         case 1:
-            double posX, posY, speed;
             cout << "X: ";
             cin >> posX;
             cout << "Y: ";
@@ -92,10 +115,25 @@ void Master::manual() {
             cin >> speed;
             send(Command(ACTION_GOTO, Position(posX, posY), speed), robot);
             break;
+        case 2:
+            send(Command(ACTION_BEFORE_KICK, ball.GetPos()), robot);
+            break;
+        case 3:
+            cout << "X: ";
+            cin >> posX;
+            cout << "Y: ";
+            cin >> posY;
+            send(Command(ACTION_KICK, Position(posX, posY)), robot);
+            break;
+        case 4:
+            send(Command(ACTION_DEFEND), robot);
+            break;
         default:
             cout << "No action created for this choice yet in master.manual" << endl;
             break;
         }
+        usleep(1000);
+
     }
 }
 
@@ -104,6 +142,9 @@ void Master::send(Command command, int roboNum) {
     if (roboNum > 2 || roboNum < 0) {
         cout << "Robo " << roboNum << " does not exist" << endl;
         roboNum = 0;
+    }
+    if (command.action != ACTION_IDLE) {
+        player[roboNum].setBusy(true);
     }
     channel[roboNum].write(command);
 }

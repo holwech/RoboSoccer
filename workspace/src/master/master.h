@@ -27,6 +27,7 @@ public:
     void run();
 private:
     void manual();
+    void exampleTactic();
     int client_nr;
     string team;
     eSide side;
