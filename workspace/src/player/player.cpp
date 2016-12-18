@@ -24,7 +24,7 @@ Player::Player(Channel* channel, RTDBConn& DBC, int deviceNr) :
 }
 
 void Player::run() {
-   cout << "Robo thread started" << endl;
+   cout << "Player " << deviceNr << " started" << endl;
    while(1) {
        updateRobo();
        switch(state) {

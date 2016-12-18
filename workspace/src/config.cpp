@@ -22,9 +22,11 @@ struct Command {
     Action action;
     Position pos1;
     Position pos2;
+    double speed;
     Command(Action action) : action(action), pos1(Position(0.0, 0.0)), pos2(Position(0.0, 0.0)) {}
     Command(Action action,  Position pos1, Position pos2) : action(action), pos1(pos1), pos2(pos2) {}
     Command(Action action, Position pos1) : action(action), pos1(pos1), pos2(Position(0.0, 0.0)) {}
+    Command(Action action, Position pos1, double speed) : action(action), pos1(pos1), pos2(Position(0.0, 0.0)), speed(speed){}
     Command() : action(ACTION_IDLE), pos1(Position(0.0, 0.0)), pos2(Position(0.0, 0.0)) {}
 
     void set(Action action, Position pos1, Position pos2) {

@@ -10,6 +10,7 @@
 #include "player/player.h"
 #include "timer.h"
 #include "config.cpp"
+#include "thread"
 
 enum ePlayModePlus {
     STATE_MENU,
@@ -25,6 +26,7 @@ public:
     Master(string& team, RTDBConn& DBC, vector<int>& rfNumber);
     void run();
 private:
+    void manual();
     int client_nr;
     string team;
     eSide side;

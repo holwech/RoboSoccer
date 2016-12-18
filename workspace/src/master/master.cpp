@@ -23,12 +23,21 @@ Master::Master(string& team, RTDBConn& DBC, vector<int>& rfNumber) :
     side = RIGHT_SIDE;
     state = REFEREE_INIT;
 
-
 }
 
 
 
 void Master::run() {
+    thread threadRobo0(&Player::run, std::ref(player[0]));
+    thread threadRobo1(&Player::run, std::ref(player[1]));
+    thread threadRobo2(&Player::run, std::ref(player[2]));
+    usleep(1000);
+    string answer;
+    cout << "Enter manual mode? (y/n) ";
+    cin >> answer;
+    if(answer == "y") {
+        manual();
+    }
 
     cout << "Starting state machine..." << endl;
     while(1) {
@@ -51,13 +60,51 @@ void Master::run() {
         case TIME_OVER:
             break;
         default:
-            cout << "No case for state." << state << endl;
+            cout << "No case for this state in master.run" << state << endl;
+            break;
+        }
+    }
+    threadRobo0.join();
+    threadRobo1.join();
+    threadRobo2.join();
+}
+
+void Master::manual() {
+    int answer;
+    int robot;
+    while(1) {
+        cout << "Choose an action" << endl;
+        cout << "	0. EXIT" << endl;
+        cout << "	1. ACTION_GOTO" << endl;
+        cin >> answer;
+        cout << "Which robot? (0-5)" << endl;
+        cin >> robot;
+        switch(answer) {
+        case 0:
+            return;
+        case 1:
+            double posX, posY, speed;
+            cout << "X: ";
+            cin >> posX;
+            cout << "Y: ";
+            cin >> posY;
+            cout << "Speed (1-2 recommended): " << endl;
+            cin >> speed;
+            send(Command(ACTION_GOTO, Position(posX, posY), speed), robot);
+            break;
+        default:
+            cout << "No action created for this choice yet in master.manual" << endl;
             break;
         }
     }
 }
 
+/** Sends a command to a given robot. Assumes robo 0 if number is out of bounds */
 void Master::send(Command command, int roboNum) {
+    if (roboNum > 2 || roboNum < 0) {
+        cout << "Robo " << roboNum << " does not exist" << endl;
+        roboNum = 0;
+    }
     channel[roboNum].write(command);
 }
 
