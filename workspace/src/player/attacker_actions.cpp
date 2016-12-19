@@ -5,10 +5,10 @@
 
 void Player::blockBall(int xcord){
 
-
+    cout << "Inside blockball" << endl;
     Position pos(xcord,ball.GetY());
     if(!robo.isArrived()){
-        robo.GotoPos(pos,150);
+        robo.GotoPos(pos,1);
     } else {
         done();
     }

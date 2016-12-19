@@ -25,6 +25,7 @@ Player::Player(Channel* channel, RTDBConn& DBC, int deviceNr) :
 
 void Player::run() {
    cout << "Player " << deviceNr << " started" << endl;
+   robo.driveWithCA();
    while(1) {
        updateRobo();
        switch(state) {
@@ -164,7 +165,7 @@ PState Player::getPrevState() {
 
 /** Sets the state of the player */
 void Player::setState(PState newState) {
-    prevState.store(state);
+    prevState.store(state.load());
     state.store(newState);
 }
 

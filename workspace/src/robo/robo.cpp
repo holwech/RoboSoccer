@@ -16,7 +16,7 @@ void Robo::GotoPos(Position target, int speed){
     }
     this->speed = speed;
     this->targetPosition = target;
-    this->AbortGotoXY();
+    //this->AbortGotoXY();
 }
 
 

@@ -28,6 +28,8 @@ public:
 private:
     void manual();
     void exampleTactic();
+    void strategy_defensive();
+    void strategy_demo();
     int client_nr;
     string team;
     eSide side;

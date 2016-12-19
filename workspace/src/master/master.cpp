@@ -100,6 +100,7 @@ void Master::manual() {
         cout << "	2. BEFORE_KICK" << endl;
         cout << "	3. KICK" << endl;
         cout << "	4. DEFEND" << endl;
+        cout << "	5. DEMO STATEGY" << endl;
         cin >> answer;
         cout << "Which robot? (0-2)" << endl;
         cin >> robot;
@@ -128,6 +129,9 @@ void Master::manual() {
         case 4:
             send(Command(ACTION_DEFEND), robot);
             break;
+        case 5:
+            strategy_defensive();
+            break;
         default:
             cout << "No action created for this choice yet in master.manual" << endl;
             break;
@@ -135,6 +139,23 @@ void Master::manual() {
         usleep(1000);
 
     }
+}
+
+void strategy_offensive(){
+
+}
+void Master::strategy_defensive(){
+    send(Command(ACTION_DEFEND), 0);
+    send(Command(ACTION_BLOCK_BALL), 1);
+}
+
+void Master::strategy_demo(){
+    /*
+     * if ahead on score:
+     * 		do strategy_defensive();
+     * else:
+     * 		do strategy_offensive();
+     */
 }
 
 /** Sends a command to a given robot. Assumes robo 0 if number is out of bounds */

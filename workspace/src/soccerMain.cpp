@@ -66,7 +66,7 @@ int main(void) {
         string client_name = "pololu_client_";
         client_name.push_back((char) (client_nr + '0'));
         RTDBConn DBC(client_name.data(), 0.1, "");
-
+        sleep(1);
         /** Init robot(s) */
         vector<int> rfNumber;
         if (teamColorAnswer == "b") {
