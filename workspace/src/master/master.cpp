@@ -145,8 +145,9 @@ void strategy_offensive(){
 
 }
 void Master::strategy_defensive(){
-    send(Command(ACTION_DEFEND), 0);
-    send(Command(ACTION_BLOCK_BALL), 1);
+    //send(Command(ACTION_DEFEND), 0);
+    //send(Command(ACTION_BLOCK_BALL), 1);
+    send(Command(ACTION_BEFORE_KICK), 1);
 }
 
 void Master::strategy_demo(){
