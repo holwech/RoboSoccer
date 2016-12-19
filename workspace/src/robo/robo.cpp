@@ -33,27 +33,16 @@ bool Robo::isArrived(){
     return this->GetPos().DistanceTo(targetPosition) < ARRIVED_DIST;
 }
 
-
-void Robo::setVariables(Robo& team1, Robo& team2, Robo& otherTeam1, Robo& otherTeam2, Robo& otherTeam3) {
-    team.push_back(&team1);
-    team.push_back(&team2);
-    otherTeam.push_back(&otherTeam1);
-    otherTeam.push_back(&otherTeam2);
-    otherTeam.push_back(&otherTeam3);
-
-    posTeam.push_back(team[0]->GetPos());
-    posTeam.push_back(team[1]->GetPos());
-    posOtherTeam.push_back(otherTeam[0]->GetPos());
-    posOtherTeam.push_back(otherTeam[1]->GetPos());
-    posOtherTeam.push_back(otherTeam[2]->GetPos());
-}
-
-void Robo::updatePositions() {
-   posTeam[0] = team[0]->GetPos();
-   posTeam[1] = team[1]->GetPos();
-   posOtherTeam[0] = otherTeam[0]->GetPos();
-   posOtherTeam[1] = otherTeam[1]->GetPos();
-   posOtherTeam[2] = otherTeam[2]->GetPos();
+void Robo::updatePositions(vector<Position> positions) {
+    for(int p = 0; p < (int)positions.size(); p++) {
+        if (p == rfNumber) {
+           // do nothing
+        } else if (p > 2) {
+            posTeam[p] = positions[p];
+        } else {
+            posOtherTeam[p] = positions[p];
+        }
+    }
 }
 //PID - related functions
 void Robo::updatePids(Position targetPos, bool ca = true){
@@ -136,7 +125,6 @@ void Robo::driveWithCA() {
        makeTurn();
     }
     else{
-        updatePositions();
         updatePids(targetPosition, true);
         // Get designated pid values
         double driveSpeed = pidDistance.getInput();

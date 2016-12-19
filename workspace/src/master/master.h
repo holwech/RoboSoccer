@@ -5,13 +5,12 @@
 #include <iostream>
 #include <vector>
 #include "kogmo_rtdb.hxx"
-#include "robo/robo.h"
 #include "referee.h"
+#include "raw_ball.h"
+#include "player/player.h"
 #include "timer.h"
-#include "control/collision_avoidance.h"
-#include "robo/robo.h"
-#include "control/pidController.h"
 #include "config.cpp"
+#include "thread"
 
 enum ePlayModePlus {
     STATE_MENU,
@@ -24,55 +23,24 @@ enum ePlayModePlus {
 class Master {
 public:
     friend class Test;
-    friend class Test_robo;
-    friend class Test_player;
-    Master(string& team,
-           RTDBConn& DBC,
-           Robo& robo0,
-           Robo& robo1,
-           Robo& robo2,
-           Robo& robo3,
-           Robo& robo4,
-           Robo& robo5,
-           RawBall& ball,
-           Referee& referee);
+    Master(string& team, RTDBConn& DBC, vector<int>& rfNumber);
     void run();
 private:
+    void manual();
+    void exampleTactic();
     int client_nr;
     string team;
     eSide side;
-    RTDBConn DBC;
-    Robo robo0;
-    Robo robo1;
-    Robo robo2;
-    Robo robo3;
-    Robo robo4;
-    Robo robo5;
     RawBall ball;
     Referee referee;
-    CA ca;
-    bool shotCompleted;
-    bool shooterInitFirstStepDone;
-    void updateFieldSide();
-    void testMenu();
-    void runPenalty();
-    void penaltyShoot();
-    void runGoalkeeper();
-    void runStartPos();
-    void beforePenalty();
-    void penalty();
-    void printInfo();
-    void runGoalkeeperingame();
     ePlayMode state;
-
     void updatePositions();
     void send(Command command, int roboNum);
+    vector<Channel> channel;
+    vector<Player> player;
     vector<Position> positions;
     Position ballPos;
-    vector<Channel> channels;
 
-    //Debug stuff
-    timer debugTimer;
 };
 
 #endif // MASTER_H

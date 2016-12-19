@@ -3,7 +3,13 @@
 #include "player/general_actions.cpp"
 #include "player/attacker_actions.cpp"
 
-Player::Player(vector<Position>* positions, RawBall* ball, Channel* channel, Robo* robo) :  positions(positions), ball(ball), channel(channel), robo(robo) {
+Player::Player(Channel* channel, RTDBConn& DBC, int deviceNr) :
+                DBC(DBC),
+                deviceNr(deviceNr),
+                positions(6),
+                ball(DBC),
+                channel(channel),
+                robo(DBC, deviceNr) {
     state = IDLE;
     ballangle = 0;
     ballx = 0;
@@ -18,9 +24,9 @@ Player::Player(vector<Position>* positions, RawBall* ball, Channel* channel, Rob
 }
 
 void Player::run() {
-   cout << "Robo thread started" << endl;
+   cout << "Player " << deviceNr << " started" << endl;
    while(1) {
-       robo->driveWithCA();
+       updateRobo();
        switch(state) {
        case IDLE:
            idle();
@@ -36,7 +42,7 @@ void Player::run() {
            before_kick(command.pos1, command.pos2);
            break;
        case KICK:
-           kick(100);
+           kick(command.pos1);
            break;
        case BLOCK_BALL:
            blockBall(command.pos1.GetX());
@@ -58,6 +64,7 @@ void Player::run() {
    }
 }
 
+/** Reads commands sent through the channel, and sets state accordingly */
 void Player::readCommand() {
     std::lock_guard<std::mutex> lock(mutex);
     if (channel->isRead()) {
@@ -76,7 +83,7 @@ void Player::readCommand() {
         break;
     case ACTION_IDLE:
         cout << "Robo in state IDLE" << endl;
-        robo->GotoPos(robo->GetPos());
+        robo.GotoPos(robo.GetPos());
         setState(IDLE);
         break;
     case ACTION_DEFEND:
@@ -101,54 +108,82 @@ void Player::readCommand() {
     }
 }
 
+/** Updates the positions of other robos */
+void Player::update(vector<Position> pos) {
+    std::lock_guard<std::mutex> lock(mutex);
+    positions = pos;
+}
+
+/** Because of risk of race conditions, this function is preferred over
+ *  getting the positions directly from the positions variable
+ */
+Position Player::position(int robot) {
+    std::lock_guard<std::mutex> lock(mutex);
+    return positions[robot];
+}
+
+/** Used by master to get the current position of the robot */
+Position Player::getPos() {
+    std::lock_guard<std::mutex> lock(mutex);
+    return robo.GetPos();
+}
+
+/** Updates the robo functions */
+void Player::updateRobo() {
+    robo.updatePositions(positions);
+    robo.driveWithCA();
+}
+
+
 void Player::done() {
     setState(IDLE);
     setBusy(false);
 }
 
+/** Checks if the player is busy performing an action */
 bool Player::isBusy() {
     return busy.load();
 }
 
+/** Sets the player to busy when an action is started */
 void Player::setBusy(bool flag) {
    busy.store(flag);
    cout << "Busy set to: " << busy.load() << endl;
 }
 
 
+/** Gets the current state of the player */
 PState Player::getState() {
-    std::lock_guard<std::mutex> lock(mutex);
     return state.load();
 }
 
+/** Gets the previous state of the player */
 PState Player::getPrevState() {
     return prevState.load();
 }
 
+/** Sets the state of the player */
 void Player::setState(PState newState) {
     prevState.store(state);
     state.store(newState);
 }
 
-
-Player::Player(Player&& other) {
+// These do not actually work, do not copy player. The result would not be good...
+// Only purpose is so that the program compiles.
+Player::Player(Player&& other) : DBC(other.DBC), ball(other.DBC), robo(other.DBC, other.deviceNr) {
     std::lock_guard<std::mutex> lock(other.mutex);
     positions = std::move(other.positions);
-    ball = std::move(other.ball);
     channel = std::move(other.channel);
     command = std::move(other.command);
-    robo = std::move(other.robo);
     prevState.store(std::move(other.prevState.load()));
     state.store(std::move(state.load()));
 }
 
-Player::Player(const Player& other) {
+Player::Player(const Player& other) : DBC(other.DBC), ball(other.DBC), robo(other.DBC, other.deviceNr) {
     std::lock_guard<std::mutex> lock(other.mutex);
     positions = other.positions;
-    ball = other.ball;
     channel = other.channel;
     command = other.command;
-    robo = other.robo;
     prevState.store(other.prevState.load());
     state.store(state.load());
 }

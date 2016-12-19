@@ -1,8 +1,8 @@
 TEMPLATE = app
 TARGET = soccerMain
 
-include(/DIST/lehre/lab_roso/tech/usr/include/settings.pri)
-#include(/DIST/lehre/lab_roso/tech/usr_sim/include/settings.pri)
+#include(/DIST/lehre/lab_roso/tech/usr/include/settings.pri)
+include(/DIST/lehre/lab_roso/tech/usr_sim/include/settings.pri)
 
 QMAKE_CXXFLAGS += -std=gnu++11 -fpermissive
 
@@ -34,10 +34,6 @@ SOURCES += src/soccerMain.cpp \
     src/config.cpp \
     src/player/player.h \
     src/player/player.cpp \
-    src/player/test_player.h \
-    src/player/test_player.cpp \
-    src/robo/test_robo.cpp \
-    src/robo/test_robo.h \
     src/player/goalkeeper_actions.cpp \
     src/player/general_actions.cpp \
     src/player/attacker_actions.cpp

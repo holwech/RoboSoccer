@@ -36,10 +36,12 @@ class Player
 {
     friend class Test_player;
 public:
-    Player(vector<Position>* positions, RawBall* ball, Channel* channel, Robo* robo);
+    Player(Channel* channel, RTDBConn& DBC, const int deviceNr);
     void run();
+    void update(vector<Position> pos);
     PState getState();
     PState getPrevState();
+    Position getPos();
     bool isBusy();
     void setBusy(bool flag);
     Player(Player&& other);
@@ -47,18 +49,22 @@ public:
     Player& operator = (Player&& other);
     Player& operator = (const Player& other);
 private:
+    Position position(int robot);
     void readCommand();
     void setState(PState newState);
+    void updateRobo();
     void done();
     /** 0 is goalkeeper
      *  1 and 2 is team playes
      *  3-5 is other team
      */
-    vector<Position>* positions;
-    RawBall* ball;
+    RTDBConn& DBC;
+    int deviceNr;
+    vector<Position> positions;
+    RawBall ball;
     Channel* channel;
     Command command;
-    Robo* robo;
+    Robo robo;
     atomic<PState> prevState;
     atomic<PState> state;
     atomic<bool> busy;
@@ -69,7 +75,7 @@ private:
     void idle();
     void goTo(Position target);
     void before_kick(Position kick_position, Position target_of_kick); //Get to position before kick -> can be used for attacker's kick and pass
-    void kick(int power);//power 0 -> 100
+    void kick(Position target);
     Position pos_before_kick;
     Position aux_pos_before_kick;
     double counter;
