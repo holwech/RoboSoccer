@@ -42,7 +42,6 @@ private:
     vector<Player> player;
     vector<Position> positions;
     Position ballPos;
-
 };
 
 #endif // MASTER_H

@@ -3,7 +3,7 @@
 #include "player/general_actions.cpp"
 #include "player/attacker_actions.cpp"
 
-Player::Player(Channel* channel, RTDBConn& DBC, int deviceNr) :
+Player::Player(Channel* channel, RTDBConn &DBC, int deviceNr) :
                 DBC(DBC),
                 deviceNr(deviceNr),
                 positions(6),
@@ -26,6 +26,7 @@ Player::Player(Channel* channel, RTDBConn& DBC, int deviceNr) :
 void Player::run() {
    cout << "Player " << deviceNr << " started" << endl;
    robo.driveWithCA();
+   cout << "Finish driveWithCA()" << endl;
    while(1) {
        updateRobo();
        switch(state) {

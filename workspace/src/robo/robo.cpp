@@ -37,7 +37,7 @@ void Robo::updatePositions(vector<Position> positions) {
     for(int p = 0; p < (int)positions.size(); p++) {
         if (p == rfNumber) {
            // do nothing
-        } else if (p > 2) {
+        } else if (p <= 2) {
             posTeam[p] = positions[p];
         } else {
             posOtherTeam[p] = positions[p];
