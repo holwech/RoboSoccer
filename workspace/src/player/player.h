@@ -74,7 +74,7 @@ private:
     /** General Variables and Functions*/
     void idle();
     void goTo(Position target);
-    void before_kick(Position kick_position, Position target_of_kick); //Get to position before kick -> can be used for attacker's kick and pass
+    bool before_kick(Position kick_position, Position target_of_kick); //Get to position before kick -> can be used for attacker's kick and pass
     void kick(Position target);
     Position pos_before_kick;
     Position aux_pos_before_kick;
