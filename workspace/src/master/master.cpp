@@ -109,9 +109,9 @@ void Master::manual() {
         case 0:
             return;
         case 1:
-            cout << "X: ";
+            cout << "x: ";
             cin >> posX;
-            cout << "Y: ";
+            cout << "y: ";
             cin >> posY;
             cout << "Speed (1-2 recommended): " << endl;
             cin >> speed;
@@ -121,8 +121,12 @@ void Master::manual() {
             send(Command(ACTION_BEFORE_KICK, ball.GetPos()), robot);
             break;
         case 3:
+            cout << "x: ";
+            cin >> posX;
+            cout << "y: ";
+            cin >> posY;
 
-            send(Command(ACTION_KICK, Position(1.25,0)), robot);
+            send(Command(ACTION_KICK, Position(posX, posY)), robot);
             break;
         case 4:
             send(Command(ACTION_DEFEND), robot);

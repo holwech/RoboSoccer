@@ -52,12 +52,14 @@ void Player::drivingKick(Position target){
     postPos -= Position(vecX, vecY);
     Position wantedPos;
     if(phase == 0){
-        wantedPos = prePos2;
+        wantedPos = prePos1;
     }else if(phase == 1){
+        wantedPos = prePos2;
+    }else if(phase == 2){
         wantedPos = postPos;
     }
     cout << "Count before init: " << phase << endl;
-    if(robo.isArrived()){
+    if(robo.GetPos().DistanceTo(wantedPos) < 0.2){
         if(phase == 0){
             phase = 1;
         }
