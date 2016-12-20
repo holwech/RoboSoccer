@@ -15,8 +15,12 @@ void Player::goTo(Position target) {
 
 void Player::kick(Position target){
     if (robo.GetPos().DistanceTo(ball.GetPos()) < 0.2){
-        robo.MoveMs(200,200,100);
+        robo.MoveMs(250,250,50);
     }
+    if (robo.GetPos().DistanceTo(ball.GetPos())<0.05){
+        done();
+    }
+
 }
 
 void Player::before_kick(Position kick_position, Position target_of_kick)
