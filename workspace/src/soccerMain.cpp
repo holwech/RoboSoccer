@@ -91,17 +91,12 @@ int main(void) {
 
         Master master(teamColorAnswer, DBC, rfNumber);
         cout << "Master ready..." << endl;
-
-
         cout << "Main program starting..." << endl;
         master.run();
         cout << "Exiting..." << endl;
-
     } catch (DBError err) {
             cout << "Client died on Error: " << err.what() << endl;
     }
-
-
     return 0;
 }
 

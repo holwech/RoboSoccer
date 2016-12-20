@@ -18,11 +18,47 @@ void Player::kick(Position target){
         robo.MoveMs(200,200,100);
     }
 }
+void Player::drivingKick(Position target){
+    Position ballPos = ball.GetPos();
+    double vecX = target.GetX() - ballPos.GetX();
+    double vecY = target.GetY() - ballPos.GetY();
+    vecX /= (vecX+vecY)*5; //Scaling to get equal distance every time
+    vecY /= (vecX+vecY)*5;
+    Position prePos1 = ballPos;
+    Position prePos2 = ballPos;
+    Position postPos = ballPos;
+    prePos1 += Position(2*vecX, 2*vecY);
+    prePos2 += Position(vecX, vecY);
+    postPos -= Position(vecX, vecY);
+    Position wantedPos;
+    if(phase == 0){
+        wantedPos = prePos2;
+    }else if(phase == 1){
+        wantedPos = postPos;
+    }
+    cout << "Count before init: " << phase << endl;
+    if(robo.isArrived()){
+        if(phase == 0){
+            phase = 1;
+        }
+        else if(phase == 1){
+            phase = 2;
+        }
+        else if(phase == 2)
+            done();
+            phase = 0;
+    }
+    if (phase >= 1){
+        robo.GotoPos(wantedPos, phase);
+    }else{
+        robo.GotoPos(wantedPos);
+    }
+    cout << "Count after function: " << phase << endl;
+
+}
 
 bool Player::before_kick(Position kick_position, Position target_of_kick)
 {
-
-
   if (target_of_kick.GetX() > kick_position.GetX())
     {
         pos_before_kick.SetX(kick_position.GetX() - delta);

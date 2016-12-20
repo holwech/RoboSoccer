@@ -21,6 +21,7 @@ Player::Player(Channel* channel, RTDBConn &DBC, int deviceNr) :
     pos_before_kick = Position(0.0, 0.0);
     busy.store(false);
     counter = 0;
+    phase = 0;
 }
 
 void Player::run() {
@@ -48,7 +49,7 @@ void Player::run() {
            }
            break;
        case KICK:
-           kick(command.pos1);
+           drivingKick(command.pos1);
            break;
        case BLOCK_BALL:
            blockBall(command.pos1.GetX());

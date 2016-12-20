@@ -22,7 +22,7 @@ Master::Master(string& team, RTDBConn& DBC, vector<int>& rfNumber) :
                 positions(6) {
     side = RIGHT_SIDE;
     state = REFEREE_INIT;
-
+    referee.Init();
 }
 
 
@@ -35,6 +35,7 @@ void Master::run() {
     string answer;
     cout << "Enter manual mode? (y/n) ";
     cin >> answer;
+    state = referee.GetPlayMode();
     if(answer == "y") {
         manual();
     }
