@@ -28,7 +28,8 @@ public:
                                              posTeam(2),
                                              posOtherTeam(3),
                                             ballBehindRobo(false),
-                                            onlyTurn(false) {}
+                                            onlyTurn(false),
+                                             isIdle(false){}
     Robo(RoboControl& other): RoboControl(other){}
     pidController pidAngle;
     pidController pidDistance;
@@ -41,6 +42,7 @@ public:
     void updatePositions(vector<Position> positions);
     void turn(Position targetPos);
     bool isArrived();
+    void idle();
 private:
     Position targetPosition;
     int rfNumber;
@@ -60,6 +62,7 @@ private:
     bool ballBehindRobo;
     bool onlyTurn;
     int speed;
+    bool isIdle;
 };
 
 #endif // ROBO_H

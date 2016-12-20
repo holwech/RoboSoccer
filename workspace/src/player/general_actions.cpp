@@ -1,7 +1,7 @@
 #include "player/player.h"
 
 void Player::idle() {
-    robo.GotoPos(robo.GetPos());
+    robo.idle();
 }
 
 void Player::goTo(Position target) {
@@ -19,7 +19,7 @@ void Player::kick(Position target){
     }
 }
 
-void Player::before_kick(Position kick_position, Position target_of_kick)
+bool Player::before_kick(Position kick_position, Position target_of_kick)
 {
 
 
@@ -181,6 +181,7 @@ void Player::before_kick(Position kick_position, Position target_of_kick)
             }
 
         }
+        return false;
     }
 
 
@@ -191,5 +192,6 @@ void Player::before_kick(Position kick_position, Position target_of_kick)
 
       }
 
+    return false;
 
 }

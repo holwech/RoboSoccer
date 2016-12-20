@@ -27,6 +27,7 @@ void Player::run() {
    cout << "Player " << deviceNr << " started" << endl;
    robo.driveWithCA();
    cout << "Finish driveWithCA()" << endl;
+   bool isDone = true;
    while(1) {
        updateRobo();
        switch(state) {
@@ -41,7 +42,10 @@ void Player::run() {
            goTo(command.pos1);
            break;
        case BEFORE_KICK:
-           before_kick(command.pos1, command.pos2);
+           isDone = before_kick(command.pos1, command.pos2);
+           if (isDone){
+               done();
+           }
            break;
        case KICK:
            kick(command.pos1);
