@@ -12,6 +12,38 @@ void Player::goTo(Position target) {
         robo.GotoPos(target);
     }
 }
+void Player::pass(Position target){
+
+    double dirx,diry,length;
+
+    dirx= (target.GetX()-ball.GetX());
+    diry= (target.GetY()-ball.GetY());
+    length= sqrt((dirx*dirx)+(diry*diry));
+    dirx=dirx/length;
+    diry=diry/length;
+
+    Position pos(ball.GetX()+(dirx/80), ball.GetY()+(diry/80));
+
+    if (robo.GetPos().DistanceTo(pos) > 0.1) {
+        robo.turn(pos);
+        if (ball.GetPos().DistanceTo(target)>=0.7){
+            cout << "long distance: " << endl;
+            robo.GotoPos(pos,2.2);
+        }
+        if (ball.GetPos().DistanceTo(target)>=0.5 && ball.GetPos().DistanceTo(target)<0.7){
+            cout << "medium distance: " << endl;
+            robo.GotoPos(pos,1.6);
+        }
+        else{
+            cout << "short distance: " << endl;
+            robo.GotoPos(pos,1.1);
+        }
+    }
+    else{
+        done();
+    }
+
+}
 
 void Player::kick(Position target){
 
@@ -30,7 +62,7 @@ void Player::kick(Position target){
 
     if (robo.GetPos().DistanceTo(pos) > 0.1) {
         robo.turn(pos);
-        robo.GotoPos(pos,1.9);
+        robo.GotoPos(pos,2);
     }
     else{
         done();
