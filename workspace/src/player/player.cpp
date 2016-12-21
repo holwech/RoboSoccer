@@ -9,7 +9,8 @@ Player::Player(Channel* channel, RTDBConn &DBC, int deviceNr) :
                 positions(6),
                 ball(DBC),
                 channel(channel),
-                robo(DBC, deviceNr) {
+                robo(DBC, deviceNr)
+                {
     state = IDLE;
     ballangle = 0;
     ballx = 0;

@@ -81,8 +81,11 @@ void Player::drivingKick(Position target){
 
 bool Player::before_kick(Position kick_position, Position target_of_kick)
 {
+    delta = 0.09;
+
   if (target_of_kick.GetX() > kick_position.GetX())
     {
+        ////// Create the position for the robot to go to behind the ball
         pos_before_kick.SetX(kick_position.GetX() - delta);
         if (target_of_kick.GetY() > kick_position.GetY())
         {
@@ -116,8 +119,9 @@ bool Player::before_kick(Position kick_position, Position target_of_kick)
 
             if (robo.GetPos().DistanceTo(pos_before_kick) > 0.1)
             {
-                robo.GotoPos(pos_before_kick,1.5);
+                robo.GotoPos(pos_before_kick,1);
                 cout << "Test 1" << endl;
+                cout << pos_before_kick << endl;
 
 
             }
@@ -164,6 +168,7 @@ bool Player::before_kick(Position kick_position, Position target_of_kick)
     }
     else
     {
+        ////// Create the position for the robot to go to behind the ball
         pos_before_kick.SetX(kick_position.GetX() + delta);
 
         if (target_of_kick.GetY() > kick_position.GetY())
@@ -239,17 +244,19 @@ bool Player::before_kick(Position kick_position, Position target_of_kick)
             }
 
         }
-        return false;
+       //return false;
     }
 
 
   if(robo.GetPos().DistanceTo(pos_before_kick.GetPos()) <= 0.1)
     {
-
+      counter++;
       robo.turn(target_of_kick);
-
+      if (counter > 100){
+          counter = 0;
+          return true;
       }
+    }
 
     return false;
-
 }
