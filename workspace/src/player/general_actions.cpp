@@ -58,7 +58,7 @@ void Player::kick(Position target){
     cout << "diry: "<< diry << endl;
     cout << "length: "<< length << endl;
 
-    Position pos(ball.GetX()+(dirx/100), ball.GetY()+(diry/100));
+    Position pos(ball.GetX()+(dirx/80), ball.GetY()+(diry/810));
 
     if (robo.GetPos().DistanceTo(pos) > 0.1) {
         robo.turn(pos);
@@ -113,7 +113,7 @@ void Player::drivingKick(Position target){
 
 bool Player::before_kick(Position kick_position, Position target_of_kick)
 {
-    delta = 0.09;
+    delta = 0.13;
 
   if (target_of_kick.GetX() > kick_position.GetX())
     {

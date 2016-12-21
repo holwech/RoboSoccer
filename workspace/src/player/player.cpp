@@ -52,7 +52,7 @@ void Player::run() {
            break;
        case KICK:
            //drivingKick(command.pos1);
-           //kick(command.pos1);
+           kick(command.pos1);
            break;
        case BLOCK_BALL:
            blockBall(command.pos1.GetX());
