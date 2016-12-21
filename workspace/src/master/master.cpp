@@ -102,6 +102,7 @@ void Master::manual() {
         cout << "	3. KICK" << endl;
         cout << "	4. DEFEND" << endl;
         cout << "	5. DEMO STATEGY" << endl;
+        cout << "	6. PASS" << endl;
         cin >> answer;
         cout << "Which robot? (0-2)" << endl;
         cin >> robot;
@@ -133,6 +134,9 @@ void Master::manual() {
             break;
         case 5:
             strategy_defensive();
+            break;
+        case 6:
+            send(Command(ACTION_PASS, positions[2]),robot);
             break;
         default:
             cout << "No action created for this choice yet in master.manual" << endl;
