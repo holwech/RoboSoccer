@@ -22,7 +22,7 @@ Master::Master(string& team, RTDBConn& DBC, vector<int>& rfNumber) :
                 positions(6) {
     side = RIGHT_SIDE;
     state = REFEREE_INIT;
-
+    referee.Init();
 }
 
 
@@ -35,6 +35,7 @@ void Master::run() {
     string answer;
     cout << "Enter manual mode? (y/n) ";
     cin >> answer;
+    state = referee.GetPlayMode();
     if(answer == "y") {
         manual();
     }
@@ -100,6 +101,7 @@ void Master::manual() {
         cout << "	2. BEFORE_KICK" << endl;
         cout << "	3. KICK" << endl;
         cout << "	4. DEFEND" << endl;
+        cout << "	5. DEMO STATEGY" << endl;
         cin >> answer;
         cout << "Which robot? (0-2)" << endl;
         cin >> robot;
@@ -107,9 +109,9 @@ void Master::manual() {
         case 0:
             return;
         case 1:
-            cout << "X: ";
+            cout << "x: ";
             cin >> posX;
-            cout << "Y: ";
+            cout << "y: ";
             cin >> posY;
             cout << "Speed (1-2 recommended): " << endl;
             cin >> speed;
@@ -119,14 +121,18 @@ void Master::manual() {
             send(Command(ACTION_BEFORE_KICK, ball.GetPos()), robot);
             break;
         case 3:
-            cout << "X: ";
+            cout << "x: ";
             cin >> posX;
-            cout << "Y: ";
+            cout << "y: ";
             cin >> posY;
+
             send(Command(ACTION_KICK, Position(posX, posY)), robot);
             break;
         case 4:
             send(Command(ACTION_DEFEND), robot);
+            break;
+        case 5:
+            strategy_defensive();
             break;
         default:
             cout << "No action created for this choice yet in master.manual" << endl;
@@ -135,6 +141,24 @@ void Master::manual() {
         usleep(1000);
 
     }
+}
+
+void strategy_offensive(){
+
+}
+void Master::strategy_defensive(){
+    //send(Command(ACTION_DEFEND), 0);
+    //send(Command(ACTION_BLOCK_BALL), 1);
+    send(Command(ACTION_BEFORE_KICK), 1);
+}
+
+void Master::strategy_demo(){
+    /*
+     * if ahead on score:
+     * 		do strategy_defensive();
+     * else:
+     * 		do strategy_offensive();
+     */
 }
 
 /** Sends a command to a given robot. Assumes robo 0 if number is out of bounds */

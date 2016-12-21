@@ -28,12 +28,13 @@ public:
                                              posTeam(2),
                                              posOtherTeam(3),
                                             ballBehindRobo(false),
-                                            onlyTurn(false) {}
+                                            onlyTurn(false),
+                                             isIdle(true){}
     Robo(RoboControl& other): RoboControl(other){}
     pidController pidAngle;
     pidController pidDistance;
     CA ca;
-    void GotoPos(Position target, int speed = 1);
+    void GotoPos(Position target, double speed = 1);
     void driveWithCA();
     void goalieDrive();
     void updatePids(Position targetPos, bool ca);
@@ -41,6 +42,7 @@ public:
     void updatePositions(vector<Position> positions);
     void turn(Position targetPos);
     bool isArrived();
+    void idle();
 private:
     Position targetPosition;
     int rfNumber;
@@ -59,7 +61,8 @@ private:
     double angleErrorRad;
     bool ballBehindRobo;
     bool onlyTurn;
-    int speed;
+    double speed;
+    bool isIdle;
 };
 
 #endif // ROBO_H

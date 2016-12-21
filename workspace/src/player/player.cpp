@@ -3,7 +3,7 @@
 #include "player/general_actions.cpp"
 #include "player/attacker_actions.cpp"
 
-Player::Player(Channel* channel, RTDBConn& DBC, int deviceNr) :
+Player::Player(Channel* channel, RTDBConn &DBC, int deviceNr) :
                 DBC(DBC),
                 deviceNr(deviceNr),
                 positions(6),
@@ -21,10 +21,14 @@ Player::Player(Channel* channel, RTDBConn& DBC, int deviceNr) :
     pos_before_kick = Position(0.0, 0.0);
     busy.store(false);
     counter = 0;
+    phase = 0;
 }
 
 void Player::run() {
    cout << "Player " << deviceNr << " started" << endl;
+   robo.driveWithCA();
+   cout << "Finish driveWithCA()" << endl;
+   bool isDone = true;
    while(1) {
        updateRobo();
        switch(state) {
@@ -39,10 +43,13 @@ void Player::run() {
            goTo(command.pos1);
            break;
        case BEFORE_KICK:
-           before_kick(command.pos1, command.pos2);
+           isDone = before_kick(command.pos1, command.pos2);
+           if (isDone){
+               done();
+           }
            break;
        case KICK:
-           kick(command.pos1);
+           drivingKick(command.pos1);
            break;
        case BLOCK_BALL:
            blockBall(command.pos1.GetX());
@@ -164,7 +171,7 @@ PState Player::getPrevState() {
 
 /** Sets the state of the player */
 void Player::setState(PState newState) {
-    prevState.store(state);
+    prevState.store(state.load());
     state.store(newState);
 }
 

@@ -9,29 +9,30 @@
   */
 
 //Use Goto to set target position. Remember to also run the driveWithCA() 100 times a second
-void Robo::GotoPos(Position target, int speed){
-    /*if(onlyTurn){
-		onlyTurn = false;
-		this->pidAngle.changeParams(ANGLE_KP_DRIVE, ANGLE_KI_DRIVE, ANGLE_KD_DRIVE);
-	}
+void Robo::GotoPos(Position target, double speed){
+    isIdle = false;
+    if(onlyTurn){
+        onlyTurn = false;
+        this->pidAngle.changeParams(ANGLE_KP_DRIVE, ANGLE_KI_DRIVE, ANGLE_KD_DRIVE);
+    }
     this->speed = speed;
     this->targetPosition = target;
-    this->AbortGotoXY();*/
-
-    onlyTurn = false;
-    this->speed = speed;
-    this->targetPosition = target;
+    //this->AbortGotoXY();
 }
 
 
 void Robo::turn(Position targetPos){
-	if(!onlyTurn){
-		onlyTurn = true;
-		this->pidAngle.changeParams(ANGLE_KP_TURN, ANGLE_KI_TURN, ANGLE_KD_TURN);
-	}
+    isIdle = false;
+    if (!onlyTurn){
+        this->onlyTurn = true;
+        this->pidAngle.changeParams(ANGLE_KP_TURN, ANGLE_KI_TURN, ANGLE_KD_TURN);
+    }
     this->targetPosition = targetPos;
 }
 
+void Robo::idle(){
+    isIdle = true;
+}
 
 bool Robo::isArrived(){
     return this->GetPos().DistanceTo(targetPosition) < ARRIVED_DIST;
@@ -41,7 +42,7 @@ void Robo::updatePositions(vector<Position> positions) {
     for(int p = 0; p < (int)positions.size(); p++) {
         if (p == rfNumber) {
            // do nothing
-        } else if (p > 2) {
+        } else if (p <= 2) {
             posTeam[p] = positions[p];
         } else {
             posOtherTeam[p] = positions[p];
@@ -101,6 +102,9 @@ void Robo::makeTurn(){
 
 //DRIVE - related functions
 void Robo::goalieDrive(){
+    if(isIdle){
+        return;
+    }
     if(onlyTurn){
         makeTurn();
     }else{
@@ -125,6 +129,9 @@ void Robo::goalieDrive(){
 
 //Drive functions must be run 100 times a second for robot to drive. Target position set by Goto()
 void Robo::driveWithCA() {
+    if(isIdle){
+        return;
+    }
     if(onlyTurn){
        makeTurn();
     }

@@ -1,11 +1,11 @@
 #include "player/player.h"
 
 void Player::idle() {
-    robo.GotoPos(robo.GetPos());
+    robo.idle();
 }
 
 void Player::goTo(Position target) {
-    if (robo.GetPos().DistanceTo(target) < 0.2) {
+    if (robo.GetPos().DistanceTo(target) < 0.05) {
         cout << "State set to IDLE" << endl;
         done();
     } else {
@@ -14,15 +14,73 @@ void Player::goTo(Position target) {
 }
 
 void Player::kick(Position target){
-    if (robo.GetPos().DistanceTo(ball.GetPos()) < 0.2){
-        robo.MoveMs(200,200,100);
+
+    double dirx,diry,length;
+
+    dirx= (target.GetX()-ball.GetX());
+    diry= (target.GetY()-ball.GetY());
+    length= sqrt((dirx*dirx)+(diry*diry));
+    dirx=dirx/length;
+    diry=diry/length;
+    cout << "dirx: "<< dirx << endl;
+    cout << "diry: "<< diry << endl;
+    cout << "length: "<< length << endl;
+
+    Position pos(ball.GetX()+(dirx/100), ball.GetY()+(diry/100));
+
+    if (robo.GetPos().DistanceTo(pos) > 0.1) {
+        robo.turn(pos);
+        robo.GotoPos(pos,1.9);
     }
+    else{
+        done();
+    }
+
+
+}
+void Player::drivingKick(Position target){
+    Position ballPos = ball.GetPos();
+    double vecX = target.GetX() - ballPos.GetX();
+    double vecY = target.GetY() - ballPos.GetY();
+    vecX /= (vecX+vecY)*5; //Scaling to get equal distance every time
+    vecY /= (vecX+vecY)*5;
+    Position prePos1 = ballPos;
+    Position prePos2 = ballPos;
+    Position postPos = ballPos;
+    prePos1 += Position(2*vecX, 2*vecY);
+    prePos2 += Position(vecX, vecY);
+    postPos -= Position(vecX, vecY);
+    Position wantedPos;
+    if(phase == 0){
+        wantedPos = prePos1;
+    }else if(phase == 1){
+        wantedPos = prePos2;
+    }else if(phase == 2){
+        wantedPos = postPos;
+    }
+    cout << "Count before init: " << phase << endl;
+    if(robo.GetPos().DistanceTo(wantedPos) < 0.2){
+        if(phase == 0){
+            phase = 1;
+        }
+        else if(phase == 1){
+            phase = 2;
+        }
+        else if(phase == 2)
+            done();
+            phase = 0;
+    }
+    if (phase >= 1){
+        robo.GotoPos(wantedPos, phase);
+    }else{
+        robo.GotoPos(wantedPos);
+    }
+    cout << "Count after function: " << phase << endl;
+
 }
 
-void Player::before_kick(Position kick_position, Position target_of_kick)
+bool Player::before_kick(Position kick_position, Position target_of_kick)
 {
-
-
   if (target_of_kick.GetX() > kick_position.GetX())
     {
         pos_before_kick.SetX(kick_position.GetX() - delta);
@@ -181,6 +239,7 @@ void Player::before_kick(Position kick_position, Position target_of_kick)
             }
 
         }
+        return false;
     }
 
 
@@ -191,5 +250,6 @@ void Player::before_kick(Position kick_position, Position target_of_kick)
 
       }
 
+    return false;
 
 }
