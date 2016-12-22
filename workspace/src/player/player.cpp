@@ -9,7 +9,8 @@ Player::Player(Channel* channel, RTDBConn &DBC, int deviceNr) :
                 positions(6),
                 ball(DBC),
                 channel(channel),
-                robo(DBC, deviceNr) {
+                robo(DBC, deviceNr)
+                {
     state = IDLE;
     ballangle = 0;
     ballx = 0;
@@ -38,6 +39,7 @@ void Player::run() {
        case BEFORE_PASS:
            break;
        case PASS:
+           pass(command.pos1);
            break;
        case GOTO:
            goTo(command.pos1);
@@ -49,7 +51,8 @@ void Player::run() {
            }
            break;
        case KICK:
-           drivingKick(command.pos1);
+           //drivingKick(command.pos1);
+           kick(command.pos1);
            break;
        case BLOCK_BALL:
            blockBall(command.pos1.GetX());
@@ -104,6 +107,10 @@ void Player::readCommand() {
     case ACTION_KICK:
         cout << "Robo in state KICK" << endl;
         setState(KICK);
+        break;
+    case ACTION_PASS:
+        cout << "Robo in state PASS" << endl;
+        setState(PASS);
         break;
     case ACTION_BLOCK_BALL:
         cout << "Robo in state BLOCK_BALL" << endl;

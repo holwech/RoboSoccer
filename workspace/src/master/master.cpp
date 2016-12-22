@@ -102,6 +102,8 @@ void Master::manual() {
         cout << "	3. KICK" << endl;
         cout << "	4. DEFEND" << endl;
         cout << "	5. DEMO STATEGY" << endl;
+        cout << "	6. PASS" << endl;
+        cout << "	7. POSITION_AND_PASS" << endl;
         cin >> answer;
         cout << "Which robot? (0-2)" << endl;
         cin >> robot;
@@ -118,21 +120,29 @@ void Master::manual() {
             send(Command(ACTION_GOTO, Position(posX, posY), speed), robot);
             break;
         case 2:
-            send(Command(ACTION_BEFORE_KICK, ball.GetPos()), robot);
+            send(Command(ACTION_BEFORE_KICK, ball.GetPos(), Position(1.27, 0)), robot);
             break;
         case 3:
-            cout << "x: ";
+            /**cout << "x: ";
             cin >> posX;
             cout << "y: ";
-            cin >> posY;
+            cin >> posY;*/
 
-            send(Command(ACTION_KICK, Position(posX, posY)), robot);
+            send(Command(ACTION_KICK, Position(1.27, 0)), robot);
             break;
         case 4:
             send(Command(ACTION_DEFEND), robot);
             break;
         case 5:
             strategy_defensive();
+            break;
+        case 6:
+            send(Command(ACTION_PASS, positions[2]),robot);
+            break;            
+        case 7:
+            send(Command(ACTION_GOTO, Position(-1.0, -0.5), 2), robot);
+            send(Command(ACTION_BEFORE_KICK, ball.GetPos(), Position(1.27, 0)), robot);
+            send(Command(ACTION_PASS, Position(1.27, 0)),robot);
             break;
         default:
             cout << "No action created for this choice yet in master.manual" << endl;
