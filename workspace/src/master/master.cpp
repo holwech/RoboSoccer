@@ -79,14 +79,15 @@ void Master::run() {
 }
 
 void Master::exampleTactic() {
-    Position target = Position(1.0, 0.0);
+    Position target = Position(1.29, 0.0);
     if (player[0].getState() == IDLE && !player[0].isBusy()) {
         send(Command(ACTION_BEFORE_KICK, ball.GetPos(), target), 0);
     } else if (player[0].getPrevState() == BEFORE_KICK && !player[0].isBusy()){
         send(Command(ACTION_KICK, target), 0);
     } else if (player[0].getPrevState() == KICK && !player[0].isBusy()) {
-        send(Command(ACTION_GOTO, target), 0);
+        send(Command(ACTION_GOTO, Position(-1.0, -0.5)), 0);
     }
+    cout << player[0].getState() << endl;
 }
 
 
@@ -140,9 +141,7 @@ void Master::manual() {
             send(Command(ACTION_PASS, positions[2]),robot);
             break;            
         case 7:
-            send(Command(ACTION_GOTO, Position(-1.0, -0.5), 2), robot);
-            send(Command(ACTION_BEFORE_KICK, ball.GetPos(), Position(1.27, 0)), robot);
-            send(Command(ACTION_PASS, Position(1.27, 0)),robot);
+            exampleTactic();
             break;
         default:
             cout << "No action created for this choice yet in master.manual" << endl;
