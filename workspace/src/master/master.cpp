@@ -79,15 +79,14 @@ void Master::run() {
 }
 
 void Master::exampleTactic() {
-    Position target = Position(1.29, 0.0);
+    Position target = Position(1.0, 0.0);
     if (player[0].getState() == IDLE && !player[0].isBusy()) {
         send(Command(ACTION_BEFORE_KICK, ball.GetPos(), target), 0);
     } else if (player[0].getPrevState() == BEFORE_KICK && !player[0].isBusy()){
         send(Command(ACTION_KICK, target), 0);
     } else if (player[0].getPrevState() == KICK && !player[0].isBusy()) {
-        send(Command(ACTION_GOTO, Position(-1.0, -0.5)), 0);
+        send(Command(ACTION_GOTO, target), 0);
     }
-    cout << player[0].getState() << endl;
 }
 
 

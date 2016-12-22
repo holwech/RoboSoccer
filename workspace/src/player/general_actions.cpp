@@ -117,7 +117,7 @@ void Player::drivingKick(Position target){
 bool Player::before_kick(Position kick_position, Position target_of_kick)
 {
     delta = 0.2;
-  if (counter < 1) {
+
   if (target_of_kick.GetX() > kick_position.GetX())
     {
         ////// Create the position for the robot to go to behind the ball: near and far
@@ -175,6 +175,13 @@ bool Player::before_kick(Position kick_position, Position target_of_kick)
                 if (robo.GetPos().DistanceTo(pos_before_kick_near.GetPos()) > 0.05 && control == 1)
                 {
                    robo.GotoPos(pos_before_kick_near,0.4);
+
+                   if(robo.GetPos().DistanceTo(pos_before_kick_near.GetPos()) <= 0.05){
+                       counter = 0;
+                       control = 0;
+                       return true;
+                       done();
+                   }
                 }
 
             }
@@ -223,6 +230,12 @@ bool Player::before_kick(Position kick_position, Position target_of_kick)
                      if (robo.GetPos().DistanceTo(pos_before_kick_near.GetPos()) > 0.05 && control == 2)
                      {
                         robo.GotoPos(pos_before_kick_near,0.4);
+                        if(robo.GetPos().DistanceTo(pos_before_kick_near.GetPos()) <= 0.05){
+                            counter = 0;
+                            control = 0;
+                            return true;
+                            done();
+                        }
                      }
 
               }
@@ -294,6 +307,12 @@ bool Player::before_kick(Position kick_position, Position target_of_kick)
                  if (robo.GetPos().DistanceTo(pos_before_kick_near.GetPos()) > 0.05 && control == 1)
                  {
                     robo.GotoPos(pos_before_kick_near,0.4);
+                    if(robo.GetPos().DistanceTo(pos_before_kick_near.GetPos()) <= 0.05){
+                        counter = 0;
+                        control = 0;
+                        return true;
+                        done();
+                    }
                  }
 
              }
@@ -343,19 +362,18 @@ bool Player::before_kick(Position kick_position, Position target_of_kick)
                      if (robo.GetPos().DistanceTo(pos_before_kick_near.GetPos()) > 0.05 && control == 2)
                      {
                         robo.GotoPos(pos_before_kick_near,0.4);
+                        if(robo.GetPos().DistanceTo(pos_before_kick_near.GetPos()) <= 0.05){
+                            counter = 0;
+                            control = 0;
+                            return true;
+                            done();
+                        }
                      }
 
              }
         }
      }
 
-
- }else{
-    counter = 0;
-    control = 0;
-    return true;
-    done();
-}
 
     return false;    
 }
