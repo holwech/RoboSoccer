@@ -18,9 +18,9 @@ Player::Player(Channel* channel, RTDBConn &DBC, int deviceNr) :
     control = 0;
     delta = 0.09;
     side = 1;
-    aux_pos_before_kick = Position(0.0, 0.0);
-    pos_before_kick_far = Position(0.0, 0.0);
-    pos_before_kick_near = Position(0.0, 0.0);
+    //aux_pos_before_kick = Position(0.0, 0.0);
+    //pos_before_kick_far = Position(0.0, 0.0);
+    //pos_before_kick_near = Position(0.0, 0.0);
     busy.store(false);
     busy.store(false);
     counter = 0;
