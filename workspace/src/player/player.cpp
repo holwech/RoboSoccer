@@ -61,7 +61,8 @@ void Player::run() {
            blockBall(command.pos1.GetX());
            break;
        case DEFEND:
-           defend();
+           defend_tom();
+           //defend();
            break;
        case KICK_OUT:
            break;

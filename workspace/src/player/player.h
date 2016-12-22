@@ -89,6 +89,7 @@ private:
     double delta;
 
     /** Goalkeeper variables and Functions */
+    void defend_tom();
     void defend();
     void goalkeeperkick();
     double ballangle;
