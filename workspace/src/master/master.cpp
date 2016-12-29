@@ -1,4 +1,7 @@
 #include "master.h"
+#include "master/tactics.cpp"
+#include "master/strategies.cpp"
+
 Master::Master(string& team, RTDBConn& DBC, vector<int>& rfNumber) :
                 team(team),
                 ball(DBC),
@@ -23,6 +26,11 @@ Master::Master(string& team, RTDBConn& DBC, vector<int>& rfNumber) :
     side = RIGHT_SIDE;
     state = REFEREE_INIT;
     referee.Init();
+
+    /** Init tactic variables */
+    t_state = STEP1;
+    tacticDone = false;
+    cps_state = 1;
 }
 
 
@@ -33,19 +41,15 @@ void Master::run() {
     thread threadRobo2(&Player::run, std::ref(player[2]));
     usleep(1000);
     string answer;
-    cout << "Enter manual mode? (y/n) ";
+    cout << "Enter manual/strategy/normal mode? (m/s/any key) ";
     cin >> answer;
-    state = referee.GetPlayMode();
-    if(answer == "y") {
+    if(answer == "m") {
         manual();
+    } else if (answer == "s") {
+        strategies();
     }
 
     cout << "Starting state machine..." << endl;
-    while (1) {
-       exampleTactic();
-    }
-    /* The referee getPlayMode is not working right now for some reason
-     * Therefore the state machine has been replaced by a simple for loop for now
     while(1) {
         updatePositions();
         state = referee.GetPlayMode();
@@ -72,24 +76,56 @@ void Master::run() {
             break;
         }
     }
-    */
     threadRobo0.join();
     threadRobo1.join();
     threadRobo2.join();
 }
 
-void Master::exampleTactic() {
-    Position target = Position(1.0, 0.0);
-    if (player[0].getState() == IDLE && !player[0].isBusy()) {
-        send(Command(ACTION_BEFORE_KICK, ball.GetPos(), target), 0);
-    } else if (player[0].getPrevState() == BEFORE_KICK && !player[0].isBusy()){
-        send(Command(ACTION_KICK, target), 0);
-    } else if (player[0].getPrevState() == KICK && !player[0].isBusy()) {
-        send(Command(ACTION_GOTO, target), 0);
+/** Sends a command to a given robot. Assumes robo 0 if number is out of bounds */
+void Master::send(Command command, int roboNum) {
+    if (roboNum > 2 || roboNum < 0) {
+        cout << "Robo " << roboNum << " does not exist" << endl;
+        roboNum = 0;
+    }
+    if (command.action != ACTION_IDLE) {
+        player[roboNum].setBusy(true);
+    }
+    channel[roboNum].write(command);
+}
+
+void Master::updatePositions() {
+    for (int i = 0; i < 6; i++) {
+        positions[i] = player[i].getPos();
+    }
+    for (int i = 0; i < 6; i++) {
+        player[i].update(positions);
     }
 }
 
+/** Add your strategies or tactics here. (Yes, I know, misleading function name) */
+void Master::strategies() {
+    int answer;
+    cout << "Select one of the following strategies/tactics: ";
+    cout << "	1. exampleTactic" << endl;
+    cin >> answer;
+    while(1) {
+        updatePositions();
+        switch(answer) {
+        case 1:
+            tacticDone = crossPassAndShoot();
+            if (tacticDone) { answer = -1; }
+            break;
+        default:
+            cout << "No case for this state yet (in strategies function), or tactic terminated" << endl;
+            cout << "Select one of the following strategies/tactics: ";
+            cout << "	1. exampleTactic" << endl;
+            cin >> answer;
+            break;
+        }
+    }
+}
 
+// Use this function for single actions only. No strategies or tactics. It won't work.
 void Master::manual() {
     int answer;
     int robot;
@@ -101,9 +137,7 @@ void Master::manual() {
         cout << "	2. BEFORE_KICK" << endl;
         cout << "	3. KICK" << endl;
         cout << "	4. DEFEND" << endl;
-        cout << "	5. DEMO STATEGY" << endl;
-        cout << "	6. PASS" << endl;
-        cout << "	7. POSITION_AND_PASS" << endl;
+        cout << "	5. PASS" << endl;
         cin >> answer;
         cout << "Which robot? (0-2)" << endl;
         cin >> robot;
@@ -134,58 +168,22 @@ void Master::manual() {
             send(Command(ACTION_DEFEND), robot);
             break;
         case 5:
-            strategy_defensive();
-            break;
-        case 6:
             send(Command(ACTION_PASS, positions[2]),robot);
             break;            
-        case 7:
-            exampleTactic();
-            break;
         default:
             cout << "No action created for this choice yet in master.manual" << endl;
             break;
         }
-        usleep(1000);
 
     }
 }
 
-void strategy_offensive(){
-
-}
-void Master::strategy_defensive(){
-    //send(Command(ACTION_DEFEND), 0);
-    //send(Command(ACTION_BLOCK_BALL), 1);
-    send(Command(ACTION_BEFORE_KICK), 1);
+void Master::resetTVariables() {
+    t_state = STEP1;
+    tacticDone = false;
+    cps_state = 1;
 }
 
-void Master::strategy_demo(){
-    /*
-     * if ahead on score:
-     * 		do strategy_defensive();
-     * else:
-     * 		do strategy_offensive();
-     */
-}
 
-/** Sends a command to a given robot. Assumes robo 0 if number is out of bounds */
-void Master::send(Command command, int roboNum) {
-    if (roboNum > 2 || roboNum < 0) {
-        cout << "Robo " << roboNum << " does not exist" << endl;
-        roboNum = 0;
-    }
-    if (command.action != ACTION_IDLE) {
-        player[roboNum].setBusy(true);
-    }
-    channel[roboNum].write(command);
-}
 
-void Master::updatePositions() {
-    for (int i = 0; i < 6; i++) {
-        positions[i] = player[i].getPos();
-    }
-    for (int i = 0; i < 6; i++) {
-        player[i].update(positions);
-    }
-}
+

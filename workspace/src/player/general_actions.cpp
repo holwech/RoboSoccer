@@ -7,8 +7,7 @@ void Player::idle() {
 void Player::goTo(Position target) {
     if (robo.GetPos().DistanceTo(target) < 0.05) {
         cout << "State set to IDLE" << endl;
-
-        done();
+        return true; // Done
     } else {
         robo.GotoPos(target);
     }
@@ -41,9 +40,7 @@ void Player::pass(Position target){
         }
     }
     else{
-
-        done();
-
+        return true; // Done
     }
 
 }
@@ -68,7 +65,7 @@ void Player::kick(Position target){
         robo.GotoPos(pos,2.5);
     }
     else{
-        done();
+        return true; // Done
     }
 
 

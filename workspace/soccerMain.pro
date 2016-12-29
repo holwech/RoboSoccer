@@ -36,7 +36,9 @@ SOURCES += src/soccerMain.cpp \
     src/player/player.cpp \
     src/player/goalkeeper_actions.cpp \
     src/player/general_actions.cpp \
-    src/player/attacker_actions.cpp
+    src/player/attacker_actions.cpp \
+    src/master/tactics.cpp \
+    src/master/strategies.cpp
 
 
 		

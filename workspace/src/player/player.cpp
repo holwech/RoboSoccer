@@ -42,23 +42,25 @@ void Player::run() {
        case BEFORE_PASS:
            break;
        case PASS:
-           pass(command.pos1);
+           isDone = pass(command.pos1);
+           if (isDone){ done(); }
            break;
        case GOTO:
-           goTo(command.pos1);
+           isDone = goTo(command.pos1);
+           if (isDone){ done(); }
            break;
        case BEFORE_KICK:
            isDone = before_kick(command.pos1, command.pos2);
-           if (isDone){
-               done();
-           }
+           if (isDone){ done(); }
            break;
        case KICK:
            //drivingKick(command.pos1);
-           kick(command.pos1);
+           isDone = kick(command.pos1);
+           if (isDone){ done(); }
            break;
        case BLOCK_BALL:
-           blockBall(command.pos1.GetX());
+           isDone = blockBall(command.pos1.GetX());
+           if (isDone){ done(); }
            break;
        case DEFEND:
            defend_tom();
