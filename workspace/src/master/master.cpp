@@ -105,8 +105,11 @@ void Master::updatePositions() {
 /** Add your strategies or tactics here. (Yes, I know, misleading function name) */
 void Master::strategies() {
     int answer;
-    cout << "Select one of the following strategies/tactics: ";
+    cout << "Select one of the following strategies/tactics: "<<endl;
     cout << "	1. exampleTactic" << endl;
+    cout << "   2. Tactic_nearpenaltyarea"<<endl;
+    cout << "   3. Tactic_ballchasing"<<endl;
+
     cin >> answer;
     while(1) {
         updatePositions();
@@ -115,10 +118,21 @@ void Master::strategies() {
             tacticDone = crossPassAndShoot();
             if (tacticDone) { answer = -1; }
             break;
+        case 2:
+            tacticDone = tactic_nearpenaltyarea();
+            if (tacticDone) { answer = -1; }
+            break;
+        case 3:
+            tacticDone = tactic_ballchasing();
+            if (tacticDone) { answer = -1; }
+            break;
         default:
             cout << "No case for this state yet (in strategies function), or tactic terminated" << endl;
-            cout << "Select one of the following strategies/tactics: ";
+            cout << "Select one of the following strategies/tactics: "<<endl;
             cout << "	1. exampleTactic" << endl;
+            cout << "   2. Tactic_nearpenaltyarea"<<endl;
+            cout << "   3. Tactic_ballchasing"<<endl;
+            t_state = STEP1;
             cin >> answer;
             break;
         }
@@ -154,7 +168,7 @@ void Master::manual() {
             send(Command(ACTION_GOTO, Position(posX, posY), speed), robot);
             break;
         case 2:
-            send(Command(ACTION_BEFORE_KICK, ball.GetPos(), Position(1.27, 0)), robot);
+            send(Command(ACTION_BEFORE_KICK, ball.GetPos(), Position(-1, 0)), robot);
             break;
         case 3:
             /**cout << "x: ";
@@ -168,7 +182,7 @@ void Master::manual() {
             send(Command(ACTION_DEFEND), robot);
             break;
         case 5:
-            send(Command(ACTION_PASS, positions[2]),robot);
+            send(Command(ACTION_PASS, Position(-1.27, 0)),robot);
             break;            
         default:
             cout << "No action created for this choice yet in master.manual" << endl;

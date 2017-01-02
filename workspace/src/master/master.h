@@ -76,7 +76,11 @@ private:
     // at the same time. Some tactics for example can only run alone, like the cross pass and
     // shoot tactic.
     void exampleTactic();
+
     bool crossPassAndShoot();
+    bool tactic_nearpenaltyarea();
+    bool tactic_ballchasing();
+
     /** SHARED TACTIC VARIABLES */
     T_State t_state;
 
