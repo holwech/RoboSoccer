@@ -10,7 +10,7 @@ void Player::blockBall(int xcord){
     if(!robo.isArrived()){
         robo.GotoPos(pos,1);
     } else {
-        done();
+        return true; // Done
     }
 
 }

@@ -1,4 +1,4 @@
-#ifndef MASTER_H
+﻿#ifndef MASTER_H
 #define MASTER_H
 
 #include <time.h>
@@ -19,6 +19,21 @@ enum ePlayModePlus {
     STATE_STARTPOS
 };
 
+/** Different strategy states. */
+enum S_State {
+    AGGRESSIVE,
+    DEFENSIVE,
+    BALANCED
+};
+
+enum T_State {
+    STEP1,
+    STEP2,
+    STEP3,
+    STEP4,
+    STEP5
+};
+
 
 class Master {
 public:
@@ -26,10 +41,9 @@ public:
     Master(string& team, RTDBConn& DBC, vector<int>& rfNumber);
     void run();
 private:
+    void resetTVariables();
+    void strategies();
     void manual();
-    void exampleTactic();
-    void strategy_defensive();
-    void strategy_demo();
     int client_nr;
     string team;
     eSide side;
@@ -42,6 +56,32 @@ private:
     vector<Player> player;
     vector<Position> positions;
     Position ballPos;
+    bool tacticDone;
+
+    /** These are variables that all strategies can and should use.
+     * 	These variables will not conflict because only one strategy can be run at
+     * 	the same time
+     */
+    S_State s_state;
+    void strategy_defensive();
+    void strategy_demo();
+
+    /** Please prefix all tactic-specific variables with some kind of identifier
+     * 	so that we get conflicting variables with the same name. Tactic variables
+     * 	should be unique since multiple tactics can be run at the same time.
+     */
+
+    // Some variables can be shared if you are sure that it will not be used multiple places
+    // at the same time. Some tactics for example can only run alone, like the cross pass and
+    // shoot tactic.
+    void exampleTactic();
+    bool crossPassAndShoot();
+    /** SHARED TACTIC VARIABLES */
+    T_State t_state;
+
+    // crossPassAndShoot-variables
+    int cps_state; // Example of a prefixed variable
+
 };
 
 #endif // MASTER_H

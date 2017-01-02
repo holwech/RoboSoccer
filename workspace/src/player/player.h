@@ -79,14 +79,17 @@ private:
     void pass(Position target);
     void drivingKick(Position target);
     int phase;
-    Position pos_before_kick;
-    Position aux_pos_before_kick;
+    //Position pos_before_kick_far;
+    //Position pos_before_kick_near;
+    //Position aux_pos_before_kick;
     double counter;
     int control;
+
     Angle ang;
     double delta;
 
     /** Goalkeeper variables and Functions */
+    void defend_tom();
     void defend();
     void goalkeeperkick();
     double ballangle;

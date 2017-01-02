@@ -1,5 +1,32 @@
 #include "player/player.h"
 
+void Player::defend_tom(){
+    //int x=ball.GetX();
+    double x = ball.GetX();
+    double y = ball.GetY();
+    Angle dir=ball.GetPhi();
+
+    if (y<-0.23 || y>0.21 || x>=1.35){
+        y = ball.GetY();
+        dir=ball.GetPhi();
+        cout << "dir:" << dir << endl;
+        cout << "staying" << endl;
+    }
+    else{
+        y = ball.GetY();
+        dir = ball.GetPhi();
+        if(dir > 0 ){
+            robo.CruisetoXY(1.35,ball.GetY()+0.1,170);
+        }
+        if(dir < 0){
+            robo.CruisetoXY(1.35,ball.GetY()-0.1,170);
+        }
+        else{
+            robo.CruisetoXY(1.35,ball.GetY(),170);
+        }
+    }
+}
+
 void Player::defend()
 {
     int i= 0;
