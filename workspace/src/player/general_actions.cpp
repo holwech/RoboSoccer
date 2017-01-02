@@ -4,15 +4,17 @@ void Player::idle() {
     robo.idle();
 }
 
-void Player::goTo(Position target) {
+bool Player::goTo(Position target) {
     if (robo.GetPos().DistanceTo(target) < 0.05) {
         cout << "State set to IDLE" << endl;
         return true; // Done
     } else {
         robo.GotoPos(target);
     }
+    return false;
 }
-void Player::pass(Position target){
+
+bool Player::pass(Position target){
 
     double dirx,diry,length;
 
@@ -42,10 +44,11 @@ void Player::pass(Position target){
     else{
         return true; // Done
     }
+    return false;
 
 }
 
-void Player::kick(Position target){
+bool Player::kick(Position target){
 
     double dirx,diry,length;
 
@@ -63,12 +66,14 @@ void Player::kick(Position target){
     if (robo.GetPos().DistanceTo(pos) > 0.1) {
         robo.turn(pos);
         robo.GotoPos(pos,2.5);
+        cout<<"--------"<<pos<<endl;
+        cout<<"--------"<<target<<endl;
     }
     else{
         return true; // Done
     }
 
-
+    return false;
 }
 void Player::drivingKick(Position target){
     Position ballPos = ball.GetPos();

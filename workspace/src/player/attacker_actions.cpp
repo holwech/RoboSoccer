@@ -3,7 +3,7 @@
 
 
 
-void Player::blockBall(int xcord){
+bool Player::blockBall(int xcord){
 
     cout << "Inside blockball" << endl;
     Position pos(xcord,ball.GetY());
@@ -12,5 +12,5 @@ void Player::blockBall(int xcord){
     } else {
         return true; // Done
     }
-
+    return false;
 }

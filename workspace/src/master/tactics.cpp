@@ -24,32 +24,41 @@ bool Master::crossPassAndShoot() {
     // Position robots accordingly
     case STEP1:
         send(Command(ACTION_GOTO, Position(0.5, 0.5)), 1);
-        send(Command(ACTION_BEFORE_KICK, ball.GetPos(), player[1].getPos()), 2);
+//        send(Command(ACTION_BEFORE_KICK, ball.GetPos(), player[1].getPos()), 2);
         t_state = STEP2;
         break;
     // Pass the ball to the other robot
     case STEP2:
-        if (!player[1].isBusy() && !player[2].isBusy()) {
-           send(Command(ACTION_PASS, player[1].getPos()));
+        if (!player[1].isBusy()) {
+           send(Command(ACTION_BEFORE_KICK, ball.GetPos(), player[1].getPos()), 2);
            t_state = STEP3;
         }
         break;
-    // Position the receiving robot according to the ball
     case STEP3:
         if (!player[2].isBusy()) {
-           send(Command(ACTION_BEFORE_KICK, ball.GetPos(), Position(1.0, 0.0)), 1);
+            send(Command(ACTION_PASS, player[1].getPos()),2);
            t_state = STEP4;
         }
         break;
-    // Kick the ball towards the goal
+    // Position the receiving robot according to the ball
     case STEP4:
+ //       if (!player[2].isBusy()) {
+         if (ball.GetVelocity()<0.0001&&!player[2].isBusy()) {
+           send(Command(ACTION_BEFORE_KICK, ball.GetPos(), Position(1.0, 0.0)), 1);
+           t_state = STEP5;
+        }
+        break;
+    // Kick the ball towards the goal
+    case STEP5:
         if (!player[1].isBusy()) {
-            send(Command(ACTION_KICK, Position(1.0, 0.0)), 1);
-            t_state = STEP5;
+//         send(Command(ACTION_KICK, Position(1.0, 0.0)), 1);
+//         send(Command(ACTION_PASS, Position(1.0, 0.0)), 1);
+
+            t_state = STEP6;
         }
         break;
     // When done kicking, terminate tactic
-    case STEP5:
+    case STEP6:
         if (!player[1].isBusy()) {
             return true;
         }

@@ -73,10 +73,10 @@ private:
 
     /** General Variables and Functions*/
     void idle();
-    void goTo(Position target);
+    bool goTo(Position target);
     bool before_kick(Position kick_position, Position target_of_kick); //Get to position before kick -> can be used for attacker's kick and pass
-    void kick(Position target);
-    void pass(Position target);
+    bool kick(Position target);
+    bool pass(Position target);
     void drivingKick(Position target);
     int phase;
     //Position pos_before_kick_far;
@@ -99,7 +99,7 @@ private:
     timer timergk;
 
     /** Attacker variables and functions */
-    void blockBall(int xcord);
+    bool blockBall(int xcord);
 
 };
 #endif // PLAYER_H
