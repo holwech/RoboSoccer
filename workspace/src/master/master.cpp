@@ -32,6 +32,7 @@ Master::Master(string& team, RTDBConn& DBC, vector<int>& rfNumber) :
     tacticDone = false;
     cps_state = 1;
     robonr = 0;
+    y=0;
 }
 
 
@@ -110,6 +111,7 @@ void Master::strategies() {
     cout << "	1. exampleTactic" << endl;
     cout << "   2. Tactic_nearpenaltyarea"<<endl;
     cout << "   3. Tactic_ballchasing"<<endl;
+    cout << "   4. Chross and Pass"<<endl;
 
     cin >> answer;
     while(1) {
@@ -127,12 +129,17 @@ void Master::strategies() {
             tacticDone = tactic_ballchasing();
             if (tacticDone) { answer = -1; }
             break;
+        case 4:
+            tacticDone = crossPassAndShoot();
+            if (tacticDone) { answer = -1; }
+            break;
         default:
             cout << "No case for this state yet (in strategies function), or tactic terminated" << endl;
             cout << "Select one of the following strategies/tactics: "<<endl;
             cout << "	1. exampleTactic" << endl;
             cout << "   2. Tactic_nearpenaltyarea"<<endl;
             cout << "   3. Tactic_ballchasing"<<endl;
+            cout << "   4. Chross and Pass"<<endl;
             t_state = STEP1;
             cin >> answer;
             break;

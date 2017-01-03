@@ -59,6 +59,7 @@ private:
     Position ballPos;
     bool tacticDone;
     int robonr;
+    double y;
 
     /** These are variables that all strategies can and should use.
      * 	These variables will not conflict because only one strategy can be run at

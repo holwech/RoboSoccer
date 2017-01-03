@@ -31,7 +31,13 @@ bool Master::crossPassAndShoot()
   {
       // Position robots accordingly
     case STEP1:
-      send(Command(ACTION_GOTO, Position(0.5, 0.5)), 1);
+      if(ball.GetY()>0){
+          y=-0.4;
+      }
+      else{
+          y=0.4;
+      }
+      send(Command(ACTION_GOTO, Position(0.7, y)), 1);
       t_state = STEP2;
       break;
       // Pass the ball to the other robot
