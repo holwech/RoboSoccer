@@ -24,26 +24,13 @@ void Master::strategy_demo(){
 
     //do strategy_defensive();
 
-        switch(side){
-
-        case 1:
-
-            break;
-
-        case;
-
         }
-
-
-
-
-    }else{
 
 
     //do strategy_offensive();
 
 
-    }
+
 
     /*
      * if ahead on score:

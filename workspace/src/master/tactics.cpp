@@ -31,21 +31,27 @@ bool Master::crossPassAndShoot()
   {
       // Position robots accordingly
     case STEP1:
-      send(Command(ACTION_GOTO, Position(0.5, 0.5)), 1);
+      if(ball.GetY()>0){
+          y=-0.5;
+      }
+      else{
+          y=0.5;
+      }
+      send(Command(ACTION_GOTO, Position(0.7, y), 3 ), 1);
       t_state = STEP2;
       break;
       // Pass the ball to the other robot
     case STEP2:
       if (!player[1].isBusy())
       {
-        send(Command(ACTION_BEFORE_KICK, ball.GetPos(), player[1].getPos()), 2);
+        send(Command(ACTION_BEFORE_KICK, ball.GetPos(), Position(player[1].getX()+0.3,y)), 2);
         t_state = STEP3;
       }
       break;
     case STEP3:
       if (!player[2].isBusy())
       {
-        send(Command(ACTION_PASS, player[1].getPos()), 2);
+        send(Command(ACTION_PASS, Position(player[1].getX()+0.3,y)), 2);
         t_state = STEP4;
       }
       break;
@@ -55,7 +61,7 @@ bool Master::crossPassAndShoot()
       if (ball.GetVelocity() < 0.00001 && !player[2].isBusy())  //wait for the ball stop, if not stopping, the ball.GetPos() will not updating because the state changes.
       {
 
-        send(Command(ACTION_BEFORE_KICK, ball.GetPos(), Position(1.0, 0.0)), 1);
+        send(Command(ACTION_BEFORE_KICK, ball.GetPos(), Position(1.4, 0.0)), 1);
         t_state = STEP5;
       }
       break;
@@ -65,7 +71,7 @@ bool Master::crossPassAndShoot()
       cout << "5-----------" << ball.GetPos() << endl;
       if (!player[1].isBusy())
       {
-        send(Command(ACTION_KICK, Position(1.0, 0.0)), 1);
+        send(Command(ACTION_KICK, Position(1.4, 0.0)), 1);
         t_state = STEP6;
       }
       break;

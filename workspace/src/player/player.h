@@ -42,6 +42,8 @@ public:
     PState getState();
     PState getPrevState();
     Position getPos();
+    double getX();
+    double getY();
     bool isBusy();
     void setBusy(bool flag);
     Player(Player&& other);

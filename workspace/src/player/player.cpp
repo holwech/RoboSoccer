@@ -147,6 +147,14 @@ Position Player::getPos() {
     std::lock_guard<std::mutex> lock(mutex);
     return robo.GetPos();
 }
+double Player::getX() {
+    std::lock_guard<std::mutex> lock(mutex);
+    return robo.GetX();
+}
+double Player::getY() {
+    std::lock_guard<std::mutex> lock(mutex);
+    return robo.GetY();
+}
 
 /** Updates the robo functions */
 void Player::updateRobo() {

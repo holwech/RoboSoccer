@@ -30,11 +30,11 @@ bool Player::pass(Position target){
         robo.turn(pos);
         if (ball.GetPos().DistanceTo(target)>=0.7){
             cout << "long distance: " << endl;
-            robo.GotoPos(pos,2.2);
+            robo.GotoPos(pos,2.5);
         }
         if (ball.GetPos().DistanceTo(target)>=0.5 && ball.GetPos().DistanceTo(target)<0.7){
             cout << "medium distance: " << endl;
-            robo.GotoPos(pos,1.6);
+            robo.GotoPos(pos,2.0);
         }
         else{
             cout << "short distance: " << endl;
@@ -65,7 +65,7 @@ bool Player::kick(Position target){
 
     if (robo.GetPos().DistanceTo(pos) > 0.1) {
         robo.turn(pos);
-        robo.GotoPos(pos,2.5);
+        robo.GotoPos(pos,2.8);
         cout<<"--------"<<pos<<endl;
         cout<<"--------"<<target<<endl;
     }
