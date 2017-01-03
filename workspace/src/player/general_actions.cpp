@@ -118,7 +118,7 @@ void Player::drivingKick(Position target){
 
 bool Player::before_kick(Position kick_position, Position target_of_kick)
 {
-    delta = 0.2;
+    delta = 0.2; // Before 0.2
     Position pos_before_kick_far(0.0,0.0);
     Position pos_before_kick_near(0.0,0.0);
     Position aux_pos_before_kick(0.0,0.0);
@@ -146,8 +146,7 @@ bool Player::before_kick(Position kick_position, Position target_of_kick)
             pos_before_kick_near.SetY(kick_position.GetY() + 0.3*delta * fabs(target_of_kick.GetY() - kick_position.GetY()) / fabs(target_of_kick.GetX() - kick_position.GetX()));
         }
 
-/*
-        if(abs(delta * fabs(target_of_kick.GetY() - kick_position.GetY()) / fabs(target_of_kick.GetX() - kick_position.GetX())) > 0.1){
+       /* if(abs(delta * fabs(target_of_kick.GetY() - kick_position.GetY()) / fabs(target_of_kick.GetX() - kick_position.GetX())) > 0.1){
 
             delta = 0.8*delta;
 
@@ -275,9 +274,8 @@ bool Player::before_kick(Position kick_position, Position target_of_kick)
               }
 
 
-      /*
-            if(abs(delta * fabs(target_of_kick.GetY() - kick_position.GetY()) / fabs(target_of_kick.GetX() - kick_position.GetX())) > 0.1){
 
+           /* if(abs(delta * fabs(target_of_kick.GetY() - kick_position.GetY()) / fabs(target_of_kick.GetX() - kick_position.GetX())) > 0.1){
             delta = 0.8*delta;
 
             pos_before_kick.SetX(kick_position.GetX() + delta);
