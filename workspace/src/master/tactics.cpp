@@ -1,70 +1,83 @@
 #include "master/master.h"
 
 /** This is where all tactics should be included
- * 	All tactics should return true when they're DONE
+ *  All tactics should return true when they're DONE
  */
 
-void Master::exampleTactic() {
-    Position target = Position(1.0, 0.0);
-    if (player[0].getState() == IDLE && !player[0].isBusy()) {
-        send(Command(ACTION_BEFORE_KICK, ball.GetPos(), target), 0);
-    } else if (player[0].getPrevState() == BEFORE_KICK && !player[0].isBusy()){
-        send(Command(ACTION_KICK, target), 0);
-    } else if (player[0].getPrevState() == KICK && !player[0].isBusy()) {
-        send(Command(ACTION_GOTO, target), 0);
-    }
+void Master::exampleTactic()
+{
+  Position target = Position(1.0, 0.0);
+  if (player[0].getState() == IDLE && !player[0].isBusy())
+  {
+    send(Command(ACTION_BEFORE_KICK, ball.GetPos(), target), 0);
+  }
+  else if (player[0].getPrevState() == BEFORE_KICK && !player[0].isBusy())
+  {
+    send(Command(ACTION_KICK, target), 0);
+  }
+  else if (player[0].getPrevState() == KICK && !player[0].isBusy())
+  {
+    send(Command(ACTION_GOTO, target), 0);
+  }
 }
 
 /** This function will place one robot at one corner of the field
  *  and then the other robot will pass the ball to this player.
  *  The player will then try to kick at the goal.
  */
-bool Master::crossPassAndShoot() {
-    switch(t_state) {
-    // Position robots accordingly
+bool Master::crossPassAndShoot()
+{
+  switch (t_state)
+  {
+      // Position robots accordingly
     case STEP1:
-        send(Command(ACTION_GOTO, Position(0.5, 0.5)), 1);
-        t_state = STEP2;
-        break;
-    // Pass the ball to the other robot
+      send(Command(ACTION_GOTO, Position(0.5, 0.5)), 1);
+      t_state = STEP2;
+      break;
+      // Pass the ball to the other robot
     case STEP2:
-        if (!player[1].isBusy()) {
-           send(Command(ACTION_BEFORE_KICK, ball.GetPos(), player[1].getPos()), 2);
-           t_state = STEP3;
-        }
-        break;
+      if (!player[1].isBusy())
+      {
+        send(Command(ACTION_BEFORE_KICK, ball.GetPos(), player[1].getPos()), 2);
+        t_state = STEP3;
+      }
+      break;
     case STEP3:
-        if (!player[2].isBusy()) {
-            send(Command(ACTION_PASS, player[1].getPos()),2);
-           t_state = STEP4;
-        }
-        break;
-    // Position the receiving robot according to the ball
+      if (!player[2].isBusy())
+      {
+        send(Command(ACTION_PASS, player[1].getPos()), 2);
+        t_state = STEP4;
+      }
+      break;
+      // Position the receiving robot according to the ball
     case STEP4:
- //       if (!player[2].isBusy()) {
-         if (ball.GetVelocity()<0.00001&&!player[2].isBusy()) {    //wait for the ball stop, if not stopping, the ball.GetPos() will not updating because the state changes.
+      //       if (!player[2].isBusy()) {
+      if (ball.GetVelocity() < 0.00001 && !player[2].isBusy())  //wait for the ball stop, if not stopping, the ball.GetPos() will not updating because the state changes.
+      {
 
-           send(Command(ACTION_BEFORE_KICK, ball.GetPos(), Position(1.0, 0.0)), 1);
-           t_state = STEP5;
-        }
-        break;
-    // Kick the ball towards the goal
+        send(Command(ACTION_BEFORE_KICK, ball.GetPos(), Position(1.0, 0.0)), 1);
+        t_state = STEP5;
+      }
+      break;
+      // Kick the ball towards the goal
 
     case STEP5:
-        cout<<"5-----------"<<ball.GetPos()<<endl;
-        if (!player[1].isBusy()) {
-         send(Command(ACTION_KICK, Position(1.0, 0.0)), 1);
-            t_state = STEP6;
-        }
-        break;
-    // When done kicking, terminate tactic
+      cout << "5-----------" << ball.GetPos() << endl;
+      if (!player[1].isBusy())
+      {
+        send(Command(ACTION_KICK, Position(1.0, 0.0)), 1);
+        t_state = STEP6;
+      }
+      break;
+      // When done kicking, terminate tactic
     case STEP6:
-        if (!player[1].isBusy()) {
-            return true;
-        }
-        break;
-    }
-    return false;
+      if (!player[1].isBusy())
+      {
+        return true;
+      }
+      break;
+  }
+  return false;
 }
 
 /*  bool Master::tactic_nearpenaltyarea()
@@ -82,42 +95,67 @@ Can be improved, in my opinion
 */
 bool Master::tactic_nearpenaltyarea()
 {
-// if the ball is too close to our gate/ penalty area
-    if(ball.GetX()>1)
+  // if the ball is too close to our gate/ penalty area
+  if (ball.GetX() > 0.65)
+  {
+
+
+    // Position robots accordingly
+    switch (t_state)
     {
-// Position robots accordingly
-        switch(t_state) {
-        case STEP1:
-           send(Command(ACTION_BEFORE_KICK, ball.GetPos(), Position(-1.0,0.0)), 2);
-               t_state = STEP2;
-            break;
+      case STEP1:
 
- // Kick the ball towards the Position(-1.0,0.0)
-        case STEP2:
-            if (!player[2].isBusy())
-            {
-                send(Command(ACTION_KICK, ball.GetPos(), Position(-1.0,0.0)), 2);
-                cout<<"---------"<<endl;
-                t_state = STEP6;
-            }
-
-            break;
-        case STEP3:break;
-        case STEP4:break;
-        case STEP5:break;
-        case STEP6:
-            if (!player[2].isBusy()) {
-                return true;
-            }
-            break;
-
-
+        if (player[0].getPos().DistanceTo(ball.GetPos()) < player[1].getPos().DistanceTo(ball.GetPos()) && player[0].getPos().DistanceTo(ball.GetPos()) < player[2].getPos().DistanceTo(ball.GetPos()))
+        {
+          robonr = 0;
         }
-        return false;
+
+        if (player[1].getPos().DistanceTo(ball.GetPos()) < player[0].getPos().DistanceTo(ball.GetPos()) && player[1].getPos().DistanceTo(ball.GetPos()) < player[2].getPos().DistanceTo(ball.GetPos()))
+        {
+          robonr = 1;
+        }
+
+        if (player[2].getPos().DistanceTo(ball.GetPos()) < player[0].getPos().DistanceTo(ball.GetPos()) && player[2].getPos().DistanceTo(ball.GetPos()) < player[1].getPos().DistanceTo(ball.GetPos()))
+        {
+          robonr = 2;
+        }
+
+        send(Command(ACTION_BEFORE_KICK, ball.GetPos(), Position(-1.0, 0.0)), robonr);
+        t_state = STEP2;
+        break;
+
+        // Kick the ball towards the Position(-1.0,0.0)
+      case STEP2:
+        if (!player[robonr].isBusy())
+        {
+          send(Command(ACTION_KICK, Position(-1.0, 0.0)), robonr);
+          cout << "---------" << endl;
+          t_state = STEP6;
+        }
+
+        break;
+      case STEP3:
+        break;
+      case STEP4:
+        break;
+      case STEP5:
+        break;
+      case STEP6:
+        if (!player[robonr].isBusy())
+        {
+          robonr = 0;
+          return true;
+        }
+        break;
+
+
     }
-    else{
-        return true;
-    }
+    return false;
+  }
+  else
+  {
+    return true;
+  }
 
 }
 
@@ -151,12 +189,12 @@ Can be improved, in my opinion
  */
 bool Master::tactic_ballchasing()
 {
-       send(Command(ACTION_BEFORE_KICK, ball.GetPos(), Position(-1.27,0.0)), 2); // Position the receiving robot according to the ball
-       if (ball.GetVelocity()<0.00001&&!player[2].isBusy())           //follow the ball until the end position of robot and ball stops
-       {
-               return true;
-        }
+  send(Command(ACTION_BEFORE_KICK, ball.GetPos(), Position(-1.27, 0.0)), 2); // Position the receiving robot according to the ball
+  if (ball.GetVelocity() < 0.00001 && !player[2].isBusy())       //follow the ball until the end position of robot and ball stops
+  {
+    return true;
+  }
 
-return false;
+  return false;
 
 }

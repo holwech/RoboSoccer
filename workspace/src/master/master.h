@@ -58,6 +58,7 @@ private:
     vector<Position> positions;
     Position ballPos;
     bool tacticDone;
+    int robonr;
 
     /** These are variables that all strategies can and should use.
      * 	These variables will not conflict because only one strategy can be run at

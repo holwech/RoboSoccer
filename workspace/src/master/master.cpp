@@ -31,6 +31,7 @@ Master::Master(string& team, RTDBConn& DBC, vector<int>& rfNumber) :
     t_state = STEP1;
     tacticDone = false;
     cps_state = 1;
+    robonr = 0;
 }
 
 
@@ -168,7 +169,7 @@ void Master::manual() {
             send(Command(ACTION_GOTO, Position(posX, posY), speed), robot);
             break;
         case 2:
-            send(Command(ACTION_BEFORE_KICK, ball.GetPos(), Position(-1, 0)), robot);
+            send(Command(ACTION_BEFORE_KICK, ball.GetPos(), Position(1.27, 0)), robot);
             break;
         case 3:
             /**cout << "x: ";
