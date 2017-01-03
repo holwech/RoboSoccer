@@ -33,7 +33,7 @@ Master::Master(string& team, RTDBConn& DBC, vector<int>& rfNumber) :
     cps_state = 1;
 
     robonr = 0; // used for tactics: near_penalty
-    y = 0;
+    y = 0; // used for tactics: Chross and Pass
 
 }
 
