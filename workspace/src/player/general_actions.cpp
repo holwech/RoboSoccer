@@ -123,13 +123,13 @@ bool Player::before_kick(Position kick_position, Position target_of_kick)
     Position pos_before_kick_near(0.0,0.0);
     Position aux_pos_before_kick(0.0,0.0);
 
-    cout << target_of_kick.AngleOfLineToPos(kick_position).Deg() << endl;
+    // cout << target_of_kick.AngleOfLineToPos(kick_position).Deg() << endl;
 
-   if(abs(kick_position.AngleOfLineToPos(robo.GetPos()).Deg()) < 110 && abs(kick_position.AngleOfLineToPos(robo.GetPos()).Deg()) > 70){
+   if(fabs(target_of_kick.AngleOfLineToPos(kick_position).Deg()) < 120 && fabs(target_of_kick.AngleOfLineToPos(kick_position).Deg()) > 60){
 
 
-        delta = 0.0005*(target_of_kick.AngleOfLineToPos(kick_position).Deg() - 90) * (target_of_kick.AngleOfLineToPos(kick_position).Deg() - 90);
-
+        delta = 0.0002*(fabs(target_of_kick.AngleOfLineToPos(kick_position).Deg()) - 90) * (fabs(target_of_kick.AngleOfLineToPos(kick_position).Deg()) - 90);
+        // cout << delta << endl;
     }
 
 
