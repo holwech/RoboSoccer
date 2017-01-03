@@ -59,7 +59,7 @@ private:
     Position ballPos;
     bool tacticDone;
     int robonr; // used for tactics: near_penalty
-    double y;
+    double y; // used for tactics: Chross and Pass
 
 
     /** These are variables that all strategies can and should use.
