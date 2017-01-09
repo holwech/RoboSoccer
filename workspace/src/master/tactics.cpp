@@ -204,3 +204,22 @@ bool Master::tactic_ballchasing()
   return false;
 
 }
+
+/**
+ *	This tactic finds the closest robot to the ball and kicks the ball
+ * 	towards the goal without hitting the goalkeeper
+ */
+bool Master::kickAtGoal() {
+    switch(t_state) {
+    // Find closest robo to ball
+    case STEP1:
+        for (int robot = 0; robot < 3; robot++) {
+
+        }
+        break;
+    default:
+        cout << "No case in kickAtGoal" << endl;
+        break;
+    }
+    return false;
+}
