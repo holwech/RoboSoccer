@@ -27,18 +27,6 @@ Master::Master(string& team, RTDBConn& DBC, vector<int>& rfNumber) :
     state = REFEREE_INIT;
     referee.Init();
 
-    /** Init strategy variables */
-    s_state = BALANCED;
-    s_step = STEP1;
-
-    /** Init tactic variables */
-    t_state = STEP1;
-    tacticDone = false;
-    cps_state = 1;
-
-    robonr = 0; // used for tactics: near_penalty
-    chrossandpassy = 0; // used for tactics: Chross and Pass
-
 }
 
 
@@ -229,10 +217,14 @@ void Master::manual() {
 
 void Master::resetTVariables() {
     s_state = BALANCED;
-    s_step = STEP1;
+    s_case = INIT;
     t_state = STEP1;
     tacticDone = false;
     cps_state = 1;
+    closestRobo = 0;
+    maxDistance = 10;
+    chrossandpassy = 0; // used for tactics: Chross and Pass
+    robonr = 0; // used for tactics: near_penalty
 }
 
 

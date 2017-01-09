@@ -4,12 +4,12 @@ void Player::idle() {
     robo.idle();
 }
 
-bool Player::goTo(Position target) {
+bool Player::goTo(Position target, double speed) {
     if (robo.GetPos().DistanceTo(target) < 0.05) {
         cout << "State set to IDLE" << endl;
         return true; // Done
     } else {
-        robo.GotoPos(target);
+        robo.GotoPos(target, speed);
     }
     return false;
 }
