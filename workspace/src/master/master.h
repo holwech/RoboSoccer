@@ -44,6 +44,7 @@ public:
 private:
     void resetTVariables();
     void strategies();
+    void strategyController();
     void manual();
     int client_nr;
     string team;
@@ -67,8 +68,10 @@ private:
      * 	the same time
      */
     S_State s_state;
+    T_State s_step;
     void strategy_defensive();
     void strategy_demo();
+
 
     /** Please prefix all tactic-specific variables with some kind of identifier
      * 	so that we get conflicting variables with the same name. Tactic variables
@@ -86,6 +89,7 @@ private:
 
     /** SHARED TACTIC VARIABLES */
     T_State t_state;
+
 
     // crossPassAndShoot-variables
     int cps_state; // Example of a prefixed variable

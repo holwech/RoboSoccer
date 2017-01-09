@@ -27,6 +27,10 @@ Master::Master(string& team, RTDBConn& DBC, vector<int>& rfNumber) :
     state = REFEREE_INIT;
     referee.Init();
 
+    /** Init strategy variables */
+    s_state = BALANCED;
+    s_step = STEP1;
+
     /** Init tactic variables */
     t_state = STEP1;
     tacticDone = false;
@@ -106,6 +110,22 @@ void Master::updatePositions() {
     }
 }
 
+void Master::strategyController() {
+    // Do something to choose strategies
+    switch(s_state) {
+    case BALANCED:
+        // Run the balanced strategy
+        break;
+    case AGGRESSIVE:
+        break;
+    case DEFENSIVE:
+        break;
+    default:
+        cout << "No strategy for this state" << endl;
+        break;
+    }
+}
+
 /** Add your strategies or tactics here. (Yes, I know, misleading function name) */
 void Master::strategies() {
     int answer;
@@ -147,7 +167,7 @@ void Master::strategies() {
             cout << "   3. Tactic_ballchasing"<<endl;
             cout << "   4. Strategy_defensive"<<endl;
             cout << "   5. Chross and Pass"<<endl;
-            t_state = STEP1;
+            resetTVariables();
             cin >> answer;
             break;
         }
@@ -208,6 +228,8 @@ void Master::manual() {
 }
 
 void Master::resetTVariables() {
+    s_state = BALANCED;
+    s_step = STEP1;
     t_state = STEP1;
     tacticDone = false;
     cps_state = 1;

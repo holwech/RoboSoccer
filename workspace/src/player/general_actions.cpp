@@ -41,7 +41,7 @@ bool Player::pass(Position target){
             robo.GotoPos(pos,1.1);
         }
     }
-    else{
+    else if (robo.isArrived()){
         return true; // Done
     }
     return false;
