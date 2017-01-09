@@ -26,6 +26,12 @@ enum S_State {
     BALANCED
 };
 
+enum S_Case {
+    INIT,
+    BLOCK,
+    COUNTER,
+};
+
 enum T_State {
     STEP1,
     STEP2,
@@ -68,8 +74,9 @@ private:
      * 	the same time
      */
     S_State s_state;
-    T_State s_step;
+    S_Case s_case;
     void strategy_defensive();
+    void strategy_offensive();
     void strategy_demo();
 
 
@@ -86,9 +93,12 @@ private:
     bool crossPassAndShoot();
     bool tactic_nearpenaltyarea();
     bool tactic_ballchasing();
+    bool kickAtGoal();
 
     /** SHARED TACTIC VARIABLES */
     T_State t_state;
+    int closestRobo;
+    double maxDistance;
 
 
     // crossPassAndShoot-variables

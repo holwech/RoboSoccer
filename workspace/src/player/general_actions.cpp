@@ -4,12 +4,12 @@ void Player::idle() {
     robo.idle();
 }
 
-bool Player::goTo(Position target) {
+bool Player::goTo(Position target, double speed) {
     if (robo.GetPos().DistanceTo(target) < 0.05) {
         cout << "State set to IDLE" << endl;
         return true; // Done
     } else {
-        robo.GotoPos(target);
+        robo.GotoPos(target, speed);
     }
     return false;
 }
@@ -40,8 +40,11 @@ bool Player::pass(Position target){
             cout << "short distance: " << endl;
             robo.GotoPos(pos,1.1);
         }
-    }
-    else if (robo.isArrived()){
+
+
+        }
+    else //if (robo.isArrived())
+    {
         return true; // Done
     }
     return false;
@@ -128,7 +131,7 @@ bool Player::before_kick(Position kick_position, Position target_of_kick)
    if(fabs(target_of_kick.AngleOfLineToPos(kick_position).Deg()) < 120 && fabs(target_of_kick.AngleOfLineToPos(kick_position).Deg()) > 60){
 
 
-        delta = 0.0002*(fabs(target_of_kick.AngleOfLineToPos(kick_position).Deg()) - 90) * (fabs(target_of_kick.AngleOfLineToPos(kick_position).Deg()) - 90) + 0.00001;
+       delta = 0.0002*(fabs(target_of_kick.AngleOfLineToPos(kick_position).Deg()) - 90) * (fabs(target_of_kick.AngleOfLineToPos(kick_position).Deg()) - 90) + pow(10,-16);
         // cout << delta << endl;
     }
 

@@ -53,14 +53,14 @@ bool Master::crossPassAndShoot()
       {
         send(Command(ACTION_PASS, Position(player[1].getX()+0.3,chrossandpassy)), 2);
         t_state = STEP4;
-      }
+     }
       break;
       // Position the receiving robot according to the ball
     case STEP4:
       //       if (!player[2].isBusy()) {
       if (ball.GetVelocity() < 0.00001 && !player[2].isBusy() && !player[1].isBusy())  //wait for the ball stop, if not stopping, the ball.GetPos() will not updating because the state changes.
       {
-
+        usleep(4000000);
         send(Command(ACTION_BEFORE_KICK, ball.GetPos(), Position(1.4, 0.0)), 1);
         t_state = STEP5;
       }
@@ -203,4 +203,23 @@ bool Master::tactic_ballchasing()
 
   return false;
 
+}
+
+/**
+ *	This tactic finds the closest robot to the ball and kicks the ball
+ * 	towards the goal without hitting the goalkeeper
+ */
+bool Master::kickAtGoal() {
+    switch(t_state) {
+    // Find closest robo to ball
+    case STEP1:
+        for (int robot = 0; robot < 3; robot++) {
+
+        }
+        break;
+    default:
+        cout << "No case in kickAtGoal" << endl;
+        break;
+    }
+    return false;
 }
