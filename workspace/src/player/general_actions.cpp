@@ -128,7 +128,7 @@ bool Player::before_kick(Position kick_position, Position target_of_kick)
    if(fabs(target_of_kick.AngleOfLineToPos(kick_position).Deg()) < 120 && fabs(target_of_kick.AngleOfLineToPos(kick_position).Deg()) > 60){
 
 
-        delta = 0.0002*(fabs(target_of_kick.AngleOfLineToPos(kick_position).Deg()) - 90) * (fabs(target_of_kick.AngleOfLineToPos(kick_position).Deg()) - 90);
+        delta = 0.0002*(fabs(target_of_kick.AngleOfLineToPos(kick_position).Deg()) - 90) * (fabs(target_of_kick.AngleOfLineToPos(kick_position).Deg()) - 90) + 0.00001;
         // cout << delta << endl;
     }
 
