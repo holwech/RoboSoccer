@@ -130,11 +130,11 @@ void Master::strategyController() {
 void Master::strategies() {
     int answer;
     cout << "Select one of the following strategies/tactics: "<<endl;
-    cout << "	1. exampleTactic" << endl;
+    cout << "	1. Cross and Pass" << endl;
     cout << "   2. Tactic_nearpenaltyarea"<<endl;
     cout << "   3. Tactic_ballchasing"<<endl;
     cout << "   4. Strategy_defensive"<<endl;
-    cout << "   5. Chross and Pass"<<endl;
+    cout << "   5. Cross and Pass"<<endl;
 
     cin >> answer;
     while(1) {
@@ -162,11 +162,11 @@ void Master::strategies() {
         default:
             cout << "No case for this state yet (in strategies function), or tactic terminated" << endl;
             cout << "Select one of the following strategies/tactics: "<<endl;
-            cout << "	1. exampleTactic" << endl;
+            cout << "	1. Cross and Pass" << endl;
             cout << "   2. Tactic_nearpenaltyarea"<<endl;
             cout << "   3. Tactic_ballchasing"<<endl;
             cout << "   4. Strategy_defensive"<<endl;
-            cout << "   5. Chross and Pass"<<endl;
+            cout << "   5. Cross and Pass"<<endl;
             resetTVariables();
             cin >> answer;
             break;

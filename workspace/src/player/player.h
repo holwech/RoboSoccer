@@ -54,7 +54,7 @@ private:
     Position position(int robot);
     void readCommand();
     void setState(PState newState);
-    void updateRobo();
+    void updateRobo(bool isGoalkeeper);
     void done();
     /** 0 is goalkeeper
      *  1 and 2 is team playes

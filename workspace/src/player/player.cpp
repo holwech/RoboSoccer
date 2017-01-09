@@ -30,11 +30,11 @@ Player::Player(Channel* channel, RTDBConn &DBC, int deviceNr) :
 
 void Player::run() {
    cout << "Player " << deviceNr << " started" << endl;
-   robo.driveWithCA();
    cout << "Finish driveWithCA()" << endl;
    bool isDone = true;
+   bool isGoalkeeper;
    while(1) {
-       updateRobo();
+       isGoalkeeper = false;
        switch(state) {
        case IDLE:
            idle();
@@ -63,7 +63,8 @@ void Player::run() {
            if (isDone){ done(); }
            break;
        case DEFEND:
-           defend_tom();
+           isGoalkeeper = true;
+           defend();
            //defend();
            break;
        case KICK_OUT:
@@ -74,6 +75,7 @@ void Player::run() {
            cout << "Case for state: " << state << endl;
            break;
        }
+       updateRobo(isGoalkeeper);
        readCommand();
        usleep(10000);
        //cout << "State: " << state << endl;
@@ -157,9 +159,9 @@ double Player::getY() {
 }
 
 /** Updates the robo functions */
-void Player::updateRobo() {
+void Player::updateRobo(bool isGoalkeeper) {
     robo.updatePositions(positions);
-    robo.driveWithCA();
+    isGoalkeeper ? robo.goalieDrive() : robo.driveWithCA();
 }
 
 

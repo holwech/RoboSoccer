@@ -40,38 +40,38 @@ void Player::defend()
 
     for(i=0;i<10;i++)
     {
-    ballangle = ball.GetPhi().Deg()+ballangle/10;
+        ballangle = ball.GetPhi().Deg()+ballangle/10;
     }
 
     for(i=0;i<10;i++)
     {
-    ballx = ballx + ball.GetX()/10;
-    bally = bally + ball.GetY()/10;
+        ballx = ballx + ball.GetX()/10;
+        bally = bally + ball.GetY()/10;
     }
 
 
     double goalkeeperx =  1.39 ;//1.36
-    double goalkeepery;
+    double goalkeepery = 0;
 
 
     goalkeepery = tan(ballangle*3.141593/180)*(goalkeeperx-ballx)+bally;
 
 
-    if (ball.GetPhi().Deg()>=80)
-    {
-        if(bally>0)
-            goalkeepery = 0.1;
-        else
-            goalkeepery = -0.1;
-    }
-    if (ball.GetPhi().Deg()<-80)
-    {
-        if(bally>0)
-            goalkeepery = 0.1;
-        else
-            goalkeepery = -0.1;
-    }
-    if (goalkeepery ==bally)
+//    if (ball.GetPhi().Deg()>=80)
+//    {
+//        if(bally>0)
+//            goalkeepery = 0.1;
+//        else
+//            goalkeepery = -0.1;
+//    }
+//    if (ball.GetPhi().Deg()<-80)
+//    {
+//        if(bally>0)
+//            goalkeepery = 0.1;
+//        else
+//            goalkeepery = -0.1;
+//    }
+    if (goalkeepery == bally)
     {
         if(ballx>0.7)
         {
@@ -123,13 +123,11 @@ void Player::defend()
     POS.SetX(goalkeeperx);
     POS.SetY(goalkeepery);
     robo.GotoPos(POS);
-//    robo->CruisetoXY(goalkeeperx,goalkeepery,120);
+ //   robo.CruisetoXY(goalkeeperx,goalkeepery,120);
 
-
+    cout << "Goaly_y: " << goalkeepery << endl;
      delta = sqrt((robo.GetX()-goalkeeperx)*(robo.GetX()-goalkeeperx)+(robo.GetY()-goalkeepery)*(robo.GetY()-goalkeepery));
-
-     if(delta<0.06)
-      robo.StopAction();
+     if(delta<0.06) robo.StopAction();
 
 /*     while(robo->GetPos().DistanceTo(ball.GetPos())<0.2)
          robo->GotoXY(ball.GetX(),ball.GetY(),160);
