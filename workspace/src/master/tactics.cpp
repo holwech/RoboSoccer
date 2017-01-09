@@ -214,7 +214,7 @@ bool Master::kickAtGoal() {
     // Find closest robo to ball
     case STEP1:
         for (int robot = 0; robot < 3; robot++) {
-            // jaja
+
         }
         break;
     default:

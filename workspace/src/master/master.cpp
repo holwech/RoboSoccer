@@ -26,6 +26,7 @@ Master::Master(string& team, RTDBConn& DBC, vector<int>& rfNumber) :
     side = RIGHT_SIDE;
     state = REFEREE_INIT;
     referee.Init();
+    resetTVariables();
 
 }
 
