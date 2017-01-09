@@ -214,8 +214,15 @@ bool Master::kickAtGoal() {
     // Find closest robo to ball
     case STEP1:
         for (int robot = 0; robot < 3; robot++) {
-
+            double distToBall = player[robot].getPos().DistanceTo(ball.GetPos());
+            if (distToBall > maxDistance) {
+                maxDistance = robot;
+                closestRobo = robot;
+            }
         }
+        break;
+    // Find the position of the goalkeeper
+    case STEP2:
         break;
     default:
         cout << "No case in kickAtGoal" << endl;
