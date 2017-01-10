@@ -25,6 +25,15 @@ enum PState {
     TEST
 };
 
+enum AState {
+    A_STEP1,
+    A_STEP2,
+    A_STEP3,
+    A_STEP4,
+    A_STEP5,
+    A_STEP6
+};
+
 
 
 /**
@@ -77,15 +86,22 @@ private:
     void idle();
     bool goTo(Position target, double speed = 1);
     bool before_kick(Position kick_position, Position target_of_kick); //Get to position before kick -> can be used for attacker's kick and pass
-    bool kick(Position target);
+    bool kick(Position target, double speed = 2.8);
     bool pass(Position target);
     void drivingKick(Position target);
+    bool old_pass(Position target);
+    bool old_kick(Position target);
     int phase;
     //Position pos_before_kick_far;
     //Position pos_before_kick_near;
     //Position aux_pos_before_kick;
     double counter;
     int control;
+    AState pass_state;
+    AState kick_state;
+    Position endKickPos;
+    double passSpeed;
+
 
     Angle ang;
     double delta;

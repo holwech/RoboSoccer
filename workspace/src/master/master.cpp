@@ -134,7 +134,7 @@ void Master::strategies() {
             if (tacticDone) { answer = -1; }
             break;
         case 2:
-            tacticDone = tactic_nearpenaltyarea();
+            tacticDone = tactic_nearpenaltyarea(0.65);
             if (tacticDone) { answer = -1; }
             break;
         case 3:
@@ -195,12 +195,9 @@ void Master::manual() {
             send(Command(ACTION_BEFORE_KICK, ball.GetPos(), Position(1.27, 0)), robot);
             break;
         case 3:
-            /**cout << "x: ";
-            cin >> posX;
-            cout << "y: ";
-            cin >> posY;*/
-
-            send(Command(ACTION_KICK, Position(1.27, 0)), robot);
+            cout << "Speed: ";
+            cin >> speed;
+            send(Command(ACTION_KICK, Position(1.27, 0), speed), robot);
             break;
         case 4:
             send(Command(ACTION_DEFEND), robot);

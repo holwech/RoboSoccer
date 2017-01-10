@@ -14,70 +14,70 @@ bool Player::goTo(Position target, double speed) {
     return false;
 }
 
-bool Player::pass(Position target){
-
-    double dirx,diry,length;
-
-    dirx= (target.GetX()-ball.GetX());
-    diry= (target.GetY()-ball.GetY());
-    length= sqrt((dirx*dirx)+(diry*diry));
-    dirx=dirx/length;
-    diry=diry/length;
-
-    Position pos(ball.GetX()+(dirx/80), ball.GetY()+(diry/80));
-
-    if (robo.GetPos().DistanceTo(pos) > 0.1) {
-        robo.turn(pos);
-        if (ball.GetPos().DistanceTo(target)>=0.7){
-            cout << "long distance: " << endl;
-            robo.GotoPos(pos,2.5);
+bool Player::pass(Position target) {
+    switch(pass_state) {
+    case A_STEP1:
+        // Some calculation to calculate the speed
+        passSpeed = 1;
+        pass_state = A_STEP2;
+        break;
+    case A_STEP2: {
+        bool passDone = kick(target, passSpeed);
+        if (passDone) {
+            return true;
         }
-        if (ball.GetPos().DistanceTo(target)>=0.5 && ball.GetPos().DistanceTo(target)<0.7){
-            cout << "medium distance: " << endl;
-            robo.GotoPos(pos,2.0);
-        }
-        else{
-            cout << "short distance: " << endl;
-            robo.GotoPos(pos,1.1);
-        }
-
-
-        }
-    else //if (robo.isArrived())
-    {
-        return true; // Done
+        break;
     }
-    return false;
-
-}
-
-bool Player::kick(Position target){
-
-    double dirx,diry,length;
-
-    dirx= (target.GetX()-ball.GetX());
-    diry= (target.GetY()-ball.GetY());
-    length= sqrt((dirx*dirx)+(diry*diry));
-    dirx=dirx/length;
-    diry=diry/length;
-    cout << "dirx: "<< dirx << endl;
-    cout << "diry: "<< diry << endl;
-    cout << "length: "<< length << endl;
-
-    Position pos(ball.GetX()+(dirx/80), ball.GetY()+(diry/80));
-
-    if (robo.GetPos().DistanceTo(pos) > 0.1) {
-        robo.turn(pos);
-        robo.GotoPos(pos,2.8);
-        cout<<"--------"<<pos<<endl;
-        cout<<"--------"<<target<<endl;
-    }
-    else{
-        return true; // Done
+    default:
+        cout << "No case for this step in action pass function" << endl;
+        break;
     }
 
     return false;
 }
+
+bool Player::kick(Position target, double speed) {
+    bool beforeKickDone = false;
+    switch(kick_state) {
+    // Go to ball and prepare to kick
+    case A_STEP1:
+        beforeKickDone = before_kick(ball.GetPos(), target);
+        if (beforeKickDone) {
+            robo.idle();
+            kick_state = A_STEP2;
+        }
+        break;
+    // Calculate which direction to kick
+    case A_STEP2:
+        double dirx,diry,length;
+        dirx= (target.GetX()-ball.GetX());
+        diry= (target.GetY()-ball.GetY());
+        length= sqrt((dirx*dirx)+(diry*diry));
+        dirx=dirx/length;
+        diry=diry/length;
+        endKickPos.SetX(ball.GetX()+(dirx / 5));
+        endKickPos.SetY(ball.GetY()+(diry / 5));
+        cout << "Position: " << endKickPos.GetX() << ", " << endKickPos.GetY() << endl;
+        kick_state = A_STEP3;
+        break;
+    // Do the kick
+    case A_STEP3: {
+        bool kickDone = goTo(endKickPos, speed);
+        if (kickDone) {
+            kick_state = A_STEP4;
+        }
+        break;
+    }
+    case A_STEP4:
+        return true;
+    // Kick done
+    default:
+        cout << "No case for this step in action kick" << endl;
+        break;
+    }
+    return false;
+}
+
 void Player::drivingKick(Position target){
     Position ballPos = ball.GetPos();
     double vecX = target.GetX() - ballPos.GetX();
@@ -184,7 +184,6 @@ bool Player::before_kick(Position kick_position, Position target_of_kick)
                 {
                    robo.GotoPos(pos_before_kick_far,1.3);
                 }
-                cout << control << endl;
                 if (robo.GetPos().DistanceTo(pos_before_kick_far) < 0.15){
                     control = 1;
                 }
@@ -257,7 +256,6 @@ bool Player::before_kick(Position kick_position, Position target_of_kick)
                      }
 
               }
-                cout << "Test 2" << endl;
 
         }
 
@@ -395,4 +393,69 @@ bool Player::before_kick(Position kick_position, Position target_of_kick)
 
 
     return false;    
+}
+
+bool Player::old_pass(Position target){
+
+    double dirx,diry,length;
+
+    dirx= (target.GetX()-ball.GetX());
+    diry= (target.GetY()-ball.GetY());
+    length= sqrt((dirx*dirx)+(diry*diry));
+    dirx=dirx/length;
+    diry=diry/length;
+
+    Position pos(ball.GetX()+(dirx/80), ball.GetY()+(diry/80));
+
+    if (robo.GetPos().DistanceTo(pos) > 0.1) {
+        robo.turn(pos);
+        if (ball.GetPos().DistanceTo(target)>=0.7){
+            cout << "long distance: " << endl;
+            robo.GotoPos(pos,2.5);
+        }
+        if (ball.GetPos().DistanceTo(target)>=0.5 && ball.GetPos().DistanceTo(target)<0.7){
+            cout << "medium distance: " << endl;
+            robo.GotoPos(pos,2.0);
+        }
+        else{
+            cout << "short distance: " << endl;
+            robo.GotoPos(pos,1.1);
+        }
+
+
+        }
+    else //if (robo.isArrived())
+    {
+        return true; // Done
+    }
+    return false;
+
+}
+
+bool Player::old_kick(Position target){
+
+    double dirx,diry,length;
+
+    dirx= (target.GetX()-ball.GetX());
+    diry= (target.GetY()-ball.GetY());
+    length= sqrt((dirx*dirx)+(diry*diry));
+    dirx=dirx/length;
+    diry=diry/length;
+    cout << "dirx: "<< dirx << endl;
+    cout << "diry: "<< diry << endl;
+    cout << "length: "<< length << endl;
+
+    Position pos(ball.GetX()+(dirx/80), ball.GetY()+(diry/80));
+
+    if (robo.GetPos().DistanceTo(pos) > 0.1) {
+        robo.turn(pos);
+        robo.GotoPos(pos,2.8);
+        cout<<"--------"<<pos<<endl;
+        cout<<"--------"<<target<<endl;
+    }
+    else{
+        return true; // Done
+    }
+
+    return false;
 }

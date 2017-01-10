@@ -30,6 +30,8 @@ enum S_Case {
     INIT,
     BLOCK,
     COUNTER,
+    SHOOT_AT_GOAL,
+    WAIT
 };
 
 enum T_State {
@@ -75,6 +77,7 @@ private:
      */
     S_State s_state;
     S_Case s_case;
+    timer s_timer;
     void strategy_defensive();
     void strategy_offensive();
     void strategy_demo();
@@ -91,7 +94,7 @@ private:
     void exampleTactic();
 
     bool crossPassAndShoot();
-    bool tactic_nearpenaltyarea();
+    bool tactic_nearpenaltyarea(double threshold);
     bool tactic_ballchasing();
     bool kickAtGoal();
 

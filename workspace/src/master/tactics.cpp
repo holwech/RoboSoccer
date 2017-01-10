@@ -37,7 +37,7 @@ bool Master::crossPassAndShoot()
       else{
           chrossandpassy=0.5;
       }
-      send(Command(ACTION_GOTO, Position(0.7, chrossandpassy), 3 ), 1);
+      send(Command(ACTION_GOTO, Position(0.7, chrossandpassy), 1.5 ), 1);
       t_state = STEP2;
       break;
       // Pass the ball to the other robot
@@ -60,7 +60,6 @@ bool Master::crossPassAndShoot()
       //       if (!player[2].isBusy()) {
       if (ball.GetVelocity() < 0.00001 && !player[2].isBusy() && !player[1].isBusy())  //wait for the ball stop, if not stopping, the ball.GetPos() will not updating because the state changes.
       {
-        usleep(4000000);
         send(Command(ACTION_BEFORE_KICK, ball.GetPos(), Position(1.4, 0.0)), 1);
         t_state = STEP5;
       }
@@ -71,7 +70,7 @@ bool Master::crossPassAndShoot()
       cout << "5-----------" << ball.GetPos() << endl;
       if (!player[1].isBusy())
       {
-        send(Command(ACTION_KICK, Position(1.4, 0.0)), 1);
+        send(Command(ACTION_KICK, Position(1.4, 0.0), 2.5), 1);
         t_state = STEP6;
       }
       break;
@@ -99,10 +98,10 @@ Can be improved, in my opinion
 3.If the ball is on the bottom border, the robot will stuck in the wall
 4.and so on
 */
-bool Master::tactic_nearpenaltyarea()
+bool Master::tactic_nearpenaltyarea(double threshold)
 {
   // if the ball is too close to our gate/ penalty area
-  if (ball.GetX() > 0.65)
+  if (ball.GetX() > threshold)
   {
 
 
@@ -136,25 +135,20 @@ bool Master::tactic_nearpenaltyarea()
         {
           send(Command(ACTION_KICK, Position(-1.0, 0.0)), robonr);
           cout << "---------" << endl;
-          t_state = STEP6;
+          t_state = STEP3;
         }
 
         break;
       case STEP3:
-        break;
-      case STEP4:
-        break;
-      case STEP5:
-        break;
-      case STEP6:
         if (!player[robonr].isBusy())
         {
           robonr = 0;
           return true;
         }
         break;
-
-
+      default:
+        cout << "No case for this step in tactic nearpenaltyarea" << endl;
+        break;
     }
     return false;
   }

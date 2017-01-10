@@ -11,21 +11,16 @@ Player::Player(Channel* channel, RTDBConn &DBC, int deviceNr) :
                 channel(channel),
                 robo(DBC, deviceNr)
                 {
-    state = IDLE;
     ballangle = 0;
     ballx = 0;
     bally = 0;
     control = 0;
     delta = 0.09;
     side = 1;
-    //aux_pos_before_kick = Position(0.0, 0.0);
-    //pos_before_kick_far = Position(0.0, 0.0);
-    //pos_before_kick_near = Position(0.0, 0.0);
-    busy.store(false);
-    busy.store(false);
     counter = 0;
     phase = 0;
-
+    passSpeed = 0;
+    done();
 }
 
 void Player::run() {
@@ -46,7 +41,7 @@ void Player::run() {
            if (isDone){ done(); }
            break;
        case GOTO:
-           isDone = goTo(command.pos1);
+           isDone = goTo(command.pos1, command.speed);
            if (isDone){ done(); }
            break;
        case BEFORE_KICK:
@@ -55,7 +50,7 @@ void Player::run() {
            break;
        case KICK:
            //drivingKick(command.pos1);
-           isDone = kick(command.pos1);
+           isDone = kick(command.pos1, command.speed);
            if (isDone){ done(); }
            break;
        case BLOCK_BALL:
@@ -168,6 +163,8 @@ void Player::updateRobo(bool isGoalkeeper) {
 void Player::done() {
     setState(IDLE);
     setBusy(false);
+    kick_state = A_STEP1;
+    pass_state = A_STEP1;
 }
 
 /** Checks if the player is busy performing an action */
