@@ -125,24 +125,12 @@ bool Master::tactic_nearpenaltyarea(double threshold)
           robonr = 2;
         }
 
-        send(Command(ACTION_BEFORE_KICK, ball.GetPos(), Position(-1.0, 0.0)), robonr);
+        send(Command(ACTION_KICK, Position(-1.0, ball.GetPos().GetY()), 2.5), robonr);
         t_state = STEP2;
         break;
-
-        // Kick the ball towards the Position(-1.0,0.0)
       case STEP2:
         if (!player[robonr].isBusy())
         {
-          send(Command(ACTION_KICK, Position(-1.0, 0.0)), robonr);
-          cout << "---------" << endl;
-          t_state = STEP3;
-        }
-
-        break;
-      case STEP3:
-        if (!player[robonr].isBusy())
-        {
-          robonr = 0;
           return true;
         }
         break;
@@ -209,14 +197,27 @@ bool Master::kickAtGoal() {
     case STEP1:
         for (int robot = 0; robot < 3; robot++) {
             double distToBall = player[robot].getPos().DistanceTo(ball.GetPos());
-            if (distToBall > maxDistance) {
+            if (distToBall < maxDistance) {
                 maxDistance = robot;
                 closestRobo = robot;
             }
         }
+        t_state = STEP2;
         break;
     // Find the position of the goalkeeper
     case STEP2:
+        t_target = Position(-1.27, 0);
+        t_state = STEP3;
+        break;
+    case STEP3: {
+        send(Command(ACTION_KICK, t_target, 2.5), closestRobo);
+        t_state = STEP4;
+        break;
+    }
+    case STEP4:
+        if (!player[closestRobo].isBusy()) {
+            return true;
+        }
         break;
     default:
         cout << "No case in kickAtGoal" << endl;

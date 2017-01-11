@@ -102,6 +102,7 @@ private:
     T_State t_state;
     int closestRobo;
     double maxDistance;
+    Position t_target;
 
 
     // crossPassAndShoot-variables
