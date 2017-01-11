@@ -28,7 +28,7 @@ void Player::run() {
    cout << "Finish driveWithCA()" << endl;
    bool isDone = true;
    bool isGoalkeeper;
-   while(1) {
+   while(1){
        isGoalkeeper = false;
        switch(state) {
        case IDLE:
@@ -47,6 +47,7 @@ void Player::run() {
        case BEFORE_KICK:
            isDone = before_kick(command.pos1, command.pos2);
            if (isDone){ done(); }
+           //usleep(200000);
            break;
        case KICK:
            //drivingKick(command.pos1);

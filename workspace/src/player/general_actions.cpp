@@ -5,7 +5,7 @@ void Player::idle() {
 }
 
 bool Player::goTo(Position target, double speed) {
-    if (robo.GetPos().DistanceTo(target) < 0.08) {
+    if (robo.GetPos().DistanceTo(target) < 0.1) {
         cout << "State set to IDLE" << endl;
         return true; // Done
     } else {
@@ -212,14 +212,14 @@ bool Player::before_kick(Position kick_position, Position target_of_kick)
             if (kick_position.GetY() > 0)
             {
 
-                aux_pos_before_kick.SetX(kick_position.GetX() - 0.35);
+                aux_pos_before_kick.SetX(kick_position.GetX() - 0.1);
                 aux_pos_before_kick.SetY(kick_position.GetY() - 0.35);
 
             }
             else
             {
 
-                aux_pos_before_kick.SetX(kick_position.GetX() - 0.35);
+                aux_pos_before_kick.SetX(kick_position.GetX() - 0.1);
                 aux_pos_before_kick.SetY(kick_position.GetY() + 0.35);
 
             }
@@ -242,7 +242,6 @@ bool Player::before_kick(Position kick_position, Position target_of_kick)
                      {
                         robo.GotoPos(pos_before_kick_far,1.3);
                      }
-                     cout << control << endl;
                      if (robo.GetPos().DistanceTo(pos_before_kick_far) < 0.15){
                          control = 2;
                      }
@@ -317,7 +316,7 @@ bool Player::before_kick(Position kick_position, Position target_of_kick)
                  {
                     robo.GotoPos(pos_before_kick_far,1.3);
                  }
-                 cout << control << endl;
+                 //cout << control << endl;
                  if (robo.GetPos().DistanceTo(pos_before_kick_far) < 0.15){
                      control = 1;
                  }
@@ -345,7 +344,7 @@ bool Player::before_kick(Position kick_position, Position target_of_kick)
             if (kick_position.GetY() > 0)
             {
 
-                aux_pos_before_kick.SetX(kick_position.GetX() + 0.35);
+                aux_pos_before_kick.SetX(kick_position.GetX() + 0.1);
                 aux_pos_before_kick.SetY(kick_position.GetY() - 0.35);
 
 
@@ -353,7 +352,7 @@ bool Player::before_kick(Position kick_position, Position target_of_kick)
             else
             {
 
-                aux_pos_before_kick.SetX(kick_position.GetX() + 0.35);
+                aux_pos_before_kick.SetX(kick_position.GetX() + 0.1);
                 aux_pos_before_kick.SetY(kick_position.GetY() + 0.35);
 
             }
@@ -374,7 +373,7 @@ bool Player::before_kick(Position kick_position, Position target_of_kick)
                      {
                         robo.GotoPos(pos_before_kick_far,1.3);
                      }
-                     cout << control << endl;
+                     //cout << control << endl;
                      if (robo.GetPos().DistanceTo(pos_before_kick_far) < 0.15){
                          control = 2;
                      }

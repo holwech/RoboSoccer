@@ -32,7 +32,7 @@ void Player::defend()
     int i= 0;
     double ballangle = 0;
     double ballx = 0;
-    double bally= 0;
+    double bally = 0;
     double delta;
     Position POS(0,0);
     Position Mid(1.4,0);
@@ -43,10 +43,11 @@ void Player::defend()
         ballangle = ball.GetPhi().Deg()+ballangle/10;
     }
 
+
     for(i=0;i<10;i++)
     {
-        ballx = ballx + ball.GetX()/10;
-        bally = bally + ball.GetY()/10;
+        ballx += ball.GetX()/10;
+        bally += ball.GetY()/10;
     }
 
 
@@ -54,7 +55,7 @@ void Player::defend()
     double goalkeepery = 0;
 
 
-    goalkeepery = tan(ballangle*3.141593/180)*(goalkeeperx-ballx)+bally;
+    goalkeepery = tan(ballangle*M_PI/180)*(goalkeeperx-ballx)+bally;
 
 
 //    if (ball.GetPhi().Deg()>=80)
@@ -71,27 +72,26 @@ void Player::defend()
 //        else
 //            goalkeepery = -0.1;
 //    }
-    if (goalkeepery == bally)
-    {
-        if(ballx>0.7)
-        {
-            if(bally>0.3)
-                goalkeepery = 0.1;
-            else if(bally<-0.3)
-                goalkeepery = -0.1;
-            else
-                goalkeepery = 0;
-        }
-        else
-        {
-            goalkeepery = 0;
-        }
-    }
+//    if (goalkeepery == bally)
+//    {
+//        if(ballx>0.7)
+//        {
+//            if(bally>0.3)
+//                goalkeepery = 0.1;
+//            else if(bally<-0.3)
+//                goalkeepery = -0.1;
+//            else
+//                goalkeepery = 0;
+//        }
+//        else
+//        {
+//            goalkeepery = 0;
+//        }
+//    }
 
     if(goalkeepery>0.26)
         goalkeepery = 0.15;
-
-    if(goalkeepery<-0.245)
+    else if(goalkeepery<-0.245)
         goalkeepery = -0.15;
 
    // go towards the ball if the ball is somewhere near the penalty area and moving not very fast
@@ -126,8 +126,10 @@ void Player::defend()
  //   robo.CruisetoXY(goalkeeperx,goalkeepery,120);
 
     cout << "Goaly_y: " << goalkeepery << endl;
-     delta = sqrt((robo.GetX()-goalkeeperx)*(robo.GetX()-goalkeeperx)+(robo.GetY()-goalkeepery)*(robo.GetY()-goalkeepery));
-     if(delta<0.06) robo.StopAction();
+
+    //distance to move too small, dont try to move
+    delta = sqrt((robo.GetX()-goalkeeperx)*(robo.GetX()-goalkeeperx)+(robo.GetY()-goalkeepery)*(robo.GetY()-goalkeepery));
+    if(delta<0.06) robo.StopAction();
 
 /*     while(robo->GetPos().DistanceTo(ball.GetPos())<0.2)
          robo->GotoXY(ball.GetX(),ball.GetY(),160);
@@ -137,6 +139,5 @@ void Player::defend()
 
 
 void Player::goalkeeperkick(){
-
 
 }

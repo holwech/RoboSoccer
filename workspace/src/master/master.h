@@ -32,6 +32,7 @@ enum S_Case {
     COUNTER,
     SHOOT,
     SHOOT_AT_GOAL,
+    POSITION,
     INTERRUPT,
     WAIT
 };
@@ -104,6 +105,7 @@ private:
     T_State t_state;
     int closestRobo;
     double maxDistance;
+    Position t_target;
 
 
     // crossPassAndShoot-variables
