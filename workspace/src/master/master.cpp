@@ -192,7 +192,7 @@ void Master::manual() {
             send(Command(ACTION_GOTO, Position(posX, posY), speed), robot);
             break;
         case 2:
-            send(Command(ACTION_BEFORE_KICK, ball.GetPos(), Position(1.27, 0)), robot);
+            send(Command(ACTION_BEFORE_KICK, ball.GetPos(), Position(1.2, 0)), robot);
             break;
         case 3:
             cout << "Speed: ";
@@ -203,7 +203,7 @@ void Master::manual() {
             send(Command(ACTION_DEFEND), robot);
             break;
         case 5:
-            send(Command(ACTION_PASS, Position(-1.27, 0)),robot);
+            send(Command(ACTION_PASS, Position(1.2,0)),robot);
             break;            
         default:
             cout << "No action created for this choice yet in master.manual" << endl;
