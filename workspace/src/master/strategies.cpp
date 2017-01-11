@@ -10,7 +10,7 @@ void Master::strategy_offensive(){
 void Master::strategy_defensive(){
     switch(s_case) {
     case INIT:
-        // Fix this so it works for both sides
+        // Fix this so  it works for both sides
         if (ball.GetPos().GetX() > -0.2) {
             cout << "Strategy: Blocking ball" << endl;
             s_case = BLOCK;

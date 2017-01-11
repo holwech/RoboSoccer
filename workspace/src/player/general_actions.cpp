@@ -15,13 +15,18 @@ bool Player::goTo(Position target, double speed) {
 }
 
 bool Player::pass(Position target) {
+    double distance=0;
+    double speedparam=0;
     switch(pass_state) {
     case A_STEP1:
-        // Some calculation to calculate the speed
-        passSpeed = 1;
+        // Calculates Speed according to distance
+        distance = ball.GetPos().DistanceTo(target);
+        speedparam = distance/2;
+        passSpeed = speedparam*2.6;
         pass_state = A_STEP2;
         break;
     case A_STEP2: {
+        cout << "Pass" << endl;
         bool passDone = kick(target, passSpeed);
         if (passDone) {
             return true;
@@ -43,7 +48,6 @@ bool Player::kick(Position target, double speed) {
     case A_STEP1:
         beforeKickDone = before_kick(ball.GetPos(), target);
         if (beforeKickDone) {
-            robo.idle();
             kick_state = A_STEP2;
         }
         break;
@@ -209,14 +213,14 @@ bool Player::before_kick(Position kick_position, Position target_of_kick)
             if (kick_position.GetY() > 0)
             {
 
-                aux_pos_before_kick.SetX(kick_position.GetX() - 0.35);
+                aux_pos_before_kick.SetX(kick_position.GetX() - 0.1);
                 aux_pos_before_kick.SetY(kick_position.GetY() - 0.35);
 
             }
             else
             {
 
-                aux_pos_before_kick.SetX(kick_position.GetX() - 0.35);
+                aux_pos_before_kick.SetX(kick_position.GetX() - 0.1);
                 aux_pos_before_kick.SetY(kick_position.GetY() + 0.35);
 
             }
@@ -341,7 +345,7 @@ bool Player::before_kick(Position kick_position, Position target_of_kick)
             if (kick_position.GetY() > 0)
             {
 
-                aux_pos_before_kick.SetX(kick_position.GetX() + 0.35);
+                aux_pos_before_kick.SetX(kick_position.GetX() + 0.1);
                 aux_pos_before_kick.SetY(kick_position.GetY() - 0.35);
 
 
@@ -349,7 +353,7 @@ bool Player::before_kick(Position kick_position, Position target_of_kick)
             else
             {
 
-                aux_pos_before_kick.SetX(kick_position.GetX() + 0.35);
+                aux_pos_before_kick.SetX(kick_position.GetX() + 0.1);
                 aux_pos_before_kick.SetY(kick_position.GetY() + 0.35);
 
             }

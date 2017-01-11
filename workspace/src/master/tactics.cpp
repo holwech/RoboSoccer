@@ -29,7 +29,7 @@ bool Master::crossPassAndShoot()
 {
   switch (t_state)
   {
-      // Position robots accordingly
+      // Positions robot accordingly
     case STEP1:
       if(ball.GetY()>0){
           chrossandpassy=-0.5;
@@ -37,49 +37,42 @@ bool Master::crossPassAndShoot()
       else{
           chrossandpassy=0.5;
       }
-      send(Command(ACTION_GOTO, Position(0.7, chrossandpassy), 1.5 ), 1);
+      send(Command(ACTION_GOTO, Position(0.7, chrossandpassy), 1.5 ), 0);
       t_state = STEP2;
       break;
-      // Pass the ball to the other robot
-    case STEP2:
-      if (!player[1].isBusy())
-      {
-        send(Command(ACTION_BEFORE_KICK, ball.GetPos(), Position(player[1].getX()+0.3,chrossandpassy)), 2);
-        t_state = STEP3;
-      }
+      // Passes the ball to the other robot
+
       break;
-    case STEP3:
-      if (!player[2].isBusy())
+    case STEP2:
+      if (!player[1].isBusy() && !player[0].isBusy())
       {
-        send(Command(ACTION_PASS, Position(player[1].getX()+0.3,chrossandpassy)), 2);
-        t_state = STEP4;
+        send(Command(ACTION_PASS, Position(player[0].getX()+0.3,chrossandpassy)), 1);
+        t_state = STEP3;
      }
       break;
-      // Position the receiving robot according to the ball
-    case STEP4:
+      // Positions the receiving robot according to the ball
+    case STEP3:
       //       if (!player[2].isBusy()) {
-      if (ball.GetVelocity() < 0.00001 && !player[2].isBusy() && !player[1].isBusy())  //wait for the ball stop, if not stopping, the ball.GetPos() will not updating because the state changes.
+      if (ball.GetVelocity() < 0.00001 && !player[1].isBusy() && !player[0].isBusy())  //wait for the ball stop, if not stopping, the ball.GetPos() will not updating because the state changes.
       {
-        send(Command(ACTION_BEFORE_KICK, ball.GetPos(), Position(1.4, 0.0)), 1);
+        send(Command(ACTION_KICK, Position(1.4, 0.0), 2.5), 0);
         t_state = STEP5;
       }
       break;
-      // Kick the ball towards the goal
+      // Kicks the ball towards the goal
 
-    case STEP5:
-      cout << "5-----------" << ball.GetPos() << endl;
-      if (!player[1].isBusy())
-      {
-        send(Command(ACTION_KICK, Position(1.4, 0.0), 2.5), 1);
-        t_state = STEP6;
-      }
+    case STEP4:
+
       break;
       // When done kicking, terminate tactic
-    case STEP6:
-      if (!player[1].isBusy())
+    case STEP5:
+      if (!player[0].isBusy())
       {
         return true;
       }
+      break;
+    case STEP6:
+
       break;
   }
   return false;
