@@ -213,14 +213,14 @@ bool Player::before_kick(Position kick_position, Position target_of_kick)
             if (kick_position.GetY() > 0)
             {
 
-                aux_pos_before_kick.SetX(kick_position.GetX() - 0.35);
+                aux_pos_before_kick.SetX(kick_position.GetX() - 0.1);
                 aux_pos_before_kick.SetY(kick_position.GetY() - 0.35);
 
             }
             else
             {
 
-                aux_pos_before_kick.SetX(kick_position.GetX() - 0.35);
+                aux_pos_before_kick.SetX(kick_position.GetX() - 0.1);
                 aux_pos_before_kick.SetY(kick_position.GetY() + 0.35);
 
             }
@@ -346,7 +346,7 @@ bool Player::before_kick(Position kick_position, Position target_of_kick)
             if (kick_position.GetY() > 0)
             {
 
-                aux_pos_before_kick.SetX(kick_position.GetX() + 0.35);
+                aux_pos_before_kick.SetX(kick_position.GetX() + 0.1);
                 aux_pos_before_kick.SetY(kick_position.GetY() - 0.35);
 
 
@@ -354,7 +354,7 @@ bool Player::before_kick(Position kick_position, Position target_of_kick)
             else
             {
 
-                aux_pos_before_kick.SetX(kick_position.GetX() + 0.35);
+                aux_pos_before_kick.SetX(kick_position.GetX() + 0.1);
                 aux_pos_before_kick.SetY(kick_position.GetY() + 0.35);
 
             }

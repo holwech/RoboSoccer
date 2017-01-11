@@ -47,6 +47,7 @@ void Player::run() {
        case BEFORE_KICK:
            isDone = before_kick(command.pos1, command.pos2);
            if (isDone){ done(); }
+           //usleep(200000);
            break;
        case KICK:
            //drivingKick(command.pos1);
