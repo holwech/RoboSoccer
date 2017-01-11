@@ -5,7 +5,7 @@ void Player::idle() {
 }
 
 bool Player::goTo(Position target, double speed) {
-    if (robo.GetPos().DistanceTo(target) < 0.05) {
+    if (robo.GetPos().DistanceTo(target) < 0.08) {
         cout << "State set to IDLE" << endl;
         return true; // Done
     } else {
@@ -26,7 +26,6 @@ bool Player::pass(Position target) {
         pass_state = A_STEP2;
         break;
     case A_STEP2: {
-        cout << "Pass" << endl;
         bool passDone = kick(target, passSpeed);
         if (passDone) {
             return true;

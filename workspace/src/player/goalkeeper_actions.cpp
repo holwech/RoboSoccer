@@ -6,7 +6,7 @@ void Player::defend_tom(){
     double y = ball.GetY();
     Angle dir=ball.GetPhi();
 
-    if (y<-0.23 || y>0.21 || x>=1.35){
+    if (y<-0.23 || y>0.23 || x>=1.35){
         y = ball.GetY();
         dir=ball.GetPhi();
         cout << "dir:" << dir << endl;
@@ -16,13 +16,13 @@ void Player::defend_tom(){
         y = ball.GetY();
         dir = ball.GetPhi();
         if(dir > 0 ){
-            robo.CruisetoXY(1.35,ball.GetY()+0.1,170);
+            robo.GotoPos(1.35,ball.GetY()+0.1);
         }
         if(dir < 0){
-            robo.CruisetoXY(1.35,ball.GetY()-0.1,170);
+            robo.GotoPos(1.35,ball.GetY()-0.1);
         }
         else{
-            robo.CruisetoXY(1.35,ball.GetY(),170);
+            robo.GotoPos(1.35,ball.GetY());
         }
     }
 }

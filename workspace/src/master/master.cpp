@@ -123,7 +123,7 @@ void Master::strategies() {
     cout << "   2. Tactic_nearpenaltyarea"<<endl;
     cout << "   3. Tactic_ballchasing"<<endl;
     cout << "   4. Strategy_defensive"<<endl;
-    cout << "   5. Cross and Pass"<<endl;
+    cout << "   5. Strategy_offensive"<<endl;
 
     cin >> answer;
     while(1) {
@@ -145,8 +145,7 @@ void Master::strategies() {
             strategy_defensive();
             break;
         case 5:
-            tacticDone = crossPassAndShoot();
-            if (tacticDone) { answer = -1; }
+            strategy_offensive();
             break;
         default:
             cout << "No case for this state yet (in strategies function), or tactic terminated" << endl;
@@ -155,7 +154,7 @@ void Master::strategies() {
             cout << "   2. Tactic_nearpenaltyarea"<<endl;
             cout << "   3. Tactic_ballchasing"<<endl;
             cout << "   4. Strategy_defensive"<<endl;
-            cout << "   5. Cross and Pass"<<endl;
+            cout << "   5. strategy_offensive"<<endl;
             resetTVariables();
             cin >> answer;
             break;

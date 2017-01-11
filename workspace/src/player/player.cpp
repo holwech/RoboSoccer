@@ -58,8 +58,8 @@ void Player::run() {
            if (isDone){ done(); }
            break;
        case DEFEND:
-           isGoalkeeper = true;
-           defend();
+           //isGoalkeeper = true;
+           defend_tom();
            //defend();
            break;
        case KICK_OUT:

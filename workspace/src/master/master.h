@@ -30,7 +30,9 @@ enum S_Case {
     INIT,
     BLOCK,
     COUNTER,
+    SHOOT,
     SHOOT_AT_GOAL,
+    INTERRUPT,
     WAIT
 };
 
