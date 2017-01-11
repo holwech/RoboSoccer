@@ -22,7 +22,7 @@ class Robo: public RoboControl
 public:
     Robo(RTDBConn& DBC, const int deviceNr): RoboControl(DBC, deviceNr),
                                             pidAngle(ANGLE_KP_DRIVE, ANGLE_KI_DRIVE, ANGLE_KD_DRIVE),
-                                            pidDistance(80.0, 0.0, 0.0),
+                                            pidDistance(80.0, 0.0, 2.0),
                                             ca(),
                                              rfNumber(deviceNr),
                                              posTeam(2),

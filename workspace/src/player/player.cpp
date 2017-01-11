@@ -28,7 +28,7 @@ void Player::run() {
    cout << "Finish driveWithCA()" << endl;
    bool isDone = true;
    bool isGoalkeeper;
-   while(1) {
+   while(1){
        isGoalkeeper = false;
        switch(state) {
        case IDLE:
