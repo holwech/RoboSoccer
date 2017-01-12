@@ -5,6 +5,54 @@
 
 
 
+void Master::strategy_offensive(){
+    double x = ball.GetPos().DistanceTo(Position(1.38,0));
+    switch(s_case){
+        case INIT:
+            // Our Team is behind
+            if( x <= 0.7 && x >= 0.1 ){
+                s_case = SHOOT;
+            }
+            if( x > 0.7 ){
+                s_case = POSITION;
+            }
+            else {
+                s_case = INIT;
+            }
+
+        break;
+
+        case SHOOT:
+        if (!player[0].isBusy() && !player[1].isBusy() && ball.GetVelocity() < 0.01 ) {
+            send(Command(ACTION_KICK, Position(1.38, 0), 2.2), 1);
+            cout << "Kick" << endl;
+            }
+        s_case = INIT;
+        break;
+
+        case POSITION:
+        if (!player[0].isBusy() && !player[1].isBusy() && ball.GetVelocity() < 0.01 ){
+            send(Command(ACTION_GOTO, Position(0.9, 0), 1), 1);
+            cout << "Position" << endl;
+            }
+        s_case = INTERRUPT;
+        break;
+
+        case INTERRUPT:
+        if (!player[0].isBusy() && !player[1].isBusy() && ball.GetVelocity() < 0.01 ){
+            send(Command(ACTION_PASS, Position(player[1].getX(),player[1].getY())), 0);
+            cout << "PASS" << endl;
+            }
+        s_case = INIT;
+        break;
+
+        default:
+            cout << "No case for this case in strategy offensive" << endl;
+            break;
+    }
+}
+
+
 
 
 void Master::strategy_defensive(){
