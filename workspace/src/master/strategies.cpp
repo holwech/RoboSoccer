@@ -6,8 +6,8 @@
 
 void Master::strategy_offensive2()
 {
-    // default
 
+    //////////////// Problem: Command ACTION_GOTO not always makes it possible to hit the ball, particular problem if ball is next to edge -> Pleas help to fix and in general improve the strategy
 
     // If robots behind ball attack,
     if(ball.GetX() > -1.2 && ball.GetX() < 0.9 &&  ball.GetY() > 0 &&  ball.GetX()> player[1].getX()+0.05 )
@@ -49,6 +49,7 @@ void Master::strategy_offensive2()
        }
     }
 
+   // Drive robot to ball position to drive ball
    if(ball.GetX() < 1.2 && player[1].getPos().DistanceTo(ball.GetPos())+0.05<player[0].getPos().DistanceTo(ball.GetPos()) && ball.GetX()>= player[1].getX()+0.05)
     {
         send(Command(ACTION_GOTO, ball.GetPos(), 1.4), 1);
@@ -59,7 +60,7 @@ void Master::strategy_offensive2()
 
     }
 
-
+   // If ball is next to edge just drive robots towards it
   if(ball.GetX() < 1.5 && ball.GetX() > 1.1 && ball.GetY() > 0.4)
   {
       send(Command(ACTION_GOTO, ball.GetPos(), 1.4), 1);
@@ -73,6 +74,7 @@ void Master::strategy_offensive2()
 
   }
 
+  // Part of field in front of penalty area when kick is used or alternatively driving
   if(ball.GetX() < 1.2  && ball.GetX() >= 0.9 && fabs(ball.GetY()) < 0.4 && player[1].getPos().DistanceTo(ball.GetPos())<player[0].getPos().DistanceTo(ball.GetPos()) && ball.GetVelocity()< 0.00001)
   {
     send(Command(ACTION_KICK, Position(1.3, 0.0), 2.6), 0);
@@ -82,6 +84,7 @@ void Master::strategy_offensive2()
     send(Command(ACTION_GOTO, ball.GetPos(), 2), 0);
   }
 
+  // If robot is not busy, send them in front of enemy goal
   if(!player[1].isBusy())
   {
       Position pos2(1,0);
@@ -94,11 +97,58 @@ void Master::strategy_offensive2()
       send(Command(ACTION_GOTO, pos2, 2), 0);
   }
 
+  // Tell goal keeper to defend
   send(Command(ACTION_DEFEND), 2);
 }
 
 void Master::strategy_offensive()
-{}
+{
+    double x = ball.GetPos().DistanceTo(Position(1.38,0));
+    switch(s_case){
+        case INIT:
+            // Our Team is behind
+            if( x <= 0.7 && x >= 0.1 ){
+                s_case = SHOOT;
+            }
+            if( x > 0.7 ){
+                s_case = POSITION;
+            }
+            else {
+                s_case = INIT;
+            }
+
+        break;
+
+        case SHOOT:
+        if (!player[0].isBusy() && !player[1].isBusy() && ball.GetVelocity() < 0.01 ) {
+            send(Command(ACTION_KICK, Position(1.38, 0), 2.2), 1);
+            cout << "Kick" << endl;
+            }
+        s_case = INIT;
+        break;
+
+        case POSITION:
+        if (!player[0].isBusy() && !player[1].isBusy() && ball.GetVelocity() < 0.01 ){
+            send(Command(ACTION_GOTO, Position(0.9, 0), 1), 1);
+            cout << "Position" << endl;
+            }
+        s_case = INTERRUPT;
+        break;
+
+        case INTERRUPT:
+        if (!player[0].isBusy() && !player[1].isBusy() && ball.GetVelocity() < 0.01 ){
+            send(Command(ACTION_PASS, Position(player[1].getX(),player[1].getY())), 0);
+            cout << "PASS" << endl;
+            }
+        s_case = INIT;
+        break;
+
+        default:
+            cout << "No case for this case in strategy offensive" << endl;
+            break;
+    }
+}
+
 
 void Master::strategy_defensive()
 {
