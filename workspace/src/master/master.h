@@ -83,6 +83,7 @@ private:
     timer s_timer;
     void strategy_defensive();
     void strategy_offensive();
+    void strategy_offensive2();
     void strategy_demo();
 
 
