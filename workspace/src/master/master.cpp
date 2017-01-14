@@ -23,7 +23,7 @@ Master::Master(string& team, RTDBConn& DBC, vector<int>& rfNumber) :
                     Player(&channel[5], DBC, rfNumber[5])
                 }),
                 positions(6) {
-    side = RIGHT_SIDE;
+    side = 1;
     state = REFEREE_INIT;
     referee.Init();
     resetTVariables();

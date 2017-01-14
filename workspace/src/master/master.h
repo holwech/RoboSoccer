@@ -59,7 +59,7 @@ private:
     void manual();
     int client_nr;
     string team;
-    eSide side;
+    int side;
     RawBall ball;
     Referee referee;
     ePlayMode state;

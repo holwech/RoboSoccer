@@ -123,7 +123,7 @@ void Master::strategy_offensive()
         if (!player[0].isBusy() && !player[1].isBusy() && ball.GetVelocity() < 0.01 ) {
             send(Command(ACTION_KICK, Position(1.38, 0), 2.2), 1);
             cout << "Kick" << endl;
-            }
+        }
         s_case = INIT;
         break;
 
