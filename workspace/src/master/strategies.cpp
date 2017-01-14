@@ -121,7 +121,7 @@ void Master::strategy_defensive() {
         break;
     case WAIT:
         if (!player[1].isBusy() && !player[2].isBusy()) {
-            cout << "Strategy defensive: NEXT" << endl;
+            cout << "Strategy defensive: NEXT W" << endl;
             s_case = NEXT;
         }
         break;
@@ -133,23 +133,25 @@ void Master::strategy_defensive() {
         // If ball is on the other teams field, shoot at goal
         } else if ((side == LEFT && ball.GetPos().GetX() > 0.2) ||
             (side == RIGHT && ball.GetPos().GetX() < -0.2)) {
-            cout << "Strategy defensive: SHOOT_AT_GOAL" << endl;
+            cout << "Strategy defensive: SHOOT_AT_GOAL N" << endl;
             s_case = SHOOT_AT_GOAL;
         } else {
-            cout << "Strategy defensive: BLOCK" << endl;
+            cout << "Strategy defensive: BLOCK N" << endl;
             s_case = BLOCK;
         }
         break;
     case SHOOT_AT_GOAL:
       {
         bool kickAtGoalDone = kickAtGoal();
-        send(Command(ACTION_GOTO, Position(0.5 * side, ball.GetPos().GetY()), 1.5), 1);
         if (kickAtGoalDone)
         {
-          cout << "Strategy defensive: WAIT" << endl;
+          cout << "Strategy defensive: WAIT S" << endl;
           s_case = WAIT;
-        } else {
-            defensiveNextMove();
+        } else if ((side == LEFT && ball.GetPos().GetX() <= 0.2) ||
+                   (side == RIGHT && ball.GetPos().GetX() >= -0.2)) {
+            cout << "Strategy defensive: BLOCK S" << endl;
+            resetTVariables();
+            s_case = BLOCK;
         }
         break;
       }
@@ -157,11 +159,14 @@ void Master::strategy_defensive() {
       {
         bool nearPenaltyDone = tactic_nearpenaltyarea(0.2 * -side);
         if (nearPenaltyDone) {
-          cout << "Strategy defensive: WAIT T" << endl;
+          cout << "Strategy defensive: WAIT B" << endl;
           resetTVariables();
           s_case = WAIT;
-        } else {
-            defensiveNextMove();
+        } else if ((side == LEFT && ball.GetPos().GetX() > 0.2) ||
+                   (side == RIGHT && ball.GetPos().GetX() < -0.2)) {
+            cout << "Strategy defensive: SHOOT_AT_GOAL B" << endl;
+            resetTVariables();
+            s_case = SHOOT_AT_GOAL;
         }
         break;
       }
@@ -178,10 +183,12 @@ void Master::defensiveNextMove() {
     // If ball is on the other teams field, shoot at goal
     } else if ((side == LEFT && ball.GetPos().GetX() > 0.2) ||
         (side == RIGHT && ball.GetPos().GetX() < -0.2)) {
-        cout << "Strategy defensive: SHOOT_AT_GOAL" << endl;
+        cout << "Strategy defensive: SHOOT_AT_GOAL F" << endl;
+        resetTVariables();
         s_case = SHOOT_AT_GOAL;
     } else {
-        cout << "Strategy defensive: BLOCK" << endl;
+        cout << "Strategy defensive: BLOCK F" << endl;
+        resetTVariables();
         s_case = BLOCK;
     }
 }
