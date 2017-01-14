@@ -45,7 +45,8 @@ void Player::defend()
     }
     else{
         Mid = Position(-1.4,0);
-        goalkeeperx =  -1.39 ;//1.36
+        goalkeeperx =  -1.36
+                ;//1.36
     }
     for(i=0;i<10;i++)
     {
@@ -131,7 +132,7 @@ void Player::defend()
     robo.GotoPos(POS);
  //   robo.CruisetoXY(goalkeeperx,goalkeepery,120);
 
-    cout << "Goaly_y: " << goalkeepery << endl;
+    //cout << "Goaly_y: " << goalkeepery << endl;
 
     //distance to move too small, dont try to move
     delta = sqrt((robo.GetX()-goalkeeperx)*(robo.GetX()-goalkeeperx)+(robo.GetY()-goalkeepery)*(robo.GetY()-goalkeepery));

@@ -28,6 +28,7 @@ enum S_State {
 
 enum S_Case {
     INIT,
+    NEXT,
     BLOCK,
     COUNTER,
     SHOOT,
@@ -85,6 +86,7 @@ private:
     void strategy_offensive();
     void strategy_offensive2();
     void strategy_demo();
+    void defensiveNextMove();
 
 
     /** Please prefix all tactic-specific variables with some kind of identifier
