@@ -111,7 +111,7 @@ private:
 
     // crossPassAndShoot-variables
     int cps_state; // Example of a prefixed variable
-
+    void printRefereeStats();
 };
 
 #endif // MASTER_H
