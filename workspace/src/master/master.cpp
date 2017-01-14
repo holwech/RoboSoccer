@@ -173,7 +173,10 @@ void Master::strategies() {
     }
 }
 void Master::printRefereeStats(){
-    cout << endl;
+    cout << "Referee stats: " << endl;
+    cout << "\tPlaymode: " << referee.GetPlayMode() << endl;
+    cout << "\tGetSide: " << referee.GetSide() << endl;
+    cout << "\tGetBlueSide: " << referee.GetBlueSide() << endl;
 }
 
 // Use this function for single actions only. No strategies or tactics. It won't work.
@@ -223,6 +226,7 @@ void Master::manual() {
         case 6:
             while(1){
                 printRefereeStats();
+                sleep(1);
             }
             break;
 

@@ -205,7 +205,8 @@ Force CA::getTotalPull(Position basePos, Position target, vector<Position>& team
         totalForce.X += temp.X;
         totalForce.Y += temp.Y;
     }
-    Force wallPull = getWallPull(basePos, target);
+  //  Force wallPull = getWallPull(basePos, target);
+    Force wallPull = {0,0,0,0,0};
     totalForce.X += wallPull.X;
     totalForce.Y += wallPull.Y;
 
