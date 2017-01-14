@@ -79,7 +79,7 @@ void Robo::updateAnglePidWithoutCA(Position targetPos){
     pidAngle.updateInput(sinAngleErrorRad);
 }
 void Robo::updateAnglePidWithCA(Position targetPos){
-    this->angleErrorRad = getReferenceAngleErrRad(targetPos, true);
+    this->angleErrorRad = getReferenceAngleErrRad(targetPos, false);
     double sinAngleErrorRad = sin(this->angleErrorRad/2);
     pidAngle.updateInput(sinAngleErrorRad);
 }

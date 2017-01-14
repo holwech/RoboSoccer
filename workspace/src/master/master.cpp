@@ -207,12 +207,12 @@ void Master::manual() {
             send(Command(ACTION_GOTO, Position(posX, posY), speed), robot);
             break;
         case 2:
-            send(Command(ACTION_BEFORE_KICK, ball.GetPos(), Position(1.2, 0)), robot);
+            send(Command(ACTION_BEFORE_KICK, ball.GetPos(), Position(1.2, 0),1.0), robot);
             break;
         case 3:
             cout << "Speed: ";
             cin >> speed;
-            send(Command(ACTION_KICK, Position(1.27, 0), speed), robot);
+            send(Command(ACTION_KICK, Position(1.27, 0), speed, 1), robot);
             break;
         case 4:
             send(Command(ACTION_DEFEND), robot);
