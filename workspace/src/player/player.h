@@ -34,7 +34,10 @@ enum AState {
     A_STEP6
 };
 
-
+enum fieldSide{
+    LEFT = -1,
+    RIGHT = 1
+};
 
 /**
  *	Remember to have everything async. That means: no while-loops that block for a certain time, no usleep.
@@ -48,6 +51,7 @@ public:
     Player(Channel* channel, RTDBConn& DBC, const int deviceNr);
     void run();
     void update(vector<Position> pos);
+    fieldSide side;
     PState getState();
     PState getPrevState();
     Position getPos();
@@ -79,14 +83,13 @@ private:
     atomic<PState> prevState;
     atomic<PState> state;
     atomic<bool> busy;
-    int side;
     mutable std::mutex mutex;
 
     /** General Variables and Functions*/
     void idle();
     bool goTo(Position target, double speed = 1);
-    bool before_kick(Position kick_position, Position target_of_kick); //Get to position before kick -> can be used for attacker's kick and pass
-    bool kick(Position target, double speed = 2.8);
+    bool before_kick(Position kick_position, Position target_of_kick, double before_kick_speed); //Get to position before kick -> can be used for attacker's kick and pass
+    bool kick(Position target, double speed = 2.8, double approach_speed = 0.4);
     bool pass(Position target);
     void drivingKick(Position target);
     bool old_pass(Position target);
