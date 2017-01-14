@@ -175,6 +175,7 @@ void Master::strategies() {
             cin >> answer;
             break;
         }
+        usleep(100);
     }
 }
 

@@ -103,22 +103,15 @@ bool Master::tactic_nearpenaltyarea(double threshold)
     {
       case STEP1:
 
-        if (player[0].getPos().DistanceTo(ball.GetPos()) < player[1].getPos().DistanceTo(ball.GetPos()) && player[0].getPos().DistanceTo(ball.GetPos()) < player[2].getPos().DistanceTo(ball.GetPos()))
-        {
-          robonr = 0;
-        }
 
-        if (player[1].getPos().DistanceTo(ball.GetPos()) < player[0].getPos().DistanceTo(ball.GetPos()) && player[1].getPos().DistanceTo(ball.GetPos()) < player[2].getPos().DistanceTo(ball.GetPos()))
+        if (player[1].getPos().DistanceTo(ball.GetPos()) < player[2].getPos().DistanceTo(ball.GetPos()))
         {
           robonr = 1;
-        }
-
-        if (player[2].getPos().DistanceTo(ball.GetPos()) < player[0].getPos().DistanceTo(ball.GetPos()) && player[2].getPos().DistanceTo(ball.GetPos()) < player[1].getPos().DistanceTo(ball.GetPos()))
-        {
+        } else {
           robonr = 2;
         }
 
-        send(Command(ACTION_KICK, Position(-1.0, ball.GetPos().GetY()), 2.5), robonr);
+        send(Command(ACTION_KICK, Position(-1.0, ball.GetPos().GetY()), 2.5, 0.4), robonr);
         t_state = STEP2;
         break;
       case STEP2:
@@ -128,7 +121,7 @@ bool Master::tactic_nearpenaltyarea(double threshold)
         }
         break;
       default:
-        cout << "No case for this step in tactic nearpenaltyarea" << endl;
+        cout << "No case for this step in tactic nearpenaltyarea" << t_state << endl;
         break;
     }
     return false;

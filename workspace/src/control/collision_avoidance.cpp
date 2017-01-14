@@ -214,5 +214,6 @@ Force CA::getTotalPull(Position basePos, Position target, vector<Position>& team
     Angle angle = basePos.AngleOfLineToPos(Position(basePos.GetX() + totalForce.X, basePos.GetY() + totalForce.Y));
     totalForce.deg = angle.Deg();
     totalForce.rad = angle.Get();
+    cout << "THIS SHOULD NOT PRINT, IF IT DOES COLLISOIN AVOIDANCE IS ON" << endl;
     return totalForce;
 }
