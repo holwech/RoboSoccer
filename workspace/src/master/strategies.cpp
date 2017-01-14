@@ -9,7 +9,7 @@ void Master::strategy_offensive2()
 
     //////////////// 2 robots always push the ball towards the enemy goal, last one in goal
 
-    // If robots behind ball attack,
+    // If robots behind ball, attack
     if(ball.GetX() > -1.3 && ball.GetX() < 0.9 &&  ball.GetY() > 0 &&  ball.GetX()> player[1].getX())
     {
         send(Command(ACTION_KICK, Position(1.3, 0.0), 2.6, 0.8), 1);
@@ -21,7 +21,7 @@ void Master::strategy_offensive2()
 
     }
 
-   // If robots not behind ball, attack otherwise get behind ball
+   // If robots not behind ball, get behind ball
    if(ball.GetX() > -1.3 && ball.GetX() < 0.9  &&  ball.GetX()<= player[1].getX() && ball.GetY() > 0)
    {
        send(Command(ACTION_BEFORE_KICK, ball.GetPos(), Position(1.38,0.0), 2.0), 1);
@@ -47,7 +47,7 @@ void Master::strategy_offensive2()
 
   }
 
-  // Part of field in front of penalty area when kick is used or alternatively driving
+  // Part of field in front of penalty area: kick towards goal
   if(ball.GetX() < 1.2  && ball.GetX() >= 0.9 && fabs(ball.GetY()) < 0.4 && player[1].getPos().DistanceTo(ball.GetPos())<player[0].getPos().DistanceTo(ball.GetPos()))
   {
     send(Command(ACTION_KICK, Position(1.38, 0.0), 2.6, 0.6), 1);
