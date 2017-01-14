@@ -172,6 +172,9 @@ void Master::strategies() {
         }
     }
 }
+void Master::printRefereeStats(){
+    cout << endl;
+}
 
 // Use this function for single actions only. No strategies or tactics. It won't work.
 void Master::manual() {
@@ -186,6 +189,8 @@ void Master::manual() {
         cout << "	3. KICK" << endl;
         cout << "	4. DEFEND" << endl;
         cout << "	5. PASS" << endl;
+        cout << "	6. REFEREE" << endl;
+
         cin >> answer;
         cout << "Which robot? (0-2)" << endl;
         cin >> robot;
@@ -214,7 +219,13 @@ void Master::manual() {
             break;
         case 5:
             send(Command(ACTION_PASS, Position(1.2,0)),robot);
-            break;            
+            break;
+        case 6:
+            while(1){
+                printRefereeStats();
+            }
+            break;
+
         default:
             cout << "No action created for this choice yet in master.manual" << endl;
             break;
@@ -222,6 +233,9 @@ void Master::manual() {
 
     }
 }
+
+
+
 
 void Master::resetTVariables() {
     s_state = BALANCED;
