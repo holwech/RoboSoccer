@@ -132,7 +132,6 @@ void Player::defend()
         robo.GotoPos(POS, 0.7);
     }
 
-    //cout << "Goaly_y: " << goalkeepery << endl;
 
     //distance to move too small, dont try to move
     //delta = sqrt((robo.GetX()-goalkeeperx)*(robo.GetX()-goalkeeperx)+(robo.GetY()-goalkeepery)*(robo.GetY()-goalkeepery));
