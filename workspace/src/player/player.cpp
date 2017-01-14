@@ -45,13 +45,13 @@ void Player::run() {
            if (isDone){ done(); }
            break;
        case BEFORE_KICK:
-           isDone = before_kick(command.pos1, command.pos2);
+           isDone = before_kick(command.pos1, command.pos2, command.speed);
            if (isDone){ done(); }
            //usleep(200000);
            break;
        case KICK:
            //drivingKick(command.pos1);
-           isDone = kick(command.pos1, command.speed);
+           isDone = kick(command.pos1, command.speed, command.approach_speed);
            if (isDone){ done(); }
            break;
        case BLOCK_BALL:

@@ -88,8 +88,8 @@ private:
     /** General Variables and Functions*/
     void idle();
     bool goTo(Position target, double speed = 1);
-    bool before_kick(Position kick_position, Position target_of_kick); //Get to position before kick -> can be used for attacker's kick and pass
-    bool kick(Position target, double speed = 2.8);
+    bool before_kick(Position kick_position, Position target_of_kick, double before_kick_speed); //Get to position before kick -> can be used for attacker's kick and pass
+    bool kick(Position target, double speed = 2.8, double approach_speed = 0.4);
     bool pass(Position target);
     void drivingKick(Position target);
     bool old_pass(Position target);

@@ -55,7 +55,7 @@ bool Master::crossPassAndShoot()
       //       if (!player[2].isBusy()) {
       if (ball.GetVelocity() < 0.00001 && !player[1].isBusy() && !player[0].isBusy())  //wait for the ball stop, if not stopping, the ball.GetPos() will not updating because the state changes.
       {
-        send(Command(ACTION_KICK, Position(1.4, 0.0), 2.6), 0);
+        send(Command(ACTION_KICK, Position(1.4, 0.0), 2.6, 0.4), 0);
         t_state = STEP5;
       }
       break;
@@ -188,7 +188,7 @@ bool Master::kickAtGoal() {
     switch(t_state) {
     // Find closest robo to ball
     case STEP1:
-        for (int robot = 0; robot < 3; robot++) {
+        for (int robot = 1; robot < 3; robot++) {
             double distToBall = player[robot].getPos().DistanceTo(ball.GetPos());
             if (distToBall < maxDistance) {
                 maxDistance = robot;
@@ -203,7 +203,7 @@ bool Master::kickAtGoal() {
         t_state = STEP3;
         break;
     case STEP3: {
-        send(Command(ACTION_KICK, t_target, 2.5), closestRobo);
+        send(Command(ACTION_KICK, t_target, 2.5, 0.4), closestRobo);
         t_state = STEP4;
         break;
     }

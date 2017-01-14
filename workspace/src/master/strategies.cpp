@@ -7,56 +7,29 @@
 void Master::strategy_offensive2()
 {
 
-    //////////////// Problem: Command ACTION_GOTO not always makes it possible to hit the ball, particular problem if ball is next to edge -> Pleas help to fix and in general improve the strategy
+    //////////////// 2 robots always push the ball towards the enemy goal
 
     // If robots behind ball attack,
-    if(ball.GetX() > -1.2 && ball.GetX() < 0.9 &&  ball.GetY() > 0 &&  ball.GetX()> player[1].getX()+0.05 )
+    if(ball.GetX() > -1.25 && ball.GetX() < 0.9 &&  ball.GetY() > 0 &&  ball.GetX()> player[1].getX())
     {
-        send(Command(ACTION_GOTO, ball.GetPos(), 1.4), 1);
+        send(Command(ACTION_KICK, Position(1.3, 0.0), 2.6, 1), 1);
 
-    }
-
-    if(ball.GetX() > -1.2 && ball.GetX() < 0.9 && ball.GetY() < 0 && ball.GetX()> player[0].getX()+0.05)
+    }else if(ball.GetX() > -1.2 && ball.GetX() < 0.9 && ball.GetY() < 0 && ball.GetX()> player[0].getX())
     {
-        send(Command(ACTION_GOTO, ball.GetPos(), 1.4), 0);
+
+        send(Command(ACTION_KICK, Position(1.3, 0.0), 2.6, 1), 0);
 
     }
 
    // If robots not behind ball, attack otherwise get behind ball
-   if(ball.GetX() > -1.2 && ball.GetX() < 0.9  &&  ball.GetX()+0.15 < player[1].getX() && player[1].getPos().DistanceTo(ball.GetPos())+0.05<player[0].getPos().DistanceTo(ball.GetPos()))
+   if(ball.GetX() > -1.2 && ball.GetX() < 0.9  &&  ball.GetX()<= player[1].getX() && player[1].getPos().DistanceTo(ball.GetPos())+0.05<player[0].getPos().DistanceTo(ball.GetPos()))
+   {
+       send(Command(ACTION_BEFORE_KICK, ball.GetPos(), Position(1.38,0.0), 2.0), 1);
+
+    } else if(ball.GetX() > -1.2 && ball.GetX() < 0.9  &&  ball.GetX() <= player[0].getX() && player[0].getPos().DistanceTo(ball.GetPos())+0.05<player[1].getPos().DistanceTo(ball.GetPos()) )
    {
 
-       if(ball.GetY()>0)
-       {
-           Position pos(ball.GetX()-0.3,ball.GetY() - 0.3);
-           send(Command(ACTION_GOTO, pos, 1.4), 1);
-       }else{
-           Position pos(ball.GetX()-0.3,ball.GetY() + 0.3);
-           send(Command(ACTION_GOTO, pos, 1.4), 1);
-       }
-
-
-    } else if(ball.GetX() > -1.2 && ball.GetX() < 0.9  &&  ball.GetX()+0.15 < player[0].getX() && player[0].getPos().DistanceTo(ball.GetPos())+0.05<player[1].getPos().DistanceTo(ball.GetPos()) )
-   {
-
-       if(ball.GetY()>0)
-       {
-           Position pos(ball.GetX()-0.3,ball.GetY() - 0.3);
-           send(Command(ACTION_GOTO, pos, 1.4), 0);
-       }else{
-           Position pos(ball.GetX()-0.3,ball.GetY() + 0.3);
-           send(Command(ACTION_GOTO, pos, 1.4), 0);
-       }
-    }
-
-   // Drive robot to ball position to drive ball
-   if(ball.GetX() < 1.2 && player[1].getPos().DistanceTo(ball.GetPos())+0.05<player[0].getPos().DistanceTo(ball.GetPos()) && ball.GetX()>= player[1].getX()+0.05)
-    {
-        send(Command(ACTION_GOTO, ball.GetPos(), 1.4), 1);
-
-    }else if(ball.GetX() < 1.2 && player[0].getPos().DistanceTo(ball.GetPos())+0.05<player[1].getPos().DistanceTo(ball.GetPos()) && ball.GetX()>= player[0].getX()+0.05)
-    {
-        send(Command(ACTION_GOTO, ball.GetPos(), 1.4), 0);
+      send(Command(ACTION_BEFORE_KICK, ball.GetPos(), Position(1.38,0.0), 2.0), 1);
 
     }
 
@@ -77,24 +50,11 @@ void Master::strategy_offensive2()
   // Part of field in front of penalty area when kick is used or alternatively driving
   if(ball.GetX() < 1.2  && ball.GetX() >= 0.9 && fabs(ball.GetY()) < 0.4 && player[1].getPos().DistanceTo(ball.GetPos())<player[0].getPos().DistanceTo(ball.GetPos()) && ball.GetVelocity()< 0.00001)
   {
-    send(Command(ACTION_KICK, Position(1.3, 0.0), 2.6), 0);
+    send(Command(ACTION_KICK, Position(1.38, 0.0), 2.6, 0.6), 1);
 
   } else if(ball.GetX() < 1.2  && ball.GetX() >= 0.9 && fabs(ball.GetY()) < 0.4)
   {
     send(Command(ACTION_GOTO, ball.GetPos(), 2), 0);
-  }
-
-  // If robot is not busy, send them in front of enemy goal
-  if(!player[1].isBusy())
-  {
-      Position pos2(1,0);
-      send(Command(ACTION_GOTO, pos2, 2), 1);
-  }
-
-  if(!player[0].isBusy())
-  {
-      Position pos2(1,0);
-      send(Command(ACTION_GOTO, pos2, 2), 0);
   }
 
   // Tell goal keeper to defend
@@ -123,7 +83,7 @@ void Master::strategy_offensive()
         if (!player[0].isBusy() && !player[1].isBusy() && ball.GetVelocity() < 0.01 ) {
             send(Command(ACTION_KICK, Position(1.38, 0), 2.2), 1);
             cout << "Kick" << endl;
-            }
+        }
         s_case = INIT;
         break;
 
