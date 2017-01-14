@@ -45,7 +45,7 @@ void Player::defend()
     }
     else{
         Mid = Position(-1.4,0);
-        goalkeeperx =  -1.39 ;//1.36
+        goalkeeperx =  -1.36 ;//1.36
     }
     for(i=0;i<10;i++)
     {
