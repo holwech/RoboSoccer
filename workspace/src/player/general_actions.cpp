@@ -190,7 +190,7 @@ bool Player::before_kick(Position kick_position, Position target_of_kick, double
       pos_before_kick_near.SetY(kick_position.GetY() + 0.3 * delta * fabs(target_of_kick.GetY() - kick_position.GetY()) / fabs(target_of_kick.GetX() - kick_position.GetX()));
     }
 
-    if(fabs(pos_before_kick_near.GetX()) > 1.3 || fabs(pos_before_kick_near.GetY()) > 0.79 || fabs(pos_before_kick_far.GetX()) > 1.3 || fabs(pos_before_kick_far.GetY()) > 0.79) /////// Deal with exceptions: outside of field
+    if(fabs(pos_before_kick_near.GetX()) > 1.2 || fabs(pos_before_kick_near.GetY()) > 0.70 || fabs(pos_before_kick_far.GetX()) > 1.2 || fabs(pos_before_kick_far.GetY()) > 0.70) /////// Deal with exceptions: outside of field
     {
 
         if (robo.GetPos().DistanceTo(ball.GetPos()) > 0.05)
@@ -325,7 +325,7 @@ bool Player::before_kick(Position kick_position, Position target_of_kick, double
     }
 
 
-    if(fabs(pos_before_kick_near.GetX()) > 1.3 || fabs(pos_before_kick_near.GetY()) > 0.79 || fabs(pos_before_kick_far.GetX()) > 1.3 || fabs(pos_before_kick_far.GetY()) > 0.79) /////// Deal with exceptions: outside of field
+    if(fabs(pos_before_kick_near.GetX()) > 1.2 || fabs(pos_before_kick_near.GetY()) > 0.70 || fabs(pos_before_kick_far.GetX()) > 1.2 || fabs(pos_before_kick_far.GetY()) > 0.70) /////// Deal with exceptions: outside of field
     {
 
         if (robo.GetPos().DistanceTo(ball.GetPos()) > 0.05)
