@@ -250,7 +250,6 @@ void Master::printRefereeStats(){
 }
 
 void Master::updateSide(){
-    cout << "UPDATING SIDE" << endl;
     if (team == "b"){
         if (referee.GetBlueSide() == 0){
             side = LEFT;
