@@ -1,7 +1,7 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include "raw_ball.h"
+#include "ball/ball.h"
 #include "position.h"
 #include "robo/robo.h"
 #include "atomic"
@@ -76,7 +76,7 @@ private:
     RTDBConn& DBC;
     int deviceNr;
     vector<Position> positions;
-    RawBall ball;
+    Ball ball;
     Channel* channel;
     Command command;
     Robo robo;
