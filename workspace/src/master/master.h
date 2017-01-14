@@ -46,7 +46,6 @@ enum T_State {
     STEP6
 };
 
-
 class Master {
 public:
     friend class Test;
@@ -59,10 +58,11 @@ private:
     void manual();
     int client_nr;
     string team;
-    eSide side;
     RawBall ball;
     Referee referee;
     ePlayMode state;
+    fieldSide side;
+    void updateSide();
     void updatePositions();
     void send(Command command, int roboNum);
     vector<Channel> channel;

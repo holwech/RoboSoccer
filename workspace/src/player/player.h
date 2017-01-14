@@ -34,7 +34,10 @@ enum AState {
     A_STEP6
 };
 
-
+enum fieldSide{
+    LEFT = -1,
+    RIGHT = 1
+};
 
 /**
  *	Remember to have everything async. That means: no while-loops that block for a certain time, no usleep.
@@ -48,6 +51,7 @@ public:
     Player(Channel* channel, RTDBConn& DBC, const int deviceNr);
     void run();
     void update(vector<Position> pos);
+    fieldSide side;
     PState getState();
     PState getPrevState();
     Position getPos();
@@ -79,7 +83,6 @@ private:
     atomic<PState> prevState;
     atomic<PState> state;
     atomic<bool> busy;
-    int side;
     mutable std::mutex mutex;
 
     /** General Variables and Functions*/

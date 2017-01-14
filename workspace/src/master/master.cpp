@@ -23,11 +23,9 @@ Master::Master(string& team, RTDBConn& DBC, vector<int>& rfNumber) :
                     Player(&channel[5], DBC, rfNumber[5])
                 }),
                 positions(6) {
-    side = RIGHT_SIDE;
     state = REFEREE_INIT;
     referee.Init();
     resetTVariables();
-
 }
 
 
@@ -48,6 +46,7 @@ void Master::run() {
 
     cout << "Starting state machine..." << endl;
     while(1) {
+        updateSide();
         updatePositions();
         state = referee.GetPlayMode();
         switch(state) {
@@ -129,6 +128,7 @@ void Master::strategies() {
 
     cin >> answer;
     while(1) {
+        updateSide();
         updatePositions();
         switch(answer) {
         case 1:
@@ -172,12 +172,6 @@ void Master::strategies() {
         }
     }
 }
-void Master::printRefereeStats(){
-    cout << "Referee stats: " << endl;
-    cout << "\tPlaymode: " << referee.GetPlayMode() << endl;
-    cout << "\tGetSide: " << referee.GetSide() << endl;
-    cout << "\tGetBlueSide: " << referee.GetBlueSide() << endl;
-}
 
 // Use this function for single actions only. No strategies or tactics. It won't work.
 void Master::manual() {
@@ -185,6 +179,7 @@ void Master::manual() {
     int robot;
     double posX, posY, speed;
     while(1) {
+        updateSide();
         cout << "Choose an action" << endl;
         cout << "	0. EXIT" << endl;
         cout << "	1. ACTION_GOTO" << endl;
@@ -192,7 +187,7 @@ void Master::manual() {
         cout << "	3. KICK" << endl;
         cout << "	4. DEFEND" << endl;
         cout << "	5. PASS" << endl;
-        cout << "	6. REFEREE" << endl;
+        cout << "	6. LISTEN TO REFEREE" << endl;
 
         cin >> answer;
         cout << "Which robot? (0-2)" << endl;
@@ -225,6 +220,7 @@ void Master::manual() {
             break;
         case 6:
             while(1){
+                updateSide();
                 printRefereeStats();
                 sleep(1);
             }
@@ -239,7 +235,36 @@ void Master::manual() {
 }
 
 
+void Master::printRefereeStats(){
+    cout << "Referee stats: " << endl;
+    cout << "\tPlaymode: " << referee.GetPlayMode() << endl;
+    cout << "\tGetSide: " << referee.GetSide() << endl;
+    cout << "\tGetBlueSide: " << referee.GetBlueSide() << endl;
+    cout << "\tCalculated side: " << side << endl;
+}
 
+void Master::updateSide(){
+    cout << "UPDATING SIDE" << endl;
+    if (team == "b"){
+        if (referee.GetBlueSide() == 0){
+            side = LEFT;
+        }
+        else{
+            side = RIGHT;
+        }
+    }
+    else{
+        if (referee.GetBlueSide() == 0){
+            side = RIGHT;
+        }
+        else{
+            side = LEFT;
+        }
+    }
+    for(int i = 0; i < (int)player.size(); i++){
+        player[i].side = side;
+    }
+}
 
 void Master::resetTVariables() {
     s_state = BALANCED;

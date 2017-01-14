@@ -35,9 +35,18 @@ void Player::defend()
     double bally = 0;
     double delta;
     Position POS(0,0);
-    Position Mid(1.4,0);
+    double goalkeepery = 0;
+    Position Mid;
+    double goalkeeperx;
 
-
+    if(side == RIGHT){
+        Mid = Position(1.4,0);
+        goalkeeperx =  1.39 ;//1.36
+    }
+    else{
+        Mid = Position(-1.4,0);
+        goalkeeperx =  -1.39 ;//1.36
+    }
     for(i=0;i<10;i++)
     {
         ballangle = ball.GetPhi().Deg()+ballangle/10;
@@ -50,9 +59,6 @@ void Player::defend()
         bally += ball.GetY()/10;
     }
 
-
-    double goalkeeperx =  1.39 ;//1.36
-    double goalkeepery = 0;
 
 
     goalkeepery = tan(ballangle*M_PI/180)*(goalkeeperx-ballx)+bally;

@@ -16,7 +16,7 @@ Player::Player(Channel* channel, RTDBConn &DBC, int deviceNr) :
     bally = 0;
     control = 0;
     delta = 0.09;
-    side = 1;
+
     counter = 0;
     phase = 0;
     passSpeed = 0;
@@ -59,9 +59,9 @@ void Player::run() {
            if (isDone){ done(); }
            break;
        case DEFEND:
-           //isGoalkeeper = true;
-           defend_tom();
-           //defend();
+           isGoalkeeper = true;
+           //defend_tom();
+           defend();
            break;
        case KICK_OUT:
            break;
@@ -130,6 +130,7 @@ void Player::readCommand() {
 void Player::update(vector<Position> pos) {
     std::lock_guard<std::mutex> lock(mutex);
     positions = pos;
+
 }
 
 /** Because of risk of race conditions, this function is preferred over
