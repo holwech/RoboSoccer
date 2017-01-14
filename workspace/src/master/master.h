@@ -6,7 +6,7 @@
 #include <vector>
 #include "kogmo_rtdb.hxx"
 #include "referee.h"
-#include "raw_ball.h"
+#include "ball/ball.h"
 #include "player/player.h"
 #include "timer.h"
 #include "config.cpp"
@@ -59,7 +59,7 @@ private:
     void manual();
     int client_nr;
     string team;
-    RawBall ball;
+    Ball ball;
     Referee referee;
     ePlayMode state;
     fieldSide side;
