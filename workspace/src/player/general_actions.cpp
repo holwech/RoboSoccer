@@ -155,20 +155,24 @@ bool Player::before_kick(Position kick_position, Position target_of_kick, double
   Position pos_before_kick_far(0.0, 0.0);
   Position pos_before_kick_near(0.0, 0.0);
   Position aux_pos_before_kick(0.0, 0.0);
-  // speed to approach is 0.4
+  // Default before_kick_speed is 0.4
 
+  // This function takes into consideration all cases: robot between target and ball, robot has to change the side relative to the ball to shoot, etc.
+  // This explains the complex structure of the code.
+  // The slope of the line between kick_position and target_of_kick is calculated and is used to determine where to position behind the ball before kick
+
+
+  // 1. Adjust delta according to angle
 
   if (fabs(target_of_kick.AngleOfLineToPos(kick_position).Deg()) < 120 && fabs(target_of_kick.AngleOfLineToPos(kick_position).Deg()) > 60)
   {
-
-
-    delta = 0.0002 * (fabs(target_of_kick.AngleOfLineToPos(kick_position).Deg()) - 90) * (fabs(target_of_kick.AngleOfLineToPos(kick_position).Deg()) - 90) + pow(10, -100000000);
-
+    delta = 0.00015 * (fabs(target_of_kick.AngleOfLineToPos(kick_position).Deg()) - 90) * (fabs(target_of_kick.AngleOfLineToPos(kick_position).Deg()) - 90) + pow(10, -100000000);
   }
 
 
-  if (target_of_kick.GetX() > kick_position.GetX())
+  if (target_of_kick.GetX() > kick_position.GetX()) //1st major part: If target_of_kick.GetX() > kick_position.GetX()
   {
+
     ////// Create the position for the robot to go to behind the ball: near and far
     pos_before_kick_far.SetX(kick_position.GetX() - delta);
     if (target_of_kick.GetY() > kick_position.GetY())
@@ -190,13 +194,15 @@ bool Player::before_kick(Position kick_position, Position target_of_kick, double
       pos_before_kick_near.SetY(kick_position.GetY() + 0.3 * delta * fabs(target_of_kick.GetY() - kick_position.GetY()) / fabs(target_of_kick.GetX() - kick_position.GetX()));
     }
 
-    if(fabs(pos_before_kick_near.GetX()) > 1.2 || fabs(pos_before_kick_near.GetY()) > 0.70 || fabs(pos_before_kick_far.GetX()) > 1.2 || fabs(pos_before_kick_far.GetY()) > 0.70) /////// Deal with exceptions: outside of field
-    {
+    if(fabs(pos_before_kick_near.GetX()) > 1.2 || fabs(pos_before_kick_near.GetY()) > 0.70 || fabs(pos_before_kick_far.GetX()) > 1.2 || fabs(pos_before_kick_far.GetY()) > 0.70)
+    { /////// Deal with exceptions: shooting position outside of field -> Just drive towards ball
 
         if (robo.GetPos().DistanceTo(ball.GetPos()) > 0.05)
         {
           robo.GotoPos(ball.GetPos(), 2.2);
-
+          cout << "Testfall" << endl;
+          cout << ball.GetX() << endl;
+          cout << ball.GetY() << endl;
         }
 
         if (robo.GetPos().DistanceTo(ball.GetPos()) <= 0.05)
@@ -207,9 +213,9 @@ bool Player::before_kick(Position kick_position, Position target_of_kick, double
           //done();
         }
 
-    }else{
+    }else{ //// Case: Position is inside the field
 
-    if (kick_position.GetX() > robo.GetX())
+    if (kick_position.GetX() > robo.GetX()) // Easy case: robot is already behind ball
     {
 
       if (robo.GetPos().DistanceTo(pos_before_kick_near) > 0.04)
@@ -218,18 +224,18 @@ bool Player::before_kick(Position kick_position, Position target_of_kick, double
         {
           robo.GotoPos(pos_before_kick_far, 1.3);
         }
-        if (robo.GetPos().DistanceTo(pos_before_kick_far) < 0.15)
+        if (robo.GetPos().DistanceTo(pos_before_kick_far) < 0.15) // Drive to position far away from ball
         {
           control = 1;
         }
 
-        if (robo.GetPos().DistanceTo(pos_before_kick_near.GetPos()) > 0.05 && control == 1)
+        if (robo.GetPos().DistanceTo(pos_before_kick_near.GetPos()) > 0.05 && control == 1) // Drive to position near ball
         {
           robo.GotoPos(pos_before_kick_near, before_kick_speed);
 
         }
 
-        if (robo.GetPos().DistanceTo(pos_before_kick_near.GetPos()) <= 0.05)
+        if (robo.GetPos().DistanceTo(pos_before_kick_near.GetPos()) <= 0.05) // Condition to end function
         {
           counter = 0;
           control = 0;
@@ -240,26 +246,26 @@ bool Player::before_kick(Position kick_position, Position target_of_kick, double
       }
 
     }
-    else
+    else // Robot has to get behind ball
     {
 
-      if (kick_position.GetY() > 0)
+      if (kick_position.GetY() > 0) // Create auxiliary point on trajectory to get behind ball without touching it
       {
 
-        aux_pos_before_kick.SetX(kick_position.GetX() - 0.1);
+        aux_pos_before_kick.SetX(kick_position.GetX() - 0.2);
         aux_pos_before_kick.SetY(kick_position.GetY() - 0.35);
 
       }
       else
       {
 
-        aux_pos_before_kick.SetX(kick_position.GetX() - 0.1);
+        aux_pos_before_kick.SetX(kick_position.GetX() - 0.2);
         aux_pos_before_kick.SetY(kick_position.GetY() + 0.35);
 
       }
 
 
-      if (robo.GetPos().DistanceTo(aux_pos_before_kick.GetPos()) > 0.1)
+      if (robo.GetPos().DistanceTo(aux_pos_before_kick.GetPos()) > 0.1) //Start approchaing the ball as seen above if already behind
       {
 
         robo.GotoPos(aux_pos_before_kick, 1.5);
@@ -284,7 +290,7 @@ bool Player::before_kick(Position kick_position, Position target_of_kick, double
         if (robo.GetPos().DistanceTo(pos_before_kick_near.GetPos()) > 0.05 && control == 2)
         {
           robo.GotoPos(pos_before_kick_near, before_kick_speed);
-          if (robo.GetPos().DistanceTo(pos_before_kick_near.GetPos()) <= 0.05)
+          if (robo.GetPos().DistanceTo(pos_before_kick_near.GetPos()) <= 0.05) // Condition to end function
           {
             counter = 0;
             control = 0;
@@ -300,7 +306,7 @@ bool Player::before_kick(Position kick_position, Position target_of_kick, double
    }
 
   }
-  else
+  else //2nd major part. It is nearly mirrored version of the 1st major part. If target_of_kick.GetX() < kick_position.GetX()
   {
 
     ///// Create the position for the robot to go to behind the ball: near and far
@@ -325,16 +331,18 @@ bool Player::before_kick(Position kick_position, Position target_of_kick, double
     }
 
 
-    if(fabs(pos_before_kick_near.GetX()) > 1.2 || fabs(pos_before_kick_near.GetY()) > 0.70 || fabs(pos_before_kick_far.GetX()) > 1.2 || fabs(pos_before_kick_far.GetY()) > 0.70) /////// Deal with exceptions: outside of field
-    {
+    if(fabs(pos_before_kick_near.GetX()) > 1.2 || fabs(pos_before_kick_near.GetY()) > 0.70 || fabs(pos_before_kick_far.GetX()) > 1.2 || fabs(pos_before_kick_far.GetY()) > 0.70)
+    {/////// Deal with exceptions: shooting position outside of field
 
         if (robo.GetPos().DistanceTo(ball.GetPos()) > 0.05)
         {
-          robo.GotoPos(ball.GetPos(), 2.2);
-
+            robo.GotoPos(ball.GetPos(), 2.2);
+            cout << "Testfall" << endl;
+            cout << ball.GetX() << endl;
+            cout << ball.GetY() << endl;
         }
 
-        if (robo.GetPos().DistanceTo(ball.GetPos()) <= 0.05)
+        if (robo.GetPos().DistanceTo(ball.GetPos()) <= 0.05) // Condition to end function
         {
           counter = 0;
           control = 0;
@@ -344,21 +352,19 @@ bool Player::before_kick(Position kick_position, Position target_of_kick, double
 
     }else{
 
-
-
-    if (robo.GetX() > kick_position.GetX())
+    if (robo.GetX() > kick_position.GetX())// Easy case: robot is already behind ball
     {
 
 
 
-      if (robo.GetPos().DistanceTo(pos_before_kick_near) > 0.04)
+      if (robo.GetPos().DistanceTo(pos_before_kick_near) > 0.04) // Drive to position far away from ball
       {
         if (control == 0)
         {
           robo.GotoPos(pos_before_kick_far, 1.3);
         }
-        //cout << control << endl;
-        if (robo.GetPos().DistanceTo(pos_before_kick_far) < 0.15)
+
+        if (robo.GetPos().DistanceTo(pos_before_kick_far) < 0.15) // Drive to position near ball
         {
           control = 1;
         }
@@ -369,7 +375,7 @@ bool Player::before_kick(Position kick_position, Position target_of_kick, double
 
         }
 
-        if (robo.GetPos().DistanceTo(pos_before_kick_near.GetPos()) <= 0.05)
+        if (robo.GetPos().DistanceTo(pos_before_kick_near.GetPos()) <= 0.05) // Condition to end function
         {
           counter = 0;
           control = 0;
@@ -380,14 +386,14 @@ bool Player::before_kick(Position kick_position, Position target_of_kick, double
       }
 
     }
-    else
+    else // Robot has to get behind ball
     {
 
 
-      if (kick_position.GetY() > 0)
+      if (kick_position.GetY() > 0) // Create auxiliary point on trajectory to get behind ball without touching it
       {
 
-        aux_pos_before_kick.SetX(kick_position.GetX() + 0.1);
+        aux_pos_before_kick.SetX(kick_position.GetX() + 0.2);
         aux_pos_before_kick.SetY(kick_position.GetY() - 0.35);
 
 
@@ -395,12 +401,12 @@ bool Player::before_kick(Position kick_position, Position target_of_kick, double
       else
       {
 
-        aux_pos_before_kick.SetX(kick_position.GetX() + 0.1);
+        aux_pos_before_kick.SetX(kick_position.GetX() + 0.2);
         aux_pos_before_kick.SetY(kick_position.GetY() + 0.35);
 
       }
 
-      if (robo.GetPos().DistanceTo(aux_pos_before_kick.GetPos()) > 0.1)
+      if (robo.GetPos().DistanceTo(aux_pos_before_kick.GetPos()) > 0.1) //Start approchaing the ball as seen above if already behind
       {
         robo.GotoPos(aux_pos_before_kick, 1.5);
         if (robo.GetPos().DistanceTo(aux_pos_before_kick.GetPos()) < 0.12)
@@ -425,7 +431,7 @@ bool Player::before_kick(Position kick_position, Position target_of_kick, double
         if (robo.GetPos().DistanceTo(pos_before_kick_near.GetPos()) > 0.05 && control == 2)
         {
           robo.GotoPos(pos_before_kick_near, before_kick_speed);
-          if (robo.GetPos().DistanceTo(pos_before_kick_near.GetPos()) <= 0.05)
+          if (robo.GetPos().DistanceTo(pos_before_kick_near.GetPos()) <= 0.05) // Condition to end function
           {
             counter = 0;
             control = 0;
@@ -442,262 +448,6 @@ bool Player::before_kick(Position kick_position, Position target_of_kick, double
   return false;
 }
 
-
-//////////////////////////////////////////////////////
-
-/*
-bool Player::before_kick_old(Position kick_position, Position target_of_kick, double before_kick_speed)
-{
-  delta = 0.2; // Before 0.2
-  Position pos_before_kick_far(0.0, 0.0);
-  Position pos_before_kick_near(0.0, 0.0);
-  Position aux_pos_before_kick(0.0, 0.0);
-  // speed to approach is 0.4
-
-
-  if (fabs(target_of_kick.AngleOfLineToPos(kick_position).Deg()) < 120 && fabs(target_of_kick.AngleOfLineToPos(kick_position).Deg()) > 60)
-  {
-
-
-    delta = 0.00015 * (fabs(target_of_kick.AngleOfLineToPos(kick_position).Deg()) - 90) * (fabs(target_of_kick.AngleOfLineToPos(kick_position).Deg()) - 90) + pow(10, -100000000);
-
-  }
-
-
-  if (target_of_kick.GetX() > kick_position.GetX())
-  {
-    ////// Create the position for the robot to go to behind the ball: near and far
-    pos_before_kick_far.SetX(kick_position.GetX() - delta);
-    if (target_of_kick.GetY() > kick_position.GetY())
-    {
-      pos_before_kick_far.SetY(kick_position.GetY() - delta * fabs(target_of_kick.GetY() - kick_position.GetY()) / fabs(target_of_kick.GetX() - kick_position.GetX()));
-    }
-    else
-    {
-      pos_before_kick_far.SetY(kick_position.GetY() + delta * fabs(target_of_kick.GetY() - kick_position.GetY()) / fabs(target_of_kick.GetX() - kick_position.GetX()));
-    }
-
-    pos_before_kick_near.SetX(kick_position.GetX() - 0.3 * delta);
-    if (target_of_kick.GetY() > kick_position.GetY())
-    {
-      pos_before_kick_near.SetY(kick_position.GetY() - 0.3 * delta * fabs(target_of_kick.GetY() - kick_position.GetY()) / fabs(target_of_kick.GetX() - kick_position.GetX()));
-    }
-    else
-    {
-      pos_before_kick_near.SetY(kick_position.GetY() + 0.3 * delta * fabs(target_of_kick.GetY() - kick_position.GetY()) / fabs(target_of_kick.GetX() - kick_position.GetX()));
-    }
-
-    if (kick_position.GetX() > robo.GetX())
-    {
-
-      if (robo.GetPos().DistanceTo(pos_before_kick_near) > 0.04)
-      {
-        if (control == 0)
-        {
-          robo.GotoPos(pos_before_kick_far, 1.3);
-        }
-        if (robo.GetPos().DistanceTo(pos_before_kick_far) < 0.15)
-        {
-          control = 1;
-        }
-
-        if (robo.GetPos().DistanceTo(pos_before_kick_near.GetPos()) > 0.05 && control == 1)
-        {
-          robo.GotoPos(pos_before_kick_near, before_kick_speed);
-
-        }
-
-        if (robo.GetPos().DistanceTo(pos_before_kick_near.GetPos()) <= 0.05)
-        {
-          counter = 0;
-          control = 0;
-          return true;
-          //done();
-        }
-
-      }
-
-    }
-    else
-    {
-
-      if (kick_position.GetY() > 0)
-      {
-
-        aux_pos_before_kick.SetX(kick_position.GetX() - 0.1);
-        aux_pos_before_kick.SetY(kick_position.GetY() - 0.35);
-
-      }
-      else
-      {
-
-        aux_pos_before_kick.SetX(kick_position.GetX() - 0.1);
-        aux_pos_before_kick.SetY(kick_position.GetY() + 0.35);
-
-      }
-
-
-      if (robo.GetPos().DistanceTo(aux_pos_before_kick.GetPos()) > 0.1)
-      {
-
-        robo.GotoPos(aux_pos_before_kick, 1.5);
-        if (robo.GetPos().DistanceTo(aux_pos_before_kick.GetPos()) < 0.12)
-        {
-          control = 1;
-        }
-
-      }
-
-      if (robo.GetPos().DistanceTo(pos_before_kick_near) > 0.1 && control > 0)
-      {
-        if (control == 1)
-        {
-          robo.GotoPos(pos_before_kick_far, 1.3);
-        }
-        if (robo.GetPos().DistanceTo(pos_before_kick_far) < 0.15)
-        {
-          control = 2;
-        }
-
-        if (robo.GetPos().DistanceTo(pos_before_kick_near.GetPos()) > 0.05 && control == 2)
-        {
-          robo.GotoPos(pos_before_kick_near, before_kick_speed);
-          if (robo.GetPos().DistanceTo(pos_before_kick_near.GetPos()) <= 0.05)
-          {
-            counter = 0;
-            control = 0;
-            return true;
-            //done();
-          }
-        }
-
-      }
-
-    }
-
-  }
-  else
-  {
-
-    ///// Create the position for the robot to go to behind the ball: near and far
-    pos_before_kick_far.SetX(kick_position.GetX() + delta);
-    if (target_of_kick.GetY() > kick_position.GetY())
-    {
-      pos_before_kick_far.SetY(kick_position.GetY() - delta * fabs(target_of_kick.GetY() - kick_position.GetY()) / fabs(target_of_kick.GetX() - kick_position.GetX()));
-    }
-    else
-    {
-      pos_before_kick_far.SetY(kick_position.GetY() + delta * fabs(target_of_kick.GetY() - kick_position.GetY()) / fabs(target_of_kick.GetX() - kick_position.GetX()));
-    }
-
-    pos_before_kick_near.SetX(kick_position.GetX() + 0.3 * delta);
-    if (target_of_kick.GetY() > kick_position.GetY())
-    {
-      pos_before_kick_near.SetY(kick_position.GetY() - 0.3 * delta * fabs(target_of_kick.GetY() - kick_position.GetY()) / fabs(target_of_kick.GetX() - kick_position.GetX()));
-    }
-    else
-    {
-      pos_before_kick_near.SetY(kick_position.GetY() + 0.3 * delta * fabs(target_of_kick.GetY() - kick_position.GetY()) / fabs(target_of_kick.GetX() - kick_position.GetX()));
-    }
-
-
-    if (robo.GetX() > kick_position.GetX())
-    {
-
-
-
-      if (robo.GetPos().DistanceTo(pos_before_kick_near) > 0.04)
-      {
-        if (control == 0)
-        {
-          robo.GotoPos(pos_before_kick_far, 1.3);
-        }
-        //cout << control << endl;
-        if (robo.GetPos().DistanceTo(pos_before_kick_far) < 0.15)
-        {
-          control = 1;
-        }
-
-        if (robo.GetPos().DistanceTo(pos_before_kick_near.GetPos()) > 0.05 && control == 1)
-        {
-          robo.GotoPos(pos_before_kick_near, before_kick_speed);
-
-        }
-
-        if (robo.GetPos().DistanceTo(pos_before_kick_near.GetPos()) <= 0.05)
-        {
-          counter = 0;
-          control = 0;
-          return true;
-          //done();
-        }
-
-      }
-
-    }
-    else
-    {
-
-
-      if (kick_position.GetY() > 0)
-      {
-
-        aux_pos_before_kick.SetX(kick_position.GetX() + 0.1);
-        aux_pos_before_kick.SetY(kick_position.GetY() - 0.35);
-
-
-      }
-      else
-      {
-
-        aux_pos_before_kick.SetX(kick_position.GetX() + 0.1);
-        aux_pos_before_kick.SetY(kick_position.GetY() + 0.35);
-
-      }
-
-      if (robo.GetPos().DistanceTo(aux_pos_before_kick.GetPos()) > 0.1)
-      {
-        robo.GotoPos(aux_pos_before_kick, 1.5);
-        if (robo.GetPos().DistanceTo(aux_pos_before_kick.GetPos()) < 0.12)
-        {
-          control = 1;
-        }
-
-      }
-
-      if (robo.GetPos().DistanceTo(pos_before_kick_near) > 0.1 && control > 0)
-      {
-        if (control == 1)
-        {
-          robo.GotoPos(pos_before_kick_far, 1.3);
-        }
-        //cout << control << endl;
-        if (robo.GetPos().DistanceTo(pos_before_kick_far) < 0.15)
-        {
-          control = 2;
-        }
-
-        if (robo.GetPos().DistanceTo(pos_before_kick_near.GetPos()) > 0.05 && control == 2)
-        {
-          robo.GotoPos(pos_before_kick_near, before_kick_speed);
-          if (robo.GetPos().DistanceTo(pos_before_kick_near.GetPos()) <= 0.05)
-          {
-            counter = 0;
-            control = 0;
-            return true;
-            //done();
-          }
-        }
-
-      }
-    }
-  }
-
-
-  return false;
-}
-
-*/
 
 bool Player::old_pass(Position target)
 {

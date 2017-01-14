@@ -47,7 +47,6 @@ void Master::strategy_offensive2()
 
   }
 
-
   // Part of field in front of penalty area when kick is used or alternatively driving
   if(ball.GetX() < 1.2  && ball.GetX() >= 0.9 && fabs(ball.GetY()) < 0.4 && player[1].getPos().DistanceTo(ball.GetPos())<player[0].getPos().DistanceTo(ball.GetPos()))
   {
@@ -60,6 +59,7 @@ void Master::strategy_offensive2()
   }
 
   // Tell goal keeper to defend
+
   send(Command(ACTION_DEFEND), 2);
 }
 

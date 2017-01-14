@@ -175,7 +175,7 @@ void Master::strategies() {
             cin >> answer;
             break;
         }
-        usleep(100);
+        usleep(10000);
     }
 }
 
@@ -212,7 +212,7 @@ void Master::manual() {
             send(Command(ACTION_GOTO, Position(posX, posY), speed), robot);
             break;
         case 2:
-            send(Command(ACTION_BEFORE_KICK, ball.GetPos(), Position(1.2, 0),1.0), robot);
+            send(Command(ACTION_BEFORE_KICK, ball.GetPos(), Position(1.2, 0),0.4), robot);
             break;
         case 3:
             cout << "Speed: ";
