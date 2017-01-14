@@ -24,12 +24,12 @@ public:
                                             pidAngle(ANGLE_KP_DRIVE, ANGLE_KI_DRIVE, ANGLE_KD_DRIVE),
                                             pidDistance(80.0, 0.0, 2.0),
                                             ca(),
-                                             rfNumber(deviceNr),
-                                             posTeam(2),
-                                             posOtherTeam(3),
+                                            rfNumber(deviceNr),
+                                            posTeam({Position(0.0, 0.0), Position(0.0, 0.0)}),
+                                            posOtherTeam({Position(0.0, 0.0), Position(0.0, 0.0), Position(0.0, 0.0)}),
                                             ballBehindRobo(false),
                                             onlyTurn(false),
-                                             isIdle(true){}
+                                            isIdle(true){}
     Robo(RoboControl& other): RoboControl(other){}
     pidController pidAngle;
     pidController pidDistance;

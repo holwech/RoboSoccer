@@ -39,15 +39,18 @@ bool Robo::isArrived(){
 }
 
 void Robo::updatePositions(vector<Position> positions) {
+    cout << "BEFORE " << positions[0] << ", " << positions[1] << ", " << positions[2] << ", "<< positions[3] << ", " << positions[4] << ", " << positions[5] << endl;
+    //Hacky way to make things work. Sorry
+    posTeam.push_back(Position(0.0, 0.0));
     for(int p = 0; p < (int)positions.size(); p++) {
-        if (p == rfNumber) {
-           // do nothing
-        } else if (p <= 2) {
+        if (p <= 2) {
             posTeam[p] = positions[p];
         } else {
-            posOtherTeam[p] = positions[p];
+            posOtherTeam[p - 3] = positions[p - 3];
         }
     }
+    posTeam.erase(posTeam.begin() + rfNumber);
+    cout << "AFTER " << posTeam[0] << ", " << posTeam[1] << ", " << posTeam[2] << ", "<< posOtherTeam[0] << ", " << posOtherTeam[1] << ", " << posOtherTeam[2] << endl;
 }
 //PID - related functions
 void Robo::updatePids(Position targetPos, bool ca = true){

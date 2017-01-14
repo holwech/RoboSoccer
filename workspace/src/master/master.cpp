@@ -126,6 +126,7 @@ void Master::strategies() {
     cout << "   5. Strategy_offensive"<<endl;
     cout << "	6. kickAtGoal" << endl;
     cout << "   7. Strategy_offensive2"<<endl;
+    cout << "	8. Monitor positions" << endl;
 
     cin >> answer;
     while(1) {
@@ -157,6 +158,8 @@ void Master::strategies() {
         case 7:
             strategy_offensive2();
             break;
+        case 8:
+            break;
         default:
             cout << "No case for this state yet (in strategies function), or tactic terminated" << endl;
             cout << "Select one of the following strategies/tactics: "<<endl;
@@ -166,6 +169,8 @@ void Master::strategies() {
             cout << "   4. Strategy_defensive"<<endl;
             cout << "   5. strategy_offensive"<<endl;
             cout << "   6. kickAtGoal" << endl;
+            cout << "   7. Strategy_offensive2"<<endl;
+            cout << "	8. Monitor positions" << endl;
             resetTVariables();
             cin >> answer;
             break;
@@ -185,6 +190,7 @@ void Master::manual() {
     int robot;
     double posX, posY, speed;
     while(1) {
+        updatePositions();
         cout << "Choose an action" << endl;
         cout << "	0. EXIT" << endl;
         cout << "	1. ACTION_GOTO" << endl;
