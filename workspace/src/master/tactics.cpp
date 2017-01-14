@@ -188,7 +188,7 @@ bool Master::kickAtGoal() {
     switch(t_state) {
     // Find closest robo to ball
     case STEP1:
-        for (int robot = 0; robot < 3; robot++) {
+        for (int robot = 1; robot < 3; robot++) {
             double distToBall = player[robot].getPos().DistanceTo(ball.GetPos());
             if (distToBall < maxDistance) {
                 maxDistance = robot;
