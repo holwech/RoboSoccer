@@ -1,4 +1,5 @@
 #include "player/player.h"
+#include "cmath"
 
 void Player::defend_tom(){
     //int x=ball.GetX();
@@ -33,7 +34,7 @@ void Player::defend()
     double ballangle = 0;
     double ballx = 0;
     double bally = 0;
-    double delta;
+    //double delta;
     Position POS(0,0);
     double goalkeepery = 0;
     Position Mid;
@@ -45,8 +46,7 @@ void Player::defend()
     }
     else{
         Mid = Position(-1.4,0);
-        goalkeeperx =  -1.36
-                ;//1.36
+        goalkeeperx =  -1.36 ;//1.36
     }
     for(i=0;i<10;i++)
     {
@@ -125,22 +125,18 @@ void Player::defend()
         }
     }
 */
+    //if not mooving and far out, dont move
+    if(true || !(ball.GetVelocity() < 0.01 && abs(ball.GetX()) < 1.0) ){
+        POS.SetX(goalkeeperx);
+        POS.SetY(goalkeepery);
+        robo.GotoPos(POS, 0.7);
+    }
 
-
-    POS.SetX(goalkeeperx);
-    POS.SetY(goalkeepery);
-    robo.GotoPos(POS);
- //   robo.CruisetoXY(goalkeeperx,goalkeepery,120);
-
-    //cout << "Goaly_y: " << goalkeepery << endl;
 
     //distance to move too small, dont try to move
-    delta = sqrt((robo.GetX()-goalkeeperx)*(robo.GetX()-goalkeeperx)+(robo.GetY()-goalkeepery)*(robo.GetY()-goalkeepery));
-    if(delta<0.06) robo.StopAction();
+    //delta = sqrt((robo.GetX()-goalkeeperx)*(robo.GetX()-goalkeeperx)+(robo.GetY()-goalkeepery)*(robo.GetY()-goalkeepery));
+    //if(delta<0.06) robo.StopAction();
 
-/*     while(robo->GetPos().DistanceTo(ball.GetPos())<0.2)
-         robo->GotoXY(ball.GetX(),ball.GetY(),160);
-*/
 }
 
 

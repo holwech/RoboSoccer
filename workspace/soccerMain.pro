@@ -38,7 +38,9 @@ SOURCES += src/soccerMain.cpp \
     src/player/general_actions.cpp \
     src/player/attacker_actions.cpp \
     src/master/tactics.cpp \
-    src/master/strategies.cpp
+    src/master/strategies.cpp \
+    src/ball/ball.cpp \
+        src/ball/ball.h
 
 
 		
@@ -52,4 +54,5 @@ dox.depends = FORCE
 
 # somewhere else in the *.pro file
 QMAKE_EXTRA_TARGETS += dox
+
 
