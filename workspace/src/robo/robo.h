@@ -8,6 +8,7 @@
 #include "position.h"
 #include "math.h"
 #include "control/collision_avoidance.h"
+#include "ball/ball.h"
 
 #define ANGLE_KP_TURN 40
 #define ANGLE_KI_TURN 3
@@ -27,12 +28,12 @@ public:
                                             rfNumber(deviceNr),
                                             posTeam({Position(0.0, 0.0), Position(0.0, 0.0)}),
                                             posOtherTeam({Position(0.0, 0.0), Position(0.0, 0.0), Position(0.0, 0.0)}),
-                                            ball(ball),
+                                            ball(DBC),
                                             ballBehindRobo(false),
                                             onlyTurn(false),
                                             isIdle(true),
                                             avoidBall(false){}
-    Robo(RoboControl& other): RoboControl(other){}
+    //Robo(RoboControl& other): RoboControl(other){}
     pidController pidAngle;
     pidController pidDistance;
     CA ca;

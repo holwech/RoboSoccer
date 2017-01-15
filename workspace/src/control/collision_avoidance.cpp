@@ -220,7 +220,7 @@ Force CA::getTotalPull(Position basePos, Position target, vector<Position>& team
 }
 
 Force CA::getBallPull(Position basePos, Position target, Position ballPos){
-    Force totalForce = getPull(basePos, target, );
+    Force totalForce = getPull(basePos, target,  ballPos);
     totalForce.len = sqrt(pow(totalForce.X, 2) + pow(totalForce.Y, 2));
     Angle angle = basePos.AngleOfLineToPos(Position(basePos.GetX() + totalForce.X, basePos.GetY() + totalForce.Y));
     totalForce.deg = angle.Deg();

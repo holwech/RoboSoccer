@@ -198,6 +198,7 @@ void Master::manual() {
         cout << "	4. DEFEND" << endl;
         cout << "	5. PASS" << endl;
         cout << "	6. LISTEN TO REFEREE" << endl;
+        cout << "	7. TEST BALL CLASS" << endl;
 
         cin >> answer;
         cout << "Which robot? (0-2)" << endl;
@@ -220,7 +221,7 @@ void Master::manual() {
         case 3:
             cout << "Speed: ";
             cin >> speed;
-            send(Command(ACTION_KICK, Position(1.27, 0), speed, 1), robot);
+            send(Command(ACTION_KICK, Position(1.27, 0), speed, 0.4), robot);
             break;
         case 4:
             send(Command(ACTION_DEFEND), robot);
@@ -235,7 +236,11 @@ void Master::manual() {
                 sleep(1);
             }
             break;
-
+        case 7: {
+            test_ball testBallHandler(ball);
+            testBallHandler.test(side);
+            break;
+        }
         default:
             cout << "No action created for this choice yet in master.manual" << endl;
             break;

@@ -199,7 +199,7 @@ void Player::setState(PState newState) {
 
 // These do not actually work, do not copy player. The result would not be good...
 // Only purpose is so that the program compiles.
-Player::Player(Player&& other) : DBC(other.DBC), ball(other.DBC), robo(other.DBC, other.deviceNr) {
+Player::Player(Player&& other) : DBC(other.DBC), ball(other.DBC), robo(other.DBC, other.deviceNr, ball) {
     std::lock_guard<std::mutex> lock(other.mutex);
     positions = std::move(other.positions);
     channel = std::move(other.channel);
@@ -208,7 +208,7 @@ Player::Player(Player&& other) : DBC(other.DBC), ball(other.DBC), robo(other.DBC
     state.store(std::move(state.load()));
 }
 
-Player::Player(const Player& other) : DBC(other.DBC), ball(other.DBC), robo(other.DBC, other.deviceNr) {
+Player::Player(const Player& other) : DBC(other.DBC), ball(other.DBC), robo(other.DBC, other.deviceNr, ball) {
     std::lock_guard<std::mutex> lock(other.mutex);
     positions = other.positions;
     channel = other.channel;
