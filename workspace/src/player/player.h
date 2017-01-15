@@ -65,6 +65,7 @@ public:
     Player& operator = (const Player& other);
 private:
     Position position(int robot);
+    void playerPrint(string message);
     void readCommand();
     void setState(PState newState);
     void updateRobo(bool isGoalkeeper);

@@ -3,7 +3,7 @@
 #include "player/general_actions.cpp"
 #include "player/attacker_actions.cpp"
 
-Player::Player(Channel* channel, RTDBConn &DBC, int deviceNr) :
+Player::Player(Channel* channel, RTDBConn &DBC, const int deviceNr) :
                 DBC(DBC),
                 deviceNr(deviceNr),
                 positions(6),
@@ -11,9 +11,9 @@ Player::Player(Channel* channel, RTDBConn &DBC, int deviceNr) :
                 channel(channel),
                 robo(DBC, deviceNr)
                 {
-    ballangle = 0;
-    ballx = 0;
-    bally = 0;
+    //ballangle = 0;
+    //ballx = 0;
+    //bally = 0;
     control = 0;
     delta = 0.09;
 
@@ -25,7 +25,6 @@ Player::Player(Channel* channel, RTDBConn &DBC, int deviceNr) :
 
 void Player::run() {
    cout << "Player " << deviceNr << " started" << endl;
-   cout << "Finish driveWithCA()" << endl;
    bool isDone = true;
    bool isGoalkeeper;
    while(1){
@@ -88,42 +87,45 @@ void Player::readCommand() {
 
     switch(command.action) {
     case ACTION_GOTO:
-        cout << "Robo in state GOTO" << endl;
-        cout << "GOTO: " << command.pos1.GetX() << ", " << command.pos1.GetY() << endl;
+        playerPrint("Robo in state GOTO");
+        //cout << "GOTO: " << command.pos1.GetX() << ", " << command.pos1.GetY() << endl;
         setState(GOTO);
         break;
     case ACTION_TEST:
         setState(TEST);
         break;
     case ACTION_IDLE:
-        cout << "Robo in state IDLE" << endl;
         robo.GotoPos(robo.GetPos());
         setState(IDLE);
         break;
     case ACTION_DEFEND:
-        cout << "Robo in state DEFENED" << endl;
+        playerPrint("Robo in state DEFENED");
         setState(DEFEND);
         break;
     case ACTION_BEFORE_KICK:
-        cout << "Robo in state BEFORE_KICK" << endl;
+        playerPrint("Robo in state BEFORE_KICK");
         setState(BEFORE_KICK);
         break;
     case ACTION_KICK:
-        cout << "Robo in state KICK" << endl;
+        playerPrint("Robo in state KICK");
         setState(KICK);
         break;
     case ACTION_PASS:
-        cout << "Robo in state PASS" << endl;
+        playerPrint("Robo in state PASS");
         setState(PASS);
         break;
     case ACTION_BLOCK_BALL:
-        cout << "Robo in state BLOCK_BALL" << endl;
+        playerPrint("Robo in state BLOCK_BALL");
         setState(BLOCK_BALL);
         break;
     default:
-        cout << "No case for this state: " << state << endl;
+        playerPrint("No case for this state");
         break;
     }
+}
+
+void Player::playerPrint(string message) {
+    cout << "#P" << deviceNr << ": " << message << endl;
 }
 
 /** Updates the positions of other robos */
@@ -177,7 +179,11 @@ bool Player::isBusy() {
 /** Sets the player to busy when an action is started */
 void Player::setBusy(bool flag) {
    busy.store(flag);
-   cout << "Busy set to: " << busy.load() << endl;
+   if (busy.load()) {
+      playerPrint("Robot is busy");
+   } else {
+      playerPrint("Robot is not busy");
+   }
 }
 
 
@@ -204,8 +210,10 @@ Player::Player(Player&& other) : DBC(other.DBC), ball(other.DBC), robo(other.DBC
     positions = std::move(other.positions);
     channel = std::move(other.channel);
     command = std::move(other.command);
+    deviceNr = std::move(other.deviceNr);
     prevState.store(std::move(other.prevState.load()));
     state.store(std::move(state.load()));
+    busy.store(std::move(busy.load()));
 }
 
 Player::Player(const Player& other) : DBC(other.DBC), ball(other.DBC), robo(other.DBC, other.deviceNr) {
@@ -213,8 +221,10 @@ Player::Player(const Player& other) : DBC(other.DBC), ball(other.DBC), robo(othe
     positions = other.positions;
     channel = other.channel;
     command = other.command;
+    deviceNr = other.deviceNr;
     prevState.store(other.prevState.load());
     state.store(state.load());
+    busy.store(busy.load());
 }
 
 Player& Player::operator = (Player&& other) {
@@ -225,9 +235,11 @@ Player& Player::operator = (Player&& other) {
     ball = std::move(other.ball);
     channel = std::move(other.channel);
     command = std::move(other.command);
+    deviceNr = std::move(other.deviceNr);
     robo = std::move(other.robo);
     prevState.store(std::move(other.prevState.load()));
     state.store(std::move(state.load()));
+    busy.store(std::move(busy.load()));
     return *this;
 }
 
@@ -239,9 +251,11 @@ Player& Player::operator = (const Player& other) {
     ball = other.ball;
     channel = other.channel;
     command = other.command;
+    deviceNr = other.deviceNr;
     robo = other.robo;
     prevState.store(other.prevState.load());
     state.store(state.load());
+    busy.store(busy.load());
     return *this;
 }
 

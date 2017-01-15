@@ -19,10 +19,8 @@ double Ball::GetVelocity() {
     return total / 8;
 }
 
-bool Ball::inGoalArea(int side) {
-    cout << "PosX: " << GetPos().GetX() << " PosY: " << GetPos().GetY() << endl;
-    if (side == -1 &&
-        fabs(RawBall::GetPos().GetY()) < 0.350 &&
+bool Ball::inGoalArea() {
+    if (fabs(RawBall::GetPos().GetY()) < 0.350 &&
         fabs(RawBall::GetPos().GetX()) > 1.15) {
         return true;
     } else {
@@ -42,7 +40,7 @@ edges Ball::nearEdge() {
            return E_RIGHT;
        }
     } else if (X < -BOUND_X) {
-       if (Y < -0.880) {
+       if (Y < -BOUND_Y) {
            return E_BOTTOM_LEFT;
        } else if (Y > BOUND_Y) {
            return E_TOP_LEFT;

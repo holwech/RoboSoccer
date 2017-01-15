@@ -24,7 +24,7 @@ class Ball : public RawBall
 public:
     Ball(RTDBConn &DBC);
     double GetVelocity();
-    bool inGoalArea(int side);
+    bool inGoalArea();
     edges nearEdge();
 };
 
