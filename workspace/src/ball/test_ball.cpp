@@ -17,7 +17,7 @@ void test_ball::test(int side) {
             break;
         }
         case 2: {
-            bool inGoal = ball.inGoalArea(side);
+            bool inGoal = ball.inGoalArea();
             cout << "inGoalArea: " << inGoal << endl;
             sleep(1);
             break;

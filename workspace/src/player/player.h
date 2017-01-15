@@ -68,6 +68,7 @@ public:
 private:
     Position position(int robot);
     enum{ STEP1, STEP2} state_before_kick;
+    void playerPrint(string message);
     void readCommand();
     void setState(PState newState);
     void updateRobo(bool isGoalkeeper);

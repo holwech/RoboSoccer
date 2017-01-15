@@ -9,7 +9,7 @@ bool Player::goTo(Position target, double speed)
 {
   if (robo.GetPos().DistanceTo(target) < 0.1)
   {
-    cout << "State set to IDLE" << endl;
+    playerPrint("State set to IDLE");
     return true; // Done
   }
   else
@@ -185,6 +185,7 @@ bool Player::angeled_behind_ball(Position targetPos){
     Position pos_behind_ball = Position(pos_behind_ball_x, pos_behind_ball_y);
     robo.GotoPos(pos_behind_ball);
     return false;
+
 }
 
 bool Player::before_kick(Position kick_position, Position target_of_kick, double before_kick_speed)
@@ -375,9 +376,9 @@ bool Player::before_kick(Position kick_position, Position target_of_kick, double
         if (robo.GetPos().DistanceTo(ball.GetPos()) > 0.05)
         {
             robo.GotoPos(ball.GetPos(), 2.2);
-            cout << "Testfall" << endl;
-            cout << ball.GetX() << endl;
-            cout << ball.GetY() << endl;
+            //cout << "Testfall" << endl;
+            //cout << ball.GetX() << endl;
+            //cout << ball.GetY() << endl;
         }
 
         if (robo.GetPos().DistanceTo(ball.GetPos()) <= 0.05) // Condition to end function

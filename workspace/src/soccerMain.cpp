@@ -84,6 +84,8 @@ int main(void) {
             rfNumber.push_back(1);
             rfNumber.push_back(2);
         }
+        for (auto& n : rfNumber)
+            cout << n << endl;
 
         // Give objects time to initialize or something.
         // Don't know why this fixes things, but it does.

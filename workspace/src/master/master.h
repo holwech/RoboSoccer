@@ -1,5 +1,6 @@
 ﻿#ifndef MASTER_H
 #define MASTER_H
+#define DEBUG true
 
 #include <iostream>
 #include <vector>
@@ -82,12 +83,14 @@ private:
     S_State s_state;
     S_Case s_case;
     timer s_timer;
+    const vector<string> strategyStateNames = {"INIT", "NEXT", "BLOCK", "COUNTER", "SHOOT", "SHOOT_AT_GOAL", "POSITION", "INTERRUPT", "WAIT"};
+    void debugContinue();
     void strategy_defensive();
     void strategy_offensive();
     void strategy_offensive2();
     void strategy_offensive3();
     void strategy_demo();
-    void defensiveNextMove();
+    void nextDefensiveMove();
     void offensiveNextMove();
 
 
