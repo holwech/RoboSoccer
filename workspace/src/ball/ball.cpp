@@ -29,3 +29,32 @@ bool Ball::inGoalArea(int side) {
         return false;
     }
 }
+
+edges Ball::nearEdge() {
+    double X = RawBall::GetPos().GetX();
+    double Y = RawBall::GetPos().GetY();
+    if (X > BOUND_X) {
+       if (Y < -BOUND_Y) {
+           return E_BOTTOM_RIGHT;
+       } else if (Y > BOUND_Y) {
+           return E_TOP_RIGHT;
+       } else {
+           return E_RIGHT;
+       }
+    } else if (X < -BOUND_X) {
+       if (Y < -0.880) {
+           return E_BOTTOM_LEFT;
+       } else if (Y > BOUND_Y) {
+           return E_TOP_LEFT;
+       } else {
+           return E_LEFT;
+       }
+    } else if (Y < -BOUND_Y) {
+        return E_BOTTOM;
+    } else if (Y > BOUND_Y) {
+        return E_TOP;
+    } else {
+        return E_NONE;
+    }
+}
+

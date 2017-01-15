@@ -218,7 +218,7 @@ void Master::manual() {
         case 3:
             cout << "Speed: ";
             cin >> speed;
-            send(Command(ACTION_KICK, Position(1.27, 0), speed, 1), robot);
+            send(Command(ACTION_KICK, Position(1.27, 0), speed, 0.4), robot);
             break;
         case 4:
             send(Command(ACTION_DEFEND), robot);
