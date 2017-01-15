@@ -210,7 +210,10 @@ double Robo::getReferenceAngleErrRad(Position targetPos, bool ca = true){
     double ref_deg;
     if (ca){
         ref_deg = getRefAngleWithCA(this->ca.getTotalPull(myPos, targetPos, posTeam, posOtherTeam, false), targetPos);
-    } else{
+    }
+    else if(avoidBall){
+        ref_deg = getRefAngleWithCA(this->ca.getBallPull(myPos, targetPos, ball.GetPos()), targetPos);
+    }else{
         ref_deg = getRefAngleWithoutCA(targetPos);
     }
     double myAngle_deg = this->GetPhi().Deg();
@@ -229,3 +232,6 @@ double Robo::getReferenceAngleErrRad(Position targetPos, bool ca = true){
     return err_rad;
 }
 
+void Robo::setAvoidBall(bool avoid){
+    avoidBall = avoid;
+}

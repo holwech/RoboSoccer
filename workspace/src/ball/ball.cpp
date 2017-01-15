@@ -2,6 +2,7 @@
 
 Ball::Ball(RTDBConn &DBC): RawBall(DBC)
 {
+
 }
 
 double Ball::GetVelocity() {
