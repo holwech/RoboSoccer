@@ -200,9 +200,9 @@ bool Player::before_kick(Position kick_position, Position target_of_kick, double
         if (robo.GetPos().DistanceTo(ball.GetPos()) > 0.05)
         {
           robo.GotoPos(ball.GetPos(), 2.2);
-          cout << "Testfall" << endl;
-          cout << ball.GetX() << endl;
-          cout << ball.GetY() << endl;
+          //cout << "Testfall" << endl;
+          //cout << ball.GetX() << endl;
+          //cout << ball.GetY() << endl;
         }
 
         if (robo.GetPos().DistanceTo(ball.GetPos()) <= 0.05)

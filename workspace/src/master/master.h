@@ -1,7 +1,6 @@
 ﻿#ifndef MASTER_H
 #define MASTER_H
 
-#include <time.h>
 #include <iostream>
 #include <vector>
 #include "kogmo_rtdb.hxx"
@@ -11,6 +10,7 @@
 #include "timer.h"
 #include "config.cpp"
 #include "thread"
+#include "ball/test_ball.h"
 
 enum ePlayModePlus {
     STATE_MENU,

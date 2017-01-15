@@ -40,7 +40,8 @@ SOURCES += src/soccerMain.cpp \
     src/master/tactics.cpp \
     src/master/strategies.cpp \
     src/ball/ball.cpp \
-        src/ball/ball.h \
+    src/ball/ball.h \
+    src/ball/test_ball.h \
     src/ball/test_ball.cpp
 
 
@@ -56,7 +57,6 @@ dox.depends = FORCE
 # somewhere else in the *.pro file
 QMAKE_EXTRA_TARGETS += dox
 
-HEADERS += \
-    src/ball/test_ball.h
+
 
 

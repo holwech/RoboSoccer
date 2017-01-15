@@ -149,6 +149,8 @@ void Master::strategy_defensive() {
         {
           cout << "Strategy defensive: WAIT S" << endl;
           s_case = WAIT;
+        } else if (ball.inGoalArea(side)) {
+           s_case = INIT;
         } else if ((side == LEFT && ball.GetPos().GetX() <= 0.2) ||
                    (side == RIGHT && ball.GetPos().GetX() >= -0.2)) {
             cout << "Strategy defensive: BLOCK S" << endl;
