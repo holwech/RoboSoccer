@@ -68,13 +68,18 @@ void Robo::updatePidsGoalie(Position targetPos){
 
 void Robo::updateDistancePid(Position targetPos){
     double dist_error = this->GetPos().DistanceTo(targetPos);
-    if (dist_error < 0.06){
-        pidDistance.updateInput(dist_error);
+    if (dist_error < ( precise ? 0.15 : 0.06 )){
+        pidDistance.updateInput(10*dist_error);
     }
     else{
         pidDistance.updateInput(speed);
     }
 }
+
+void Robo::setPrecise(bool val){
+    precise = val;
+}
+
 void Robo::updateAnglePidWithoutCA(Position targetPos){
     this->angleErrorRad = getReferenceAngleErrRad(targetPos, false);
     double sinAngleErrorRad = sin(this->angleErrorRad/2);

@@ -41,6 +41,8 @@ void Player::run() {
            if (isDone){ done(); }
            break;
        case GOTO:
+           robo.setAvoidBall(true);
+           robo.setPrecise(true);
            isDone = goTo(command.pos1, command.speed);
            if (isDone){ done(); }
            break;

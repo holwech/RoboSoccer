@@ -1,5 +1,5 @@
 #include "player/player.h"
-
+#include "ball/ball.h"
 void Player::idle()
 {
   robo.idle();
@@ -148,6 +148,44 @@ void Player::drivingKick(Position target)
 
 }
 
+bool Player::before_kick_improved(Position kick_position, Position target_of_kick, double before_kick_speed){
+    /*switch
+     * edge: go right behind
+     * on field: go to position to kick ball towards goal
+     */
+    edges edge = ball.nearEdge();
+    switch(edge){
+    case E_NONE:
+        angeled_behind_ball(target_of_kick);
+        break;
+    default:
+        break;
+    }
+    return false;
+
+}
+
+bool Player::angeled_behind_ball(Position targetPos){
+    Position ballPos = ball.GetPos();
+    double pos_behind_ball_x;
+    double pos_behind_ball_y;
+    Position direction = Position(ballPos.GetX() - targetPos.GetX(), ballPos.GetY() - targetPos.GetY() );
+    double scale = 1;
+    double length = direction.DistanceTo(Position(0,0));
+
+    switch (state_before_kick){
+    case STEP1:
+        pos_behind_ball_x = ballPos.GetX() + direction.GetX()*2*scale/length;
+        pos_behind_ball_y = ballPos.GetY() + direction.GetY()*2*scale/length;
+        break;
+    case STEP2:
+        pos_behind_ball_x = ballPos.GetX() + direction.GetX()*scale/length;
+        pos_behind_ball_y = ballPos.GetY() + direction.GetY()*scale/length;
+    }
+    Position pos_behind_ball = Position(pos_behind_ball_x, pos_behind_ball_y);
+    robo.GotoPos(pos_behind_ball);
+    return false;
+}
 
 bool Player::before_kick(Position kick_position, Position target_of_kick, double before_kick_speed)
 {
