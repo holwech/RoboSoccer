@@ -125,7 +125,7 @@ void Master::strategies() {
     cout << "   5. Strategy_offensive"<<endl;
     cout << "	6. kickAtGoal" << endl;
     cout << "   7. Strategy_offensive2"<<endl;
-    cout << "	8. Monitor positions" << endl;
+    cout << "	8. Strategy_offensive3" << endl;
 
     cin >> answer;
     while(1) {
@@ -159,6 +159,9 @@ void Master::strategies() {
             strategy_offensive2();
             break;
         case 8:
+            strategy_offensive3();
+            break;
+        case 9:
             break;
         default:
             cout << "No case for this state yet (in strategies function), or tactic terminated" << endl;

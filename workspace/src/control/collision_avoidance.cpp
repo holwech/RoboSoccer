@@ -1,4 +1,5 @@
 #include "collision_avoidance.h"
+#include "ball/ball.h"
 
 CA::CA() {
     //Adding goalArea obstacle-Positions
@@ -215,5 +216,14 @@ Force CA::getTotalPull(Position basePos, Position target, vector<Position>& team
     totalForce.deg = angle.Deg();
     totalForce.rad = angle.Get();
     cout << "THIS SHOULD NOT PRINT, IF IT DOES COLLISOIN AVOIDANCE IS ON" << endl;
+    return totalForce;
+}
+
+Force CA::getBallPull(Position basePos, Position target, Position ballPos){
+    Force totalForce = getPull(basePos, target, );
+    totalForce.len = sqrt(pow(totalForce.X, 2) + pow(totalForce.Y, 2));
+    Angle angle = basePos.AngleOfLineToPos(Position(basePos.GetX() + totalForce.X, basePos.GetY() + totalForce.Y));
+    totalForce.deg = angle.Deg();
+    totalForce.rad = angle.Get();
     return totalForce;
 }

@@ -4,13 +4,13 @@
 #include <time.h>
 #include <iostream>
 #include <vector>
+#include <thread>
 #include "kogmo_rtdb.hxx"
 #include "referee.h"
 #include "ball/ball.h"
 #include "player/player.h"
 #include "timer.h"
 #include "config.cpp"
-#include "thread"
 
 enum ePlayModePlus {
     STATE_MENU,
@@ -85,8 +85,10 @@ private:
     void strategy_defensive();
     void strategy_offensive();
     void strategy_offensive2();
+    void strategy_offensive3();
     void strategy_demo();
     void defensiveNextMove();
+    void offensiveNextMove();
 
 
     /** Please prefix all tactic-specific variables with some kind of identifier

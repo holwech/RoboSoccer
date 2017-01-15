@@ -3,10 +3,69 @@
 /** Include all strategies here
  */
 
+void Master::strategy_offensive3(){
+    switch(s_case){
+    case INIT:
+        send(Command(ACTION_DEFEND), 0);
+        send(Command(ACTION_GOTO, Position(0.5 * side, 0.0), 1.5), 1);
+        send(Command(ACTION_GOTO, Position(0.1 * side, 0.0), 1.5), 2);
+        cout << "Strategy defensive: WAIT" << endl;
+        s_case = WAIT;
+        break;
+    case WAIT:
+        break;
+    case BLOCK:
+        send(Command(ACTION_BLOCK_BALL,Position(0,0)) , 1);
+        send(Command(ACTION_GOTO, Position(0.5*-side, 0.0)), 1);
+        break;
+    case POSITION:
+        break;
+    case SHOOT_AT_GOAL:
+        send(Command(ACTION_BLOCK_BALL, Position(0,0)),1);
+        send(Command(ACTION_KICK), 2);
+        break;
+    case NEXT:
+        break;
+    default:
+        break;
+    }
+    offensiveNextMove();
+}
+
+void Master::offensiveNextMove(){
+    switch(s_case){
+    case INIT:
+        s_case = WAIT;
+    case WAIT:
+        if (!player[1].isBusy() && !player[2].isBusy()) {
+            cout << "Strategy offensive: NEXT" << endl;
+            s_case = NEXT;
+        }
+        break;
+    case NEXT:
+        if ((side == LEFT && ball.GetPos().GetX() > 0.2) ||
+            (side == RIGHT && ball.GetPos().GetX() < -0.2)) {
+            cout << "Strategy defensive: SHOOT_AT_GOAL" << endl;
+            s_case = SHOOT_AT_GOAL;
+        }
+        break;
+    case BLOCK:
+    case POSITION:
+    case SHOOT_AT_GOAL:
+            //shoot even if far away form opponent goal
+        if (!((side == LEFT && ball.GetPos().GetX() > 0.2) ||
+            (side == RIGHT && ball.GetPos().GetX() < -0.2)) ) {
+            cout << "Strategy defensive: SHOOT_AT_GOAL" << endl;
+            s_case = SHOOT_AT_GOAL;
+        }
+        break;
+    default:
+        break;
+    }
+}
 
 void Master::strategy_offensive2()
 {
-
     //////////////// 2 robots always push the ball towards the enemy goal, last one in goal
 
     // If robots behind ball, attack
@@ -16,9 +75,7 @@ void Master::strategy_offensive2()
         cout << "state1" << endl;
     }else if(ball.GetX() > -1.3 && ball.GetX() < 0.9 && ball.GetY() < 0 && ball.GetX()> player[0].getX())
     {
-
         send(Command(ACTION_KICK, Position(1.3, 0.0), 2.6, 0.8), 0);
-
     }
 
    // If robots not behind ball, get behind ball
@@ -28,10 +85,8 @@ void Master::strategy_offensive2()
        cout << "state2" << endl;
     } else if(ball.GetX() > -1.3 && ball.GetX() < 0.9  &&  ball.GetX() <= player[0].getX() && ball.GetY() < 0)
    {
-
       send(Command(ACTION_BEFORE_KICK, ball.GetPos(), Position(1.38,0.0), 2.0), 0);
-
-    }
+   }
 
    // If ball is next to edge just drive robots towards it
   if(ball.GetX() < 1.5 && ball.GetX() > 1.3 && ball.GetY() > 0.4)
@@ -55,7 +110,6 @@ void Master::strategy_offensive2()
   } else if(ball.GetX() < 1.2  && ball.GetX() >= 0.9 && fabs(ball.GetY()) < 0.4)
   {
     send(Command(ACTION_KICK, Position(1.38, 0.0), 2.6, 0.6), 0);
-
   }
 
   // Tell goal keeper to defend

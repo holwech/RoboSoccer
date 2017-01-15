@@ -20,16 +20,18 @@
 class Robo: public RoboControl
 {
 public:
-    Robo(RTDBConn& DBC, const int deviceNr): RoboControl(DBC, deviceNr),
+    Robo(RTDBConn& DBC, const int deviceNr, Ball &ball): RoboControl(DBC, deviceNr),
                                             pidAngle(ANGLE_KP_DRIVE, ANGLE_KI_DRIVE, ANGLE_KD_DRIVE),
                                             pidDistance(80.0, 0.0, 2.0),
                                             ca(),
                                             rfNumber(deviceNr),
                                             posTeam({Position(0.0, 0.0), Position(0.0, 0.0)}),
                                             posOtherTeam({Position(0.0, 0.0), Position(0.0, 0.0), Position(0.0, 0.0)}),
+                                            ball(ball),
                                             ballBehindRobo(false),
                                             onlyTurn(false),
-                                            isIdle(true){}
+                                            isIdle(true),
+                                            avoidBall(false){}
     Robo(RoboControl& other): RoboControl(other){}
     pidController pidAngle;
     pidController pidDistance;
@@ -43,6 +45,7 @@ public:
     void turn(Position targetPos);
     bool isArrived();
     void idle();
+    void setAvoidBall(bool avoid);
 private:
     Position targetPosition;
     int rfNumber;
@@ -58,11 +61,14 @@ private:
     void updateDistancePid(Position targetPos);
     vector<Position> posTeam;
     vector<Position> posOtherTeam;
+    Ball ball;
     double angleErrorRad;
     bool ballBehindRobo;
     bool onlyTurn;
     double speed;
     bool isIdle;
+    bool avoidBall;
+    bool avoidAll;
 };
 
 #endif // ROBO_H
