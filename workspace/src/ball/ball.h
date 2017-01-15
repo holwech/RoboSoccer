@@ -5,6 +5,7 @@ class Ball : public RawBall
 {
 public:
     Ball(RTDBConn &DBC);
+    double GetVelocity();
 
 };
 
