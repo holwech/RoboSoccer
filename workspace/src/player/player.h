@@ -63,11 +63,11 @@ public:
     Player(const Player& other);
     Player& operator = (Player&& other);
     Player& operator = (const Player& other);
-    bool before_kick_improved(Position kick_position, Position target_of_kick, double before_kick_speed);
     bool angeled_behind_ball(Position targetPos);
 private:
     Position position(int robot);
-    enum{ STEP1, STEP2} state_before_kick;
+    enum{ STEP1 = 1, STEP2, STEP3} state_before_kick;
+    void debugContinue();
     void playerPrint(string message);
     void readCommand();
     void setState(PState newState);
@@ -93,6 +93,8 @@ private:
     void idle();
     bool goTo(Position target, double speed = 1);
     bool before_kick(Position kick_position, Position target_of_kick, double before_kick_speed); //Get to position before kick -> can be used for attacker's kick and pass
+    bool before_kick_improved(Position kick_position, Position target_of_kick, double before_kick_speed);
+    double lengthToBall;
     bool kick(Position target, double speed = 2.8, double approach_speed = 0.4);
     bool pass(Position target);
     void drivingKick(Position target);

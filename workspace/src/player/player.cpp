@@ -4,6 +4,7 @@
 #include "player/attacker_actions.cpp"
 
 Player::Player(Channel* channel, RTDBConn &DBC, const int deviceNr) :
+                state_before_kick(STEP1),
                 DBC(DBC),
                 deviceNr(deviceNr),
                 positions(6),
@@ -46,14 +47,20 @@ void Player::run() {
            if (isDone){ done(); }
            break;
        case BEFORE_KICK:
-           isDone = before_kick(command.pos1, command.pos2, command.speed);
-           if (isDone){ done(); }
+           robo.setAvoidBall(true);
+           isDone = before_kick_improved(command.pos1, command.pos2, command.speed);
+           if (isDone){
+               robo.setAvoidBall(false);
+               done();
+           }
            //usleep(200000);
            break;
        case KICK:
            //drivingKick(command.pos1);
            isDone = kick(command.pos1, command.speed, command.approach_speed);
-           if (isDone){ done(); }
+           if (isDone){
+
+               done(); }
            break;
        case BLOCK_BALL:
            isDone = blockBall(command.pos1.GetX());
@@ -207,7 +214,7 @@ void Player::setState(PState newState) {
 
 // These do not actually work, do not copy player. The result would not be good...
 // Only purpose is so that the program compiles.
-Player::Player(Player&& other) : DBC(other.DBC), ball(other.DBC), robo(other.DBC, other.deviceNr) {
+Player::Player(Player&& other) : state_before_kick(STEP1), DBC(other.DBC), ball(other.DBC), robo(other.DBC, other.deviceNr) {
     std::lock_guard<std::mutex> lock(other.mutex);
     positions = std::move(other.positions);
     channel = std::move(other.channel);
@@ -218,7 +225,7 @@ Player::Player(Player&& other) : DBC(other.DBC), ball(other.DBC), robo(other.DBC
     busy.store(std::move(busy.load()));
 }
 
-Player::Player(const Player& other) : DBC(other.DBC), ball(other.DBC), robo(other.DBC, other.deviceNr) {
+Player::Player(const Player& other) : state_before_kick(STEP1), DBC(other.DBC), ball(other.DBC), robo(other.DBC, other.deviceNr) {
     std::lock_guard<std::mutex> lock(other.mutex);
     positions = other.positions;
     channel = other.channel;

@@ -56,9 +56,11 @@ bool Player::kick(Position target, double speed, double approach_speed)
   {
       // Go to ball and prepare to kick
     case A_STEP1:
-      beforeKickDone = before_kick(ball.GetPos(), target, approach_speed);
+      cout << "before before kick" << endl;
+      beforeKickDone = before_kick_improved(ball.GetPos(), target, approach_speed);
       if (beforeKickDone)
       {
+        cout << "before kick finished" << endl;
         kick_state = A_STEP2;
       }
       break;
@@ -149,20 +151,37 @@ void Player::drivingKick(Position target)
 }
 
 bool Player::before_kick_improved(Position kick_position, Position target_of_kick, double before_kick_speed){
-    /*switch
-     * edge: go right behind
-     * on field: go to position to kick ball towards goal
-     */
+    robo.setPrecise(true);
+    robo.setAvoidBall(true);
+
     edges edge = ball.nearEdge();
+    bool done = false;
     switch(edge){
     case E_NONE:
-        angeled_behind_ball(target_of_kick);
+        done = angeled_behind_ball(target_of_kick);
         break;
     default:
         break;
     }
-    return false;
-
+    if(done){
+        robo.setAvoidBall(false);
+        robo.setPrecise(false);
+    }
+    return done;
+}
+void manualStateChange(int state){
+    cout << "Change to state " << state << "?" << endl;
+    string ans2;
+    cin >> ans2;
+}
+void Player::debugContinue() {
+    if (true) {
+        cout << ">> STRATEGY STATE: " << state_before_kick << endl;
+        cout << ">> Continue (y)? " << endl;
+        string ans;
+        cin.ignore(std::numeric_limits<std::streamsize>::max());
+        getline(cin, ans, '\n');
+    }
 }
 
 bool Player::angeled_behind_ball(Position targetPos){
@@ -170,22 +189,56 @@ bool Player::angeled_behind_ball(Position targetPos){
     double pos_behind_ball_x;
     double pos_behind_ball_y;
     Position direction = Position(ballPos.GetX() - targetPos.GetX(), ballPos.GetY() - targetPos.GetY() );
-    double scale = 1;
+    double scale = 0.1;
     double length = direction.DistanceTo(Position(0,0));
+    Position pos_behind_ball;
+    double speed = 0;
 
     switch (state_before_kick){
     case STEP1:
-        pos_behind_ball_x = ballPos.GetX() + direction.GetX()*2*scale/length;
-        pos_behind_ball_y = ballPos.GetY() + direction.GetY()*2*scale/length;
+        speed = 1.5;
+        pos_behind_ball_x = ballPos.GetX() + direction.GetX()*3*scale/length;
+        pos_behind_ball_y = ballPos.GetY() + direction.GetY()*3*scale/length;
+        pos_behind_ball = Position(pos_behind_ball_x, pos_behind_ball_y);
+        if(robo.GetPos().DistanceTo(pos_behind_ball) < 0.09){
+            state_before_kick = STEP2;
+            lengthToBall = robo.GetPos().DistanceTo(ball.GetPos());
+        }
         break;
     case STEP2:
+        //if the ball has moved far away, go back to step1
+        if ( lengthToBall +0.05 < robo.GetPos().DistanceTo(ball.GetPos()) ){
+            state_before_kick = STEP1;
+        }
+        speed = 0.4;
+
+        pos_behind_ball_x = ballPos.GetX() + direction.GetX()*2*scale/length;
+        pos_behind_ball_y = ballPos.GetY() + direction.GetY()*2*scale/length;
+        pos_behind_ball = Position(pos_behind_ball_x, pos_behind_ball_y);
+        if(robo.GetPos().DistanceTo(pos_behind_ball) < 0.06){
+            cout << "FINISHED STEP2" << endl;
+            state_before_kick = STEP3;
+        }
+        break;
+    case STEP3:
+        //if the ball has moved far away, go back to step1
+        if ( lengthToBall +0.05 < robo.GetPos().DistanceTo(ball.GetPos()) ){
+            state_before_kick = STEP1;
+        }
+        speed = 0.4;
+
         pos_behind_ball_x = ballPos.GetX() + direction.GetX()*scale/length;
         pos_behind_ball_y = ballPos.GetY() + direction.GetY()*scale/length;
+        pos_behind_ball = Position(pos_behind_ball_x, pos_behind_ball_y);
+        if(robo.GetPos().DistanceTo(pos_behind_ball) < 0.06){
+            state_before_kick = STEP1;
+            return true;
+        }
+        break;
     }
-    Position pos_behind_ball = Position(pos_behind_ball_x, pos_behind_ball_y);
-    robo.GotoPos(pos_behind_ball);
+    //cout << "In angeled_behind_ball, pos: " << pos_behind_ball << endl;
+    robo.GotoPos(pos_behind_ball, speed);
     return false;
-
 }
 
 bool Player::before_kick(Position kick_position, Position target_of_kick, double before_kick_speed)
