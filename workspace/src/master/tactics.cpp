@@ -111,7 +111,8 @@ bool Master::tactic_nearpenaltyarea(double threshold)
           robonr = 2;
         }
 
-        send(Command(ACTION_KICK, Position(-1.0, ball.GetPos().GetY()), 2.5, 0.4), robonr);
+        send(Command(ACTION_KICK, Position(-1.0, ball.GetPos().GetY()), 2.5, 2.0), robonr);
+        cout << "NEARPENALTY" << endl;
         t_state = STEP2;
         break;
       case STEP2:
@@ -181,12 +182,10 @@ bool Master::kickAtGoal() {
     switch(t_state) {
     // Find closest robo to ball
     case STEP1:
-        for (int robot = 1; robot < 3; robot++) {
-            double distToBall = player[robot].getPos().DistanceTo(ball.GetPos());
-            if (distToBall < maxDistance) {
-                maxDistance = robot;
-                closestRobo = robot;
-            }
+        if (player[1].getPos().DistanceTo(ball.GetPos()) < player[2].getPos().DistanceTo(ball.GetPos())) {
+          closestRobo = 1;
+        } else {
+          closestRobo = 2;
         }
         t_state = STEP2;
         break;
@@ -196,7 +195,7 @@ bool Master::kickAtGoal() {
         t_state = STEP3;
         break;
     case STEP3: {
-        send(Command(ACTION_KICK, t_target, 2.5, 0.4), closestRobo);
+        send(Command(ACTION_KICK, t_target, 2.5, 2.0), closestRobo);
         t_state = STEP4;
         break;
     }
