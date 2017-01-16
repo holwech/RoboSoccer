@@ -187,10 +187,13 @@ bool Player::angeled_behind_ball(Position targetPos, double speed){
         pos_behind_ball_x = ballPos.GetX() + direction.GetX() * 3 * scale / length;
         pos_behind_ball_y = ballPos.GetY() + direction.GetY() * 3 * scale / length;
         pos_behind_ball = Position(pos_behind_ball_x, pos_behind_ball_y);
-        robo.GotoPos(pos_behind_ball, speed);
+        if (robo.GetPos().DistanceTo(pos_behind_ball) < 0.3) {
+            robo.GotoPos(pos_behind_ball, speed * 0.3);
+        } else {
+            robo.GotoPos(pos_behind_ball, speed);
+        }
         if(robo.isArrived()){
             cout << "STEP1 DONE" << endl;
-            sleep(3);
             state_before_kick = STEP2;
             lengthToBall = robo.GetPos().DistanceTo(ball.GetPos());
         }
@@ -206,10 +209,9 @@ bool Player::angeled_behind_ball(Position targetPos, double speed){
         pos_behind_ball_x = ballPos.GetX() + direction.GetX() * 1 * scale / length;
         pos_behind_ball_y = ballPos.GetY() + direction.GetY() * 1 * scale / length;
         pos_behind_ball = Position(pos_behind_ball_x, pos_behind_ball_y);
-        robo.GotoPos(pos_behind_ball, speed * 0.25);
+        robo.GotoPos(pos_behind_ball, speed * 0.35);
         if (robo.isArrived()) {
             cout << "Angled behind ball DONE" << endl;
-            sleep(3);
             return true;
         }
         break;
