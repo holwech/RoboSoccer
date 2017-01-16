@@ -236,6 +236,7 @@ void Master::nextDefensiveMove() {
                    (side == RIGHT && ball.GetPos().GetX() >= -0.2)) {
         nextState = BLOCK;
     }
+        cout << "side: " << side << " ball: " << ball.GetPos() << endl;
     if (nextState != s_case) {
         resetTVariables();
         s_case = nextState;
