@@ -56,7 +56,7 @@ bool Player::kick(Position target, double speed, double approach_speed)
   {
       // Go to ball and prepare to kick
     case A_STEP1:
-      beforeKickDone = before_kick_improved(ball.GetPos(), target, approach_speed);
+      beforeKickDone = before_kick(ball.GetPos(), target, approach_speed);
       if (beforeKickDone)
       {
         cout << "before kick finished" << endl;
@@ -151,6 +151,7 @@ void Player::drivingKick(Position target)
 
 
 bool Player::before_kick_improved(Position kick_position, Position target_of_kick, double before_kick_speed){
+
     robo.setPrecise(false);
     robo.setAvoidBall(true);
 
@@ -372,13 +373,9 @@ bool Player::before_kick(Position kick_position, Position target_of_kick, double
             //done();
           }
         }
-
       }
-
     }
-
    }
-
   }
   else //2nd major part. It is nearly mirrored version of the 1st major part. If target_of_kick.GetX() < kick_position.GetX()
   {
@@ -513,11 +510,9 @@ bool Player::before_kick(Position kick_position, Position target_of_kick, double
             //done();
           }
         }
-
       }
     }
   }
-
 }
   return false;
 }
