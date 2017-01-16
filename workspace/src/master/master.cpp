@@ -186,7 +186,7 @@ void Master::strategies() {
 void Master::manual() {
     int answer;
     int robot;
-    double posX, posY, speed;
+    double posX, posY, speed, approachSpeed;
     while(1) {
         updateSide();
         updatePositions();
@@ -216,12 +216,16 @@ void Master::manual() {
             send(Command(ACTION_GOTO, Position(posX, posY), speed), robot);
             break;
         case 2:
-            send(Command(ACTION_BEFORE_KICK, ball.GetPos(), Position(1.2, 0),0.4), robot);
+            cout << "Approach speed: ";
+            cin >> approachSpeed;
+            send(Command(ACTION_BEFORE_KICK, ball.GetPos(), Position(1.2, 0), approachSpeed), robot);
             break;
         case 3:
             cout << "Speed: ";
             cin >> speed;
-            send(Command(ACTION_KICK, Position(1.27, 0), speed, 0.4), robot);
+            cout << "Approach speed: ";
+            cin >> approachSpeed;
+            send(Command(ACTION_KICK, Position(1.27, 0), speed, approachSpeed), robot);
             break;
         case 4:
             send(Command(ACTION_DEFEND), robot);

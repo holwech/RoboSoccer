@@ -63,7 +63,6 @@ public:
     Player(const Player& other);
     Player& operator = (Player&& other);
     Player& operator = (const Player& other);
-    bool angeled_behind_ball(Position targetPos);
 private:
     Position position(int robot);
     enum{ STEP1 = 1, STEP2, STEP3} state_before_kick;
@@ -73,6 +72,7 @@ private:
     void setState(PState newState);
     void updateRobo(bool isGoalkeeper);
     void done();
+    bool angeled_behind_ball(Position targetPos, double speed = 1.5);
     /** 0 is goalkeeper
      *  1 and 2 is team playes
      *  3-5 is other team

@@ -41,16 +41,12 @@ void Player::run() {
            if (isDone){ done(); }
            break;
        case GOTO:
-           robo.setAvoidBall(true);
-           robo.setPrecise(true);
            isDone = goTo(command.pos1, command.speed);
            if (isDone){ done(); }
            break;
        case BEFORE_KICK:
-           robo.setAvoidBall(true);
            isDone = before_kick_improved(command.pos1, command.pos2, command.speed);
            if (isDone){
-               robo.setAvoidBall(false);
                done();
            }
            //usleep(200000);
@@ -58,9 +54,7 @@ void Player::run() {
        case KICK:
            //drivingKick(command.pos1);
            isDone = kick(command.pos1, command.speed, command.approach_speed);
-           if (isDone){
-
-               done(); }
+           if (isDone){  done(); }
            break;
        case BLOCK_BALL:
            isDone = blockBall(command.pos1.GetX());
@@ -178,6 +172,7 @@ void Player::done() {
     setBusy(false);
     kick_state = A_STEP1;
     pass_state = A_STEP1;
+    state_before_kick = STEP1;
 }
 
 /** Checks if the player is busy performing an action */
@@ -214,24 +209,26 @@ void Player::setState(PState newState) {
 
 // These do not actually work, do not copy player. The result would not be good...
 // Only purpose is so that the program compiles.
-Player::Player(Player&& other) : state_before_kick(STEP1), DBC(other.DBC), ball(other.DBC), robo(other.DBC, other.deviceNr) {
+Player::Player(Player&& other) : DBC(other.DBC), ball(other.DBC), robo(other.DBC, other.deviceNr) {
     std::lock_guard<std::mutex> lock(other.mutex);
     positions = std::move(other.positions);
     channel = std::move(other.channel);
     command = std::move(other.command);
     deviceNr = std::move(other.deviceNr);
     prevState.store(std::move(other.prevState.load()));
+    state_before_kick = std::move(other.state_before_kick);
     state.store(std::move(state.load()));
     busy.store(std::move(busy.load()));
 }
 
-Player::Player(const Player& other) : state_before_kick(STEP1), DBC(other.DBC), ball(other.DBC), robo(other.DBC, other.deviceNr) {
+Player::Player(const Player& other) : DBC(other.DBC), ball(other.DBC), robo(other.DBC, other.deviceNr) {
     std::lock_guard<std::mutex> lock(other.mutex);
     positions = other.positions;
     channel = other.channel;
     command = other.command;
     deviceNr = other.deviceNr;
     prevState.store(other.prevState.load());
+    state_before_kick = other.state_before_kick;
     state.store(state.load());
     busy.store(busy.load());
 }
@@ -247,6 +244,7 @@ Player& Player::operator = (Player&& other) {
     deviceNr = std::move(other.deviceNr);
     robo = std::move(other.robo);
     prevState.store(std::move(other.prevState.load()));
+    state_before_kick = std::move(other.state_before_kick);
     state.store(std::move(state.load()));
     busy.store(std::move(busy.load()));
     return *this;
@@ -263,6 +261,7 @@ Player& Player::operator = (const Player& other) {
     deviceNr = other.deviceNr;
     robo = other.robo;
     prevState.store(other.prevState.load());
+    state_before_kick = other.state_before_kick;
     state.store(state.load());
     busy.store(busy.load());
     return *this;
