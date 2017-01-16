@@ -2,6 +2,8 @@
 
 /** Include all strategies here
  */
+#define KICK_SPEED 3
+#define APPROACH_SPEED 2
 
 void Master::debugContinue() {
     if (DEBUG) {
@@ -30,8 +32,8 @@ void Master::strategy_offensive3(){
     case POSITION:
         break;
     case SHOOT_AT_GOAL:
-        send(Command(ACTION_BLOCK_BALL, Position(0,0)),1);
-        send(Command(ACTION_KICK), 2);
+       // send(Command(ACTION_BLOCK_BALL, Position(0,0)),1);
+        send(Command(ACTION_KICK, KICK_SPEED, APPROACH_SPEED), 2);
         break;
     case NEXT:
         break;

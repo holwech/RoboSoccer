@@ -9,6 +9,7 @@
   */
 
 //Use Goto to set target position. Remember to also run the driveWithCA() 100 times a second
+
 void Robo::GotoPos(Position target, double speed){
     isIdle = false;
     if(onlyTurn){
@@ -32,6 +33,11 @@ void Robo::turn(Position targetPos){
 
 void Robo::idle(){
     isIdle = true;
+}
+
+Position Robo::movePosInBounce(Position pos){
+
+
 }
 
 bool Robo::isArrived(){

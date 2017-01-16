@@ -56,7 +56,7 @@ bool Player::kick(Position target, double speed, double approach_speed)
   {
       // Go to ball and prepare to kick
     case A_STEP1:
-      beforeKickDone = before_kick(ball.GetPos(), target, approach_speed);
+      beforeKickDone = before_kick_improved(ball.GetPos(), target, approach_speed);
       if (beforeKickDone)
       {
         cout << "before kick finished" << endl;
@@ -160,6 +160,22 @@ bool Player::before_kick_improved(Position kick_position, Position target_of_kic
     switch(edge){
     case E_NONE:
         done = angeled_behind_ball(target_of_kick, before_kick_speed);
+        break;
+    case E_BOTTOM:
+        break;
+    case E_BOTTOM_LEFT:
+        break;
+    case E_BOTTOM_RIGHT:
+        break;
+    case E_LEFT:
+        break;
+    case E_RIGHT:
+        break;
+    case E_TOP:
+        break;
+    case E_TOP_LEFT:
+        break;
+    case E_TOP_RIGHT:
         break;
     default:
         cout << "No case for this edge in before_kick_improved" << endl;
