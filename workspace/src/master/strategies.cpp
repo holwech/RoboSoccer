@@ -14,12 +14,48 @@ void Master::debugContinue() {
     }
 }
 
+
+/*
+void Master::strategy_offensive3(){ ////////// Modification of original offensive3
+
+
+    if(side)
+    {
+        if(ball.GetX() < 0.2){
+
+            crossPassAndShoot();
+
+        }else{
+
+
+            bounceForward();
+
+        }
+
+    }else{
+
+        if(ball.GetX() > -0.2){
+
+            crossPassAndShoot();
+
+        }else{
+
+
+            bounceForward();
+
+        }
+
+    }
+}
+
+*/
+
 void Master::strategy_offensive3(){
     switch(s_case){
     case INIT:
         send(Command(ACTION_DEFEND), 0);
-        send(Command(ACTION_GOTO, Position(0.5 * side, 0.0), 1.5), 1);
-        send(Command(ACTION_GOTO, Position(0.1 * side, 0.0), 1.5), 2);
+        send(Command(ACTION_GOTO, Position(0.5 * side, 0.4), 1.5), 1);
+        send(Command(ACTION_GOTO, Position(0.1 * side, -0.4), 1.5), 2);
         cout << "Strategy defensive: WAIT" << endl;
         break;
     case WAIT:
@@ -31,8 +67,14 @@ void Master::strategy_offensive3(){
     case POSITION:
         break;
     case SHOOT_AT_GOAL:
-       // send(Command(ACTION_BLOCK_BALL, Position(0,0)),1);
-        send(Command(ACTION_KICK, Position(1.38*-side, 0), KICK_SPEED, APPROACH_SPEED), 2);
+        if(player[1].getPos().DistanceTo(ball.GetPos()) < player[2].getPos().DistanceTo(ball.GetPos()) + 0.3)
+        {
+            send(Command(ACTION_GOTO, Position(0.75 * -side, -0.4), 2), 2);
+            send(Command(ACTION_KICK, Position(1.38*-side, 0), KICK_SPEED, APPROACH_SPEED), 1);
+        }else{
+            send(Command(ACTION_GOTO, Position(0.9 * -side, 0.4), 2), 1);
+            send(Command(ACTION_KICK, Position(1.38*-side, 0), KICK_SPEED, APPROACH_SPEED), 2);
+        }
         break;
     case NEXT:
         break;
@@ -50,15 +92,15 @@ void Master::offensiveNextMove(){
     case WAIT:
         if (!player[1].isBusy() && !player[2].isBusy()) {
             cout << "Strategy offensive: NEXT" << endl;
-            s_case = NEXT;
+            s_case = SHOOT_AT_GOAL;
         }
         break;
     case NEXT:
-        if ((side == LEFT && ball.GetPos().GetX() > 0.2) ||
+        /*if ((side == LEFT && ball.GetPos().GetX() > 0.2) ||
             (side == RIGHT && ball.GetPos().GetX() < -0.2)) {
             cout << "Strategy defensive: SHOOT_AT_GOAL" << endl;
             s_case = SHOOT_AT_GOAL;
-        }
+        }*/
         break;
     case BLOCK:
     case POSITION:
