@@ -57,6 +57,13 @@ void Player::run() {
            if (isDone){  done(); }
            break;
        case BLOCK_BALL:
+           //temporary test
+
+            while(true){
+                 Position tempBallPos = ball.GetPos();
+                cout << "Position " << tempBallPos << " translated to " << robo.movePosInBounce(tempBallPos) << endl << endl;
+                sleep(1);
+            }
            isDone = blockBall(command.pos1.GetX());
            if (isDone){ done(); }
            break;

@@ -49,6 +49,7 @@ public:
     void idle();
     void setAvoidBall(bool avoid);
     void setPrecise(bool val);
+    Position movePosInBounce(Position pos);
 private:
     Position targetPosition;
     int rfNumber;
