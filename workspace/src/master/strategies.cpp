@@ -21,7 +21,6 @@ void Master::strategy_offensive3(){
         send(Command(ACTION_GOTO, Position(0.5 * side, 0.0), 1.5), 1);
         send(Command(ACTION_GOTO, Position(0.1 * side, 0.0), 1.5), 2);
         cout << "Strategy defensive: WAIT" << endl;
-        s_case = WAIT;
         break;
     case WAIT:
         break;
@@ -33,7 +32,7 @@ void Master::strategy_offensive3(){
         break;
     case SHOOT_AT_GOAL:
        // send(Command(ACTION_BLOCK_BALL, Position(0,0)),1);
-        send(Command(ACTION_KICK, KICK_SPEED, APPROACH_SPEED), 2);
+        send(Command(ACTION_KICK, Position(1.38*-side, 0), KICK_SPEED, APPROACH_SPEED), 2);
         break;
     case NEXT:
         break;
@@ -47,6 +46,7 @@ void Master::offensiveNextMove(){
     switch(s_case){
     case INIT:
         s_case = WAIT;
+        break;
     case WAIT:
         if (!player[1].isBusy() && !player[2].isBusy()) {
             cout << "Strategy offensive: NEXT" << endl;
