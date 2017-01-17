@@ -7,7 +7,8 @@ void Player::idle()
 
 bool Player::goTo(Position target, double speed)
 {
-  if (robo.GetPos().DistanceTo(target) < 0.1)
+    robo.GotoPos(target, speed);
+  if (robo.isArrived(0.1))
   {
     playerPrint("State set to IDLE");
     return true; // Done
@@ -203,12 +204,12 @@ bool Player::angeled_behind_ball(Position targetPos, double speed){
         pos_behind_ball_x = ballPos.GetX() + direction.GetX() * 3 * scale / length;
         pos_behind_ball_y = ballPos.GetY() + direction.GetY() * 3 * scale / length;
         pos_behind_ball = Position(pos_behind_ball_x, pos_behind_ball_y);
-        if (robo.GetPos().DistanceTo(pos_behind_ball) < 0.3) {
+        if (robo.isArrived(0.3)) {
             robo.GotoPos(pos_behind_ball, speed * 0.3);
         } else {
             robo.GotoPos(pos_behind_ball, speed);
         }
-        if(robo.isArrived()){
+        if(robo.isArrived(0.04)){
             cout << "STEP1 DONE" << endl;
             state_before_kick = STEP2;
             lengthToBall = robo.GetPos().DistanceTo(ball.GetPos());
@@ -226,7 +227,8 @@ bool Player::angeled_behind_ball(Position targetPos, double speed){
         pos_behind_ball_y = ballPos.GetY() + direction.GetY() * 1 * scale / length;
         pos_behind_ball = Position(pos_behind_ball_x, pos_behind_ball_y);
         robo.GotoPos(pos_behind_ball, speed * 0.35);
-        if (robo.isArrived()) {
+        if (robo.isArrived(0.04)) {
+            cout << endl << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl << endl;
             cout << "Angled behind ball DONE" << endl;
             return true;
         }

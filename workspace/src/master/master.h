@@ -85,6 +85,7 @@ private:
     timer s_timer;
     const vector<string> strategyStateNames = {"INIT", "NEXT", "BLOCK", "COUNTER", "SHOOT", "SHOOT_AT_GOAL", "POSITION", "INTERRUPT", "WAIT"};
     void debugContinue();
+    void t_debugContinue();
     void strategy_defensive();
     void strategy_offensive();
     void strategy_offensive2();
@@ -92,6 +93,7 @@ private:
     void strategy_demo();
     void nextDefensiveMove();
     void offensiveNextMove();
+    bool bounceForward();
 
 
     /** Please prefix all tactic-specific variables with some kind of identifier
@@ -111,6 +113,7 @@ private:
 
     /** SHARED TACTIC VARIABLES */
     T_State t_state;
+    T_State t_state2;
     int closestRobo;
     double maxDistance;
     Position t_target;

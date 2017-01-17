@@ -54,7 +54,9 @@ void Player::run() {
        case KICK:
            //drivingKick(command.pos1);
            isDone = kick(command.pos1, command.speed, command.approach_speed);
-           if (isDone){  done(); }
+           if (isDone){
+               cout << endl << "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$4" << endl;
+               done(); }
            break;
        case BLOCK_BALL:
            //temporary test

@@ -4,6 +4,14 @@
  *  All tactics should return true when they're DONE
  */
 
+void Master::t_debugContinue() {
+    if (DEBUG) {
+        cout << ">> Continue (y)? " << endl;
+        string ans;
+        cin >> ans;
+    }
+}
+
 void Master::exampleTactic()
 {
   Position target = Position(1.0, 0.0);
@@ -76,6 +84,40 @@ bool Master::crossPassAndShoot()
       break;
   }
   return false;
+}
+
+bool Master::bounceForward() {
+    switch(t_state2) {
+    case STEP1: {
+        Position kickerPos = player[1].getPos();
+        Position target(0.8 * -side, -0.3);
+        double midpointXDist = (kickerPos.GetX() - target.GetX()) / 2;
+        double midpointX = target.GetX() + midpointXDist;
+        Position targetWall(midpointX, -0.89);
+        send(Command(ACTION_KICK, targetWall, 3.0, 2.0), 1);
+        send(Command(ACTION_GOTO, Position(midpointX, -0.3), 2.0), 2);
+        t_state2 = STEP2;
+        break;
+    }
+    case STEP2:
+        if (!player[1].isBusy() && !player[2].isBusy()) {
+            send(Command(ACTION_GOTO, Position(0.8 * side, 0.0), 2.0), 2);
+            t_state2 = STEP3;
+        }
+        break;
+    case STEP3:
+        if (!player[1].isBusy() && !player[2].isBusy()) {
+            t_state2 = STEP4;
+        }
+        break;
+    case STEP4:
+        return kickAtGoal();
+        break;
+    default:
+        cout << "No case for this state in bounceForward" << endl;
+        break;
+    }
+    return false;
 }
 
 /*  bool Master::tactic_nearpenaltyarea()
@@ -191,7 +233,7 @@ bool Master::kickAtGoal() {
         break;
     // Find the position of the goalkeeper
     case STEP2:
-        t_target = Position(-1.27, 0);
+        t_target = Position(1.27 * -side, 0);
         t_state = STEP3;
         break;
     case STEP3: {

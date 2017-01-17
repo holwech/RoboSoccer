@@ -26,6 +26,7 @@ public:
     double GetVelocity();
     bool inGoalArea();
     edges nearEdge();
+    bool isStopped();
 };
 
 #endif // BALL_H

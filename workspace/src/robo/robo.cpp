@@ -18,7 +18,7 @@ void Robo::GotoPos(Position target, double speed){
         this->pidAngle.changeParams(ANGLE_KP_DRIVE, ANGLE_KI_DRIVE, ANGLE_KD_DRIVE);
     }
     this->speed = speed;
-    this->targetPosition = target;
+    this->targetPosition = movePosInBounce(target);
     //this->AbortGotoXY();
 }
 
@@ -40,49 +40,63 @@ Position Robo::movePosInBounce(Position pos){
     //Find how much we must divide the vector to make it in bounce
     Position midPosLeft(-0.58,0);
     Position midPosRight(0.58,0);
-    cout << "length left: " << midPosLeft.DistanceTo(GetPos()) << endl;
-    cout << "length right: " << midPosRight.DistanceTo(GetPos()) << endl;
+    //cout << "length left: " << midPosLeft.DistanceTo(GetPos()) << endl;
+    //cout << "length right: " << midPosRight.DistanceTo(GetPos()) << endl;
     double scaleX = 0;
     double scaleY = 0;
     double cornerScale = 0;
-    //corners by door
+
+    //corners
     if(pos.GetX() < -1.17){
         if (pos.GetY() > 0.61){
             //bottom door
             cornerScale = midPosLeft.DistanceTo(pos)/1.04;
-            return cornerScale;
+            cout << "Cornerscale: " << cornerScale << endl;
+            if (cornerScale > 1)
+                cout << "SCALED POS IN CORNER" << endl;
+                return Position(pos.GetX()/cornerScale, pos.GetY()/cornerScale);
         }
-        else if(pos.GetY() < 0.58){
+        else if(pos.GetY() < -0.58){
             //top door
             cornerScale = midPosLeft.DistanceTo(pos)/1.07;
-            return cornerScale;
+            cout << "Cornerscale: " << cornerScale << endl;
+            if (cornerScale > 1)
+                cout << "SCALED POS IN CORNER" << endl;
+                return Position(pos.GetX()/cornerScale, pos.GetY()/cornerScale);
         }
     }
-    else if(pos.GetX() > 1.414){
+    else if(pos.GetX() > 1.2){
         if (pos.GetY() < -0.62){
             //top not door
             cornerScale = midPosRight.DistanceTo(pos)/1.04;
-            return cornerScale;
+            cout << "Cornerscale: " << cornerScale << endl;
+            if (cornerScale > 1)
+                cout << "SCALED POS IN CORNER" << endl;
+                return Position(pos.GetX()/cornerScale, pos.GetY()/cornerScale);
         }
-        else if(pos.GetY() < -0.6){
+        else if(pos.GetY() > 0.6){
             //bottom not door
-            cornerScale = midPosRight.DistanceTo(pos)/1.1;
-            return cornerScale;
+            cornerScale = midPosRight.DistanceTo(pos)/1.06;
+            cout << "Cornerscale: " << cornerScale << endl;
+            if (cornerScale > 1)
+                cout << "SCALED POS IN CORNER" << endl;
+                return Position(pos.GetX()/cornerScale, pos.GetY()/cornerScale);
         }
     }
 
+    //door
     if(pos.GetX() <  0){
-        scaleX = pos.GetX()/-1.40;
+        scaleX = pos.GetX()/-1.38;
     }
     else if(pos.GetX() > 0){
-        scaleX = pos.GetX()/1.40;
+        scaleX = pos.GetX()/1.38;
     }
 
     if(pos.GetY() < 0){
-        scaleY = pos.GetY()/-0.87;
+        scaleY = pos.GetY()/-0.85;
     }
     else if(pos.GetY() > 0){
-        scaleY = pos.GetY()/0.85;
+        scaleY = pos.GetY()/0.83;
     }
 
     //If inside, return original, or scale and return scaled version
@@ -98,8 +112,8 @@ Position Robo::movePosInBounce(Position pos){
     }
 }
 
-bool Robo::isArrived(){
-    return this->GetPos().DistanceTo(targetPosition) < ARRIVED_DIST;
+bool Robo::isArrived(double radius){
+    return this->GetPos().DistanceTo(targetPosition) < radius;
 }
 
 void Robo::updatePositions(vector<Position> positions) {
