@@ -45,7 +45,7 @@ bool Master::crossPassAndShoot()
       else{
           chrossandpassy=0.5;
       }
-      send(Command(ACTION_GOTO, Position(0.7, chrossandpassy), 1.5 ), 0);
+      send(Command(ACTION_GOTO, Position(0.7, chrossandpassy), 1.5, 2.0 ), 0);
       t_state = STEP2;
       break;
       // Passes the ball to the other robot
@@ -61,9 +61,9 @@ bool Master::crossPassAndShoot()
       // Positions the receiving robot according to the ball
     case STEP3:
       //       if (!player[2].isBusy()) {
-      if (ball.GetVelocity() < 0.00001 && !player[1].isBusy() && !player[0].isBusy())  //wait for the ball stop, if not stopping, the ball.GetPos() will not updating because the state changes.
+      if (ball.GetVelocity() < 0.0001 && !player[1].isBusy() && !player[0].isBusy())  //wait for the ball stop, if not stopping, the ball.GetPos() will not updating because the state changes.
       {
-        send(Command(ACTION_KICK, Position(1.4, 0.0), 2.6, 0.4), 0);
+        send(Command(ACTION_KICK, Position(1.4, 0.0), 2.6, 2.0), 0);
         t_state = STEP5;
       }
       break;
@@ -94,7 +94,7 @@ bool Master::bounceForward() {
         double midpointXDist = (ball.GetPos().GetX() - target.GetX()) / 2;
         double midpointX = target.GetX() + midpointXDist;
         Position targetWall(midpointX, 0.89 * flipY);
-        send(Command(ACTION_KICK, targetWall, 3.0, 1.5), 1);
+        send(Command(ACTION_KICK, targetWall, 2.0, 1.5), 1);
         send(Command(ACTION_GOTO, Position(midpointX, ball.GetPos().GetY()), 2.0), 2);
         t_state2 = STEP2;
         break;

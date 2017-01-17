@@ -33,13 +33,13 @@ bool Player::pass(Position target)
     case A_STEP1:
       // Calculates Speed according to distance
       distance = ball.GetPos().DistanceTo(target);
-      speedparam = distance / 2;
-      passSpeed = speedparam * 2.6;
+      speedparam = distance;
+      passSpeed = speedparam * 2.0;
       pass_state = A_STEP2;
       break;
     case A_STEP2:
       {
-        bool passDone = kick(target, passSpeed);
+        bool passDone = kick(target, passSpeed, 2.0);
         if (passDone)
         {
           return true;
@@ -76,8 +76,8 @@ bool Player::kick(Position target, double speed, double approach_speed)
       length = sqrt((dirx * dirx) + (diry * diry));
       dirx = dirx / length;
       diry = diry / length;
-      endKickPos.SetX(ball.GetX() + (dirx / 5));
-      endKickPos.SetY(ball.GetY() + (diry / 5));
+      endKickPos.SetX(ball.GetX() + (dirx / 10));
+      endKickPos.SetY(ball.GetY() + (diry / 10));
       cout << "Position: " << endKickPos.GetX() << ", " << endKickPos.GetY() << endl;
       kick_state = A_STEP3;
       break;

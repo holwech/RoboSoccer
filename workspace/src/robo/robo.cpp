@@ -106,12 +106,11 @@ Position Robo::movePosInBounce(Position pos){
     //If inside, return original, or scale and return scaled version
     //cout << "scaleX, scaleY: " << scaleX << ", " << scaleY;
     if (scaleX <= 1 && scaleY <=1){
-        cout << endl;
         return pos;
     }
     else{
         double largestScale = std::max(scaleY, scaleX);
-        cout << "largestScale: " << largestScale << endl;
+        //cout << "largestScale: " << largestScale << endl;
         return Position(pos.GetX()/largestScale, pos.GetY()/largestScale);
     }
 }
