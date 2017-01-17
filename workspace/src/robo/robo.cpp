@@ -100,7 +100,7 @@ Position Robo::movePosInBounce(Position pos){
     }
 
     //If inside, return original, or scale and return scaled version
-    cout << "scaleX, scaleY: " << scaleX << ", " << scaleY;
+    //cout << "scaleX, scaleY: " << scaleX << ", " << scaleY;
     if (scaleX <= 1 && scaleY <=1){
         cout << endl;
         return pos;

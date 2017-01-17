@@ -220,7 +220,6 @@ bool Player::angeled_behind_ball(Position targetPos, double speed){
         if ( lengthToBall +0.05 < robo.GetPos().DistanceTo(ball.GetPos()) ){
             state_before_kick = STEP1;
             cout << "BALL TOO FAR AWAY, GOING TO STEP 1" << endl;
-            sleep(3);
         }
 
         pos_behind_ball_x = ballPos.GetX() + direction.GetX() * 1 * scale / length;
@@ -228,7 +227,7 @@ bool Player::angeled_behind_ball(Position targetPos, double speed){
         pos_behind_ball = Position(pos_behind_ball_x, pos_behind_ball_y);
         robo.GotoPos(pos_behind_ball, speed * 0.35);
         if (robo.isArrived(0.04)) {
-            cout << endl << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl << endl;
+            //cout << endl << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl << endl;
             cout << "Angled behind ball DONE" << endl;
             return true;
         }
