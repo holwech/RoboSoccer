@@ -89,19 +89,19 @@ bool Master::crossPassAndShoot()
 bool Master::bounceForward() {
     switch(t_state2) {
     case STEP1: {
-        Position kickerPos = player[1].getPos();
-        Position target(0.8 * -side, -0.3);
-        double midpointXDist = (kickerPos.GetX() - target.GetX()) / 2;
+        double flipY = ball.GetPos().GetY() > 0 ? 1.0 : -1.0;
+        Position target(0.8 * -side, 0.3 * flipY);
+        double midpointXDist = (ball.GetPos().GetX() - target.GetX()) / 2;
         double midpointX = target.GetX() + midpointXDist;
-        Position targetWall(midpointX, -0.89);
-        send(Command(ACTION_KICK, targetWall, 3.0, 2.0), 1);
-        send(Command(ACTION_GOTO, Position(midpointX, -0.3), 2.0), 2);
+        Position targetWall(midpointX, 0.89 * flipY);
+        send(Command(ACTION_KICK, targetWall, 3.0, 1.5), 1);
+        send(Command(ACTION_GOTO, Position(midpointX, ball.GetPos().GetY()), 2.0), 2);
         t_state2 = STEP2;
         break;
     }
     case STEP2:
         if (!player[1].isBusy() && !player[2].isBusy()) {
-            send(Command(ACTION_GOTO, Position(0.8 * side, 0.0), 2.0), 2);
+            send(Command(ACTION_GOTO, Position(0.8 * side, 0.0), 2.0), 1);
             t_state2 = STEP3;
         }
         break;
@@ -143,25 +143,21 @@ bool Master::tactic_nearpenaltyarea(double threshold)
     // Position robots accordingly
     switch (t_state)
     {
-      case STEP1:
-
-
-        if (player[1].getPos().DistanceTo(ball.GetPos()) < player[2].getPos().DistanceTo(ball.GetPos()))
-        {
-          robonr = 1;
-        } else {
-          robonr = 2;
-        }
-
-        send(Command(ACTION_KICK, Position(-1.0, ball.GetPos().GetY()), 2.5, 2.0), robonr);
-        cout << "NEARPENALTY" << endl;
+      case STEP1: {
+        closestRobo = getClosest();
         t_state = STEP2;
         break;
+      }
       case STEP2:
-        if (!player[robonr].isBusy())
+        send(Command(ACTION_KICK, Position(-1.0, ball.GetPos().GetY()), 2.5, 2.0), closestRobo);
+        t_state = STEP3;
+        break;
+      case STEP3:
+        if (!player[closestRobo].isBusy())
         {
           return true;
         }
+        checkClosest(closestRobo);
         break;
       default:
         cout << "No case for this step in tactic nearpenaltyarea" << t_state << endl;
@@ -223,20 +219,19 @@ bool Master::tactic_ballchasing()
 bool Master::kickAtGoal() {
     switch(t_state) {
     // Find closest robo to ball
-    case STEP1:
-        if (player[1].getPos().DistanceTo(ball.GetPos()) < player[2].getPos().DistanceTo(ball.GetPos())) {
-          closestRobo = 1;
-        } else {
-          closestRobo = 2;
-        }
+    case STEP1: {
+        closestRobo = getClosest();
+        cout << "Closest robo is: " << closestRobo << endl;
         t_state = STEP2;
         break;
+    }
     // Find the position of the goalkeeper
     case STEP2:
         t_target = Position(1.27 * -side, 0);
         t_state = STEP3;
         break;
     case STEP3: {
+        cout << "Closest robo in STEP3 is: " << closestRobo << endl;
         send(Command(ACTION_KICK, t_target, 2.5, 2.0), closestRobo);
         t_state = STEP4;
         break;
@@ -245,6 +240,7 @@ bool Master::kickAtGoal() {
         if (!player[closestRobo].isBusy()) {
             return true;
         }
+        checkClosest(closestRobo);
         break;
     default:
         cout << "No case in kickAtGoal" << endl;

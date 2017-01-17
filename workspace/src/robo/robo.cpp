@@ -31,6 +31,10 @@ void Robo::turn(Position targetPos){
     this->targetPosition = targetPos;
 }
 
+void Robo::stop() {
+    idle();
+}
+
 void Robo::idle(){
     isIdle = true;
 }

@@ -5,6 +5,10 @@ void Player::idle()
   robo.idle();
 }
 
+bool Player::stop() {
+  return true;
+}
+
 bool Player::goTo(Position target, double speed)
 {
   if (robo.GetPos().DistanceTo(target) < 0.1)
@@ -219,7 +223,6 @@ bool Player::angeled_behind_ball(Position targetPos, double speed){
         if ( lengthToBall +0.05 < robo.GetPos().DistanceTo(ball.GetPos()) ){
             state_before_kick = STEP1;
             cout << "BALL TOO FAR AWAY, GOING TO STEP 1" << endl;
-            sleep(3);
         }
 
         pos_behind_ball_x = ballPos.GetX() + direction.GetX() * 1 * scale / length;

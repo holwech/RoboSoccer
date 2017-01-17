@@ -47,6 +47,7 @@ public:
     void turn(Position targetPos);
     bool isArrived();
     void idle();
+    void stop();
     void setAvoidBall(bool avoid);
     void setPrecise(bool val);
 private:

@@ -6,7 +6,7 @@
 #define APPROACH_SPEED 2
 
 void Master::debugContinue() {
-    if (DEBUG) {
+    if (0) {
         cout << ">> STRATEGY STATE: " << strategyStateNames[s_case] << endl;
         cout << ">> Continue (y)? " << endl;
         string ans;
@@ -198,26 +198,18 @@ void Master::strategy_defensive() {
         bool kickAtGoalDone = kickAtGoal();
         if (kickAtGoalDone)
         {
-          cout << "Strategy defensive: WAIT S" << endl;
           resetTVariables();
-          s_case = WAIT;
-          debugContinue();
-        } else {
-            nextDefensiveMove();
         }
+        nextDefensiveMove();
         break;
       }
     case BLOCK:
       {
         bool nearPenaltyDone = tactic_nearpenaltyarea(0.2 * -side);
         if (nearPenaltyDone) {
-            cout << "Strategy defensive: WAIT B" << endl;
             resetTVariables();
-            s_case = WAIT;
-            debugContinue();
-        } else {
-            nextDefensiveMove();
         }
+        nextDefensiveMove();
         break;
       }
     default:
@@ -238,7 +230,6 @@ void Master::nextDefensiveMove() {
                    (side == RIGHT && ball.GetPos().GetX() >= -0.2)) {
         nextState = BLOCK;
     }
-        cout << "side: " << side << " ball: " << ball.GetPos() << endl;
     if (nextState != s_case) {
         resetTVariables();
         s_case = nextState;

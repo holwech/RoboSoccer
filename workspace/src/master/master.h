@@ -67,12 +67,14 @@ private:
     void updateSide();
     void updatePositions();
     void send(Command command, int roboNum);
+    int getClosest(bool withKeeper = false);
+    int setClosest(int prevClosest, bool resetTactic = false, bool withKeeper = false);
+    void checkClosest(int currClosest, bool withKeeper = false);
     vector<Channel> channel;
     vector<Player> player;
     vector<Position> positions;
     Position ballPos;
     bool tacticDone;
-    int robonr; // used for tactics: near_penalty
     double chrossandpassy; // used for tactics: Chross and Pass
 
 

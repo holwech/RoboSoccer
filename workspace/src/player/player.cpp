@@ -34,6 +34,10 @@ void Player::run() {
        case IDLE:
            idle();
            break;
+       case STOP:
+           isDone = stop();
+           if (isDone){ done(); }
+           break;
        case BEFORE_PASS:
            break;
        case PASS:
@@ -93,6 +97,10 @@ void Player::readCommand() {
         playerPrint("Robo in state GOTO");
         //cout << "GOTO: " << command.pos1.GetX() << ", " << command.pos1.GetY() << endl;
         setState(GOTO);
+        break;
+    case ACTION_STOP:
+        playerPrint("Robo in state STOP");
+        setState(STOP);
         break;
     case ACTION_TEST:
         setState(TEST);

@@ -7,6 +7,7 @@
 
 typedef enum {
     ACTION_IDLE,
+    ACTION_STOP,
     ACTION_BEFORE_PASS,
     ACTION_PASS,
     ACTION_GOTO,
