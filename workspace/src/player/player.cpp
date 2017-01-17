@@ -58,9 +58,17 @@ void Player::run() {
        case KICK:
            //drivingKick(command.pos1);
            isDone = kick(command.pos1, command.speed, command.approach_speed);
-           if (isDone){  done(); }
+           if (isDone){
+               done(); }
            break;
        case BLOCK_BALL:
+           //temporary test
+
+            while(true){
+                 Position tempBallPos = ball.GetPos();
+                cout << "Position " << tempBallPos << " translated to " << robo.movePosInBounce(tempBallPos) << endl << endl;
+                sleep(1);
+            }
            isDone = blockBall(command.pos1.GetX());
            if (isDone){ done(); }
            break;

@@ -45,11 +45,12 @@ public:
     void updatePidsGoalie(Position targetPos);
     void updatePositions(vector<Position> positions);
     void turn(Position targetPos);
-    bool isArrived();
+    bool isArrived(double radius);
     void idle();
     void stop();
     void setAvoidBall(bool avoid);
     void setPrecise(bool val);
+    Position movePosInBounce(Position pos);
 private:
     Position targetPosition;
     int rfNumber;
