@@ -57,3 +57,10 @@ edges Ball::nearEdge() {
     }
 }
 
+bool Ball::isStopped() {
+    if (Ball::GetVelocity() < 0.0001) {
+        return true;
+    } else {
+        return false;
+    }
+}

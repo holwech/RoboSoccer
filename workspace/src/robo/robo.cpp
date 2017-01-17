@@ -35,10 +35,6 @@ void Robo::idle(){
     isIdle = true;
 }
 
-Position Robo::movePosInBounce(Position pos){
-
-
-}
 
 bool Robo::isArrived(){
     return this->GetPos().DistanceTo(targetPosition) < ARRIVED_DIST;

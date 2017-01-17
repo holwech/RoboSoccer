@@ -126,6 +126,7 @@ void Master::strategies() {
     cout << "	6. kickAtGoal" << endl;
     cout << "   7. Strategy_offensive2"<<endl;
     cout << "	8. Strategy_offensive3" << endl;
+    cout << "	9. bounce forward" << endl;
 
     cin >> answer;
     while(1) {
@@ -162,6 +163,8 @@ void Master::strategies() {
             strategy_offensive3();
             break;
         case 9:
+            tacticDone = bounceForward();
+            if (tacticDone) { answer = -1; }
             break;
         default:
             cout << "No case for this state yet (in strategies function), or tactic terminated" << endl;
@@ -174,6 +177,7 @@ void Master::strategies() {
             cout << "   6. kickAtGoal" << endl;
             cout << "   7. Strategy_offensive2"<<endl;
             cout << "	8. Monitor positions" << endl;
+            cout << "	9. bounce forward" << endl;
             resetTVariables();
             cin >> answer;
             break;
@@ -288,6 +292,7 @@ void Master::resetTVariables() {
     s_state = BALANCED;
     s_case = INIT;
     t_state = STEP1;
+    t_state2 = STEP1;
     tacticDone = false;
     cps_state = 1;
     closestRobo = 0;
