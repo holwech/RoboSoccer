@@ -1,4 +1,5 @@
 #include "collision_avoidance.h"
+#include "ball/ball.h"
 
 CA::CA() {
     //Adding goalArea obstacle-Positions
@@ -134,7 +135,7 @@ Force CA::getPull(Position& basePos, Position& target, Position& obstacle) {
     return force;
 }
 
-/** Field boundaries: {-1.383, 0.089}, {1.422, 0.876}, {1.465, -0.924}, {-1.466, -0.884}
+/** Field boundaries: {-1.383, 0.89}, {1.422, 0.876}, {1.465, -0.924}, {-1.466, -0.884}
   * Goal boundaries
   * Goal (not by the door): {1.414, 0.338}, {1.191, 0.341}, {1.205, -0.354}, {1.430, -0.362}
   * Goal (by the door): {-1.389, 0.369}, {-1.174, 0.360}, {-1.194, -0.332}, {-1.415, -0.325}
@@ -205,7 +206,8 @@ Force CA::getTotalPull(Position basePos, Position target, vector<Position>& team
         totalForce.X += temp.X;
         totalForce.Y += temp.Y;
     }
-    Force wallPull = getWallPull(basePos, target);
+  //  Force wallPull = getWallPull(basePos, target);
+    Force wallPull = {0,0,0,0,0};
     totalForce.X += wallPull.X;
     totalForce.Y += wallPull.Y;
 
@@ -213,5 +215,17 @@ Force CA::getTotalPull(Position basePos, Position target, vector<Position>& team
     Angle angle = basePos.AngleOfLineToPos(Position(basePos.GetX() + totalForce.X, basePos.GetY() + totalForce.Y));
     totalForce.deg = angle.Deg();
     totalForce.rad = angle.Get();
+    cout << "THIS SHOULD NOT PRINT, IF IT DOES COLLISOIN AVOIDANCE IS ON" << endl;
     return totalForce;
+}
+
+Force CA::getBallPull(Position basePos, Position target, Position ballPos){
+    Force ballForce = getPull(basePos, target,  ballPos);
+    ballForce.X *= 0.5;
+    ballForce.Y *= 0.5;
+    ballForce.len = sqrt(pow(ballForce.X, 2) + pow(ballForce.Y, 2));
+    Angle angle = basePos.AngleOfLineToPos(Position(basePos.GetX() + ballForce.X, basePos.GetY() + ballForce.Y));
+    ballForce.deg = angle.Deg();
+    ballForce.rad = angle.Get();
+    return ballForce;
 }

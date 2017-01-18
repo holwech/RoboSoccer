@@ -23,14 +23,9 @@ Master::Master(string& team, RTDBConn& DBC, vector<int>& rfNumber) :
                     Player(&channel[5], DBC, rfNumber[5])
                 }),
                 positions(6) {
-    side = RIGHT_SIDE;
     state = REFEREE_INIT;
     referee.Init();
-
-    /** Init tactic variables */
-    t_state = STEP1;
-    tacticDone = false;
-    cps_state = 1;
+    resetTVariables();
 }
 
 
@@ -51,6 +46,7 @@ void Master::run() {
 
     cout << "Starting state machine..." << endl;
     while(1) {
+        updateSide();
         updatePositions();
         state = referee.GetPlayMode();
         switch(state) {
@@ -102,16 +98,28 @@ void Master::updatePositions() {
     }
 }
 
+void Master::strategyController() {
+    // Do something to choose strategies
+    switch(s_state) {
+    case BALANCED:
+        // Run the balanced strategy
+        break;
+    case AGGRESSIVE:
+        break;
+    case DEFENSIVE:
+        break;
+    default:
+        cout << "No strategy for this state" << endl;
+        break;
+    }
+}
+
 /** Add your strategies or tactics here. (Yes, I know, misleading function name) */
 void Master::strategies() {
-    int answer;
-    cout << "Select one of the following strategies/tactics: "<<endl;
-    cout << "	1. exampleTactic" << endl;
-    cout << "   2. Tactic_nearpenaltyarea"<<endl;
-    cout << "   3. Tactic_ballchasing"<<endl;
+    int answer = -1;
 
-    cin >> answer;
     while(1) {
+        updateSide();
         updatePositions();
         switch(answer) {
         case 1:
@@ -119,23 +127,56 @@ void Master::strategies() {
             if (tacticDone) { answer = -1; }
             break;
         case 2:
-            tacticDone = tactic_nearpenaltyarea();
-            if (tacticDone) { answer = -1; }
+            tacticDone = tactic_nearpenaltyarea(0.65);
+            //if (tacticDone) { answer = -1; }
             break;
         case 3:
             tacticDone = tactic_ballchasing();
             if (tacticDone) { answer = -1; }
+            break;    
+        case 4:
+            strategy_defensive();
+            usleep(10);
+            break;
+        case 5:
+            strategy_offensive();
+            break;
+        case 6:
+            tacticDone = kickAtGoal();
+            //if (tacticDone) { answer = -1; }
+            break;   
+        case 7:
+            strategy_offensive2();
+            break;
+        case 8:
+            strategy_offensive3();
+            break;
+        case 9:
+            tacticDone = bounceForward();
+            if (tacticDone) { answer = -1; }
+            break;
+        case 10:
+            closestRobo = setClosest(closestRobo, true, true);
+            cout << "Closest robo is: " << closestRobo << endl;
+            sleep(1);
             break;
         default:
-            cout << "No case for this state yet (in strategies function), or tactic terminated" << endl;
             cout << "Select one of the following strategies/tactics: "<<endl;
-            cout << "	1. exampleTactic" << endl;
+            cout << "   1. Cross and Pass" << endl;
             cout << "   2. Tactic_nearpenaltyarea"<<endl;
             cout << "   3. Tactic_ballchasing"<<endl;
-            t_state = STEP1;
+            cout << "   4. Strategy_defensive"<<endl;
+            cout << "   5. strategy_offensive"<<endl;
+            cout << "   6. kickAtGoal" << endl;
+            cout << "   7. Strategy_offensive2"<<endl;
+            cout << "	8. Monitor positions" << endl;
+            cout << "	9. bounce forward" << endl;
+            cout << "	10. test closest robo" << endl;
+            resetTVariables();
             cin >> answer;
             break;
         }
+        usleep(10000);
     }
 }
 
@@ -143,8 +184,10 @@ void Master::strategies() {
 void Master::manual() {
     int answer;
     int robot;
-    double posX, posY, speed;
+    double posX, posY, speed, approachSpeed;
     while(1) {
+        updateSide();
+        updatePositions();
         cout << "Choose an action" << endl;
         cout << "	0. EXIT" << endl;
         cout << "	1. ACTION_GOTO" << endl;
@@ -152,6 +195,11 @@ void Master::manual() {
         cout << "	3. KICK" << endl;
         cout << "	4. DEFEND" << endl;
         cout << "	5. PASS" << endl;
+        cout << "	6. LISTEN TO REFEREE" << endl;
+        cout << "	7. TEST BALL CLASS" << endl;
+        cout << "	8. STOP" << endl;
+        cout << "	9. TEST POS_TO_BOUNCE" << endl;
+
         cin >> answer;
         cout << "Which robot? (0-2)" << endl;
         cin >> robot;
@@ -168,22 +216,43 @@ void Master::manual() {
             send(Command(ACTION_GOTO, Position(posX, posY), speed), robot);
             break;
         case 2:
-            send(Command(ACTION_BEFORE_KICK, ball.GetPos(), Position(-1, 0)), robot);
+            cout << "Approach speed: ";
+            cin >> approachSpeed;
+            send(Command(ACTION_BEFORE_KICK, ball.GetPos(), Position(1.2, 0), approachSpeed), robot);
             break;
         case 3:
-            /**cout << "x: ";
-            cin >> posX;
-            cout << "y: ";
-            cin >> posY;*/
-
-            send(Command(ACTION_KICK, Position(1.27, 0)), robot);
+            cout << "Speed: ";
+            cin >> speed;
+            cout << "Approach speed: ";
+            cin >> approachSpeed;
+            send(Command(ACTION_KICK, Position(1.27, 0), speed, approachSpeed), robot);
             break;
         case 4:
             send(Command(ACTION_DEFEND), robot);
             break;
         case 5:
-            send(Command(ACTION_PASS, Position(-1.27, 0)),robot);
-            break;            
+            send(Command(ACTION_PASS, Position(1.2,0)),robot);
+            break;
+        case 6:
+            while(1){
+                updateSide();
+                printRefereeStats();
+                sleep(1);
+            }
+            break;
+        case 7: {
+            test_ball testBallHandler(ball);
+            testBallHandler.test(side);
+            break;
+        }
+        case 8:
+            send(Command(ACTION_GOTO, Position(1.0, 0.0), 1.5), 0);
+            sleep(2);
+            send(Command(ACTION_STOP), 0);
+            break;
+        case 9:
+            send(Command(ACTION_BLOCK_BALL, Position(0,0) ), 1);
+            break;
         default:
             cout << "No action created for this choice yet in master.manual" << endl;
             break;
@@ -192,12 +261,75 @@ void Master::manual() {
     }
 }
 
-void Master::resetTVariables() {
-    t_state = STEP1;
-    tacticDone = false;
-    cps_state = 1;
+
+void Master::printRefereeStats(){
+    cout << "Referee stats: " << endl;
+    cout << "\tPlaymode: " << referee.GetPlayMode() << endl;
+    cout << "\tGetSide: " << referee.GetSide() << endl;
+    cout << "\tGetBlueSide: " << referee.GetBlueSide() << endl;
+    cout << "\tCalculated side: " << side << endl;
 }
 
+void Master::updateSide(){
+    if (team == "b"){
+        if (referee.GetBlueSide() == 0){
+            side = LEFT;
+        }
+        else{
+            side = RIGHT;
+        }
+    }
+    else{
+        if (referee.GetBlueSide() == 0){
+            side = RIGHT;
+        }
+        else{
+            side = LEFT;
+        }
+    }
+    for(int i = 0; i < (int)player.size(); i++){
+        player[i].side = side;
+    }
+}
 
+void Master::resetTVariables() {
+    s_state = BALANCED;
+    s_case = INIT;
+    t_state = STEP1;
+    t_state2 = STEP1;
+    tacticDone = false;
+    cps_state = 1;
+    closestRobo = -1;
+    maxDistance = 10;
+    chrossandpassy = 0; // used for tactics: Chross and Pass
+}
 
+// Gives the number of the closest robot
+int Master::getClosest(bool withKeeper) {
+    if (withKeeper && (player[0].getPos().DistanceTo(ball.GetPos()) < player[1].getPos().DistanceTo(ball.GetPos()))) {
+      return 0;
+    } else if (player[1].getPos().DistanceTo(ball.GetPos()) < player[2].getPos().DistanceTo(ball.GetPos())) {
+      return 1;
+    } else {
+      return 2;
+    }
+}
 
+// Gives the number of the closest robo and also stops the what the current robot is doing
+// and resets the tactic if reset is set to true
+int Master::setClosest(int currClosest, bool resetTactic, bool withKeeper) {
+    int newClosest = getClosest(withKeeper);
+    if (currClosest != newClosest && currClosest != -1) {
+        cout << "NEW CLOSEST ROBO: " << newClosest << " OLD: " << currClosest << endl;
+        send(Command(ACTION_STOP), currClosest);
+        if (resetTactic) {
+           t_state = STEP1;
+        }
+    }
+    return newClosest;
+}
+
+// Checks wether it is closest or not. If it has change, the tactic will reset
+void Master::checkClosest(int currClosest, bool withKeeper) {
+    setClosest(currClosest, true, withKeeper);
+}

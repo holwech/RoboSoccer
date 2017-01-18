@@ -1,16 +1,17 @@
 ﻿#ifndef MASTER_H
 #define MASTER_H
+#define DEBUG true
 
-#include <time.h>
 #include <iostream>
 #include <vector>
+#include <thread>
 #include "kogmo_rtdb.hxx"
 #include "referee.h"
-#include "raw_ball.h"
+#include "ball/ball.h"
 #include "player/player.h"
 #include "timer.h"
 #include "config.cpp"
-#include "thread"
+#include "ball/test_ball.h"
 
 enum ePlayModePlus {
     STATE_MENU,
@@ -26,6 +27,18 @@ enum S_State {
     BALANCED
 };
 
+enum S_Case {
+    INIT,
+    NEXT,
+    BLOCK,
+    COUNTER,
+    SHOOT,
+    SHOOT_AT_GOAL,
+    POSITION,
+    INTERRUPT,
+    WAIT
+};
+
 enum T_State {
     STEP1,
     STEP2,
@@ -35,7 +48,6 @@ enum T_State {
     STEP6
 };
 
-
 class Master {
 public:
     friend class Test;
@@ -44,28 +56,47 @@ public:
 private:
     void resetTVariables();
     void strategies();
+    void strategyController();
     void manual();
     int client_nr;
     string team;
-    eSide side;
-    RawBall ball;
+    Ball ball;
     Referee referee;
     ePlayMode state;
+    fieldSide side;
+    void updateSide();
     void updatePositions();
     void send(Command command, int roboNum);
+    int getClosest(bool withKeeper = false);
+    int setClosest(int prevClosest, bool resetTactic = false, bool withKeeper = false);
+    void checkClosest(int currClosest, bool withKeeper = false);
     vector<Channel> channel;
     vector<Player> player;
     vector<Position> positions;
     Position ballPos;
     bool tacticDone;
+    double chrossandpassy; // used for tactics: Chross and Pass
+
 
     /** These are variables that all strategies can and should use.
      * 	These variables will not conflict because only one strategy can be run at
      * 	the same time
      */
     S_State s_state;
+    S_Case s_case;
+    timer s_timer;
+    const vector<string> strategyStateNames = {"INIT", "NEXT", "BLOCK", "COUNTER", "SHOOT", "SHOOT_AT_GOAL", "POSITION", "INTERRUPT", "WAIT"};
+    void debugContinue();
+    void t_debugContinue();
     void strategy_defensive();
+    void strategy_offensive();
+    void strategy_offensive2();
+    void strategy_offensive3();
     void strategy_demo();
+    void nextDefensiveMove();
+    void offensiveNextMove();
+    bool bounceForward();
+
 
     /** Please prefix all tactic-specific variables with some kind of identifier
      * 	so that we get conflicting variables with the same name. Tactic variables
@@ -78,15 +109,21 @@ private:
     void exampleTactic();
 
     bool crossPassAndShoot();
-    bool tactic_nearpenaltyarea();
+    bool tactic_nearpenaltyarea(double threshold);
     bool tactic_ballchasing();
+    bool kickAtGoal();
 
     /** SHARED TACTIC VARIABLES */
     T_State t_state;
+    T_State t_state2;
+    int closestRobo;
+    double maxDistance;
+    Position t_target;
+
 
     // crossPassAndShoot-variables
     int cps_state; // Example of a prefixed variable
-
+    void printRefereeStats();
 };
 
 #endif // MASTER_H

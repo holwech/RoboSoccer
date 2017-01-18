@@ -8,6 +8,7 @@
 #include "position.h"
 #include "math.h"
 #include "control/collision_avoidance.h"
+#include "ball/ball.h"
 
 #define ANGLE_KP_TURN 40
 #define ANGLE_KI_TURN 3
@@ -24,13 +25,16 @@ public:
                                             pidAngle(ANGLE_KP_DRIVE, ANGLE_KI_DRIVE, ANGLE_KD_DRIVE),
                                             pidDistance(80.0, 0.0, 0.0),
                                             ca(),
-                                             rfNumber(deviceNr),
-                                             posTeam(2),
-                                             posOtherTeam(3),
+                                            rfNumber(deviceNr),
+                                            posTeam({Position(0.0, 0.0), Position(0.0, 0.0)}),
+                                            posOtherTeam({Position(0.0, 0.0), Position(0.0, 0.0), Position(0.0, 0.0)}),
+                                            ball(DBC),
                                             ballBehindRobo(false),
                                             onlyTurn(false),
-                                             isIdle(true){}
-    Robo(RoboControl& other): RoboControl(other){}
+                                            isIdle(true),
+                                            avoidBall(false),
+                                            precise(false){}
+    //Robo(RoboControl& other): RoboControl(other){}
     pidController pidAngle;
     pidController pidDistance;
     CA ca;
@@ -41,8 +45,12 @@ public:
     void updatePidsGoalie(Position targetPos);
     void updatePositions(vector<Position> positions);
     void turn(Position targetPos);
-    bool isArrived();
+    bool isArrived(double radius);
     void idle();
+    void stop();
+    void setAvoidBall(bool avoid);
+    void setPrecise(bool val);
+    Position movePosInBounce(Position pos);
 private:
     Position targetPosition;
     int rfNumber;
@@ -58,11 +66,15 @@ private:
     void updateDistancePid(Position targetPos);
     vector<Position> posTeam;
     vector<Position> posOtherTeam;
+    Ball ball;
     double angleErrorRad;
     bool ballBehindRobo;
     bool onlyTurn;
     double speed;
     bool isIdle;
+    bool avoidBall;
+    bool avoidAll;
+    bool precise;
 };
 
 #endif // ROBO_H

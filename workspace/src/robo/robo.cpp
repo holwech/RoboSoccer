@@ -9,6 +9,8 @@
   */
 
 //Use Goto to set target position. Remember to also run the driveWithCA() 100 times a second
+
+
 void Robo::GotoPos(Position target, double speed){
     isIdle = false;
     if(onlyTurn){
@@ -16,7 +18,7 @@ void Robo::GotoPos(Position target, double speed){
         this->pidAngle.changeParams(ANGLE_KP_DRIVE, ANGLE_KI_DRIVE, ANGLE_KD_DRIVE);
     }
     this->speed = speed;
-    this->targetPosition = target;
+    this->targetPosition = movePosInBounce(target);
     //this->AbortGotoXY();
 }
 
@@ -30,25 +32,106 @@ void Robo::turn(Position targetPos){
     this->targetPosition = targetPos;
 }
 
+void Robo::stop() {
+    idle();
+}
+
 void Robo::idle(){
     isIdle = true;
 }
 
-bool Robo::isArrived(){
-    return this->GetPos().DistanceTo(targetPosition) < ARRIVED_DIST;
+Position Robo::movePosInBounce(Position pos){
+    //Find how much we must divide the vector to make it in bounce
+    Position midPosLeft(-0.58,0);
+    Position midPosRight(0.58,0);
+    //cout << "length left: " << midPosLeft.DistanceTo(GetPos()) << endl;
+    //cout << "length right: " << midPosRight.DistanceTo(GetPos()) << endl;
+    double scaleX = 0;
+    double scaleY = 0;
+    double cornerScale = 0;
+
+    //corners
+    if(pos.GetX() < -1.17){
+        if (pos.GetY() > 0.61){
+            //bottom door
+            cornerScale = midPosLeft.DistanceTo(pos)/1.04;
+            cout << "Cornerscale: " << cornerScale << endl;
+            if (cornerScale > 1)
+                cout << "SCALED POS IN CORNER" << endl;
+                return Position(pos.GetX()/cornerScale, pos.GetY()/cornerScale);
+        }
+        else if(pos.GetY() < -0.58){
+            //top door
+            cornerScale = midPosLeft.DistanceTo(pos)/1.07;
+            cout << "Cornerscale: " << cornerScale << endl;
+            if (cornerScale > 1)
+                cout << "SCALED POS IN CORNER" << endl;
+                return Position(pos.GetX()/cornerScale, pos.GetY()/cornerScale);
+        }
+    }
+    else if(pos.GetX() > 1.2){
+        if (pos.GetY() < -0.62){
+            //top not door
+            cornerScale = midPosRight.DistanceTo(pos)/1.04;
+            cout << "Cornerscale: " << cornerScale << endl;
+            if (cornerScale > 1)
+                cout << "SCALED POS IN CORNER" << endl;
+                return Position(pos.GetX()/cornerScale, pos.GetY()/cornerScale);
+        }
+        else if(pos.GetY() > 0.6){
+            //bottom not door
+            cornerScale = midPosRight.DistanceTo(pos)/1.06;
+            cout << "Cornerscale: " << cornerScale << endl;
+            if (cornerScale > 1)
+                cout << "SCALED POS IN CORNER" << endl;
+                return Position(pos.GetX()/cornerScale, pos.GetY()/cornerScale);
+        }
+    }
+
+    //door
+    if(pos.GetX() <  0){
+        scaleX = pos.GetX()/-1.38;
+    }
+    else if(pos.GetX() > 0){
+        scaleX = pos.GetX()/1.38;
+    }
+
+    if(pos.GetY() < 0){
+        scaleY = pos.GetY()/-0.85;
+    }
+    else if(pos.GetY() > 0){
+        scaleY = pos.GetY()/0.83;
+    }
+
+    //If inside, return original, or scale and return scaled version
+    //cout << "scaleX, scaleY: " << scaleX << ", " << scaleY;
+    if (scaleX <= 1 && scaleY <=1){
+        return pos;
+    }
+    else{
+        double largestScale = std::max(scaleY, scaleX);
+        //cout << "largestScale: " << largestScale << endl;
+        return Position(pos.GetX()/largestScale, pos.GetY()/largestScale);
+    }
+}
+
+bool Robo::isArrived(double radius){
+    return this->GetPos().DistanceTo(targetPosition) < radius;
 }
 
 void Robo::updatePositions(vector<Position> positions) {
+    //Hacky way to make things work. Sorry. --- You are forgiven, we all make mistakes.
+    posTeam.push_back(Position(0.0, 0.0));
     for(int p = 0; p < (int)positions.size(); p++) {
-        if (p == rfNumber) {
-           // do nothing
-        } else if (p <= 2) {
+        if (p <= 2) {
             posTeam[p] = positions[p];
         } else {
-            posOtherTeam[p] = positions[p];
+            posOtherTeam[p - 3] = positions[p - 3];
         }
     }
+    posTeam.erase(posTeam.begin() + rfNumber);
 }
+
 //PID - related functions
 void Robo::updatePids(Position targetPos, bool ca = true){
     updateDistancePid(targetPos);
@@ -66,15 +149,20 @@ void Robo::updatePidsGoalie(Position targetPos){
 
 void Robo::updateDistancePid(Position targetPos){
     double dist_error = this->GetPos().DistanceTo(targetPos);
-    if (dist_error < 0.06){
-        pidDistance.updateInput(dist_error);
+    if (dist_error < ( precise ? 0.15 : 0.06 )){
+        pidDistance.updateInput(5*dist_error);
     }
     else{
         pidDistance.updateInput(speed);
     }
 }
+
+void Robo::setPrecise(bool val){
+    precise = val;
+}
+
 void Robo::updateAnglePidWithoutCA(Position targetPos){
-    this->angleErrorRad = getReferenceAngleErrRad(targetPos, true);
+    this->angleErrorRad = getReferenceAngleErrRad(targetPos, false);
     double sinAngleErrorRad = sin(this->angleErrorRad/2);
     pidAngle.updateInput(sinAngleErrorRad);
 }
@@ -208,7 +296,10 @@ double Robo::getReferenceAngleErrRad(Position targetPos, bool ca = true){
     double ref_deg;
     if (ca){
         ref_deg = getRefAngleWithCA(this->ca.getTotalPull(myPos, targetPos, posTeam, posOtherTeam, false), targetPos);
-    } else{
+    }
+    else if(avoidBall){
+        ref_deg = getRefAngleWithCA(this->ca.getBallPull(myPos, targetPos, ball.GetPos()), targetPos);
+    }else{
         ref_deg = getRefAngleWithoutCA(targetPos);
     }
     double myAngle_deg = this->GetPhi().Deg();
@@ -227,3 +318,6 @@ double Robo::getReferenceAngleErrRad(Position targetPos, bool ca = true){
     return err_rad;
 }
 
+void Robo::setAvoidBall(bool avoid){
+    avoidBall = avoid;
+}
