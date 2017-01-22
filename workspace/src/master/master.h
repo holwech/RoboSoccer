@@ -70,6 +70,8 @@ private:
     int getClosest(bool withKeeper = false);
     int setClosest(int prevClosest, bool resetTactic = false, bool withKeeper = false);
     void checkClosest(int currClosest, bool withKeeper = false);
+    Position getOtherKeeperPos();
+    int otherKeeperInGoalArea();
     vector<Channel> channel;
     vector<Player> player;
     vector<Position> positions;
@@ -96,6 +98,9 @@ private:
     void nextDefensiveMove();
     void offensiveNextMove();
     bool bounceForward();
+    void strategy_best();
+    void nextMove();
+    int getNotClosest();
 
 
     /** Please prefix all tactic-specific variables with some kind of identifier
@@ -109,9 +114,9 @@ private:
     void exampleTactic();
 
     bool crossPassAndShoot();
-    bool tactic_nearpenaltyarea(double threshold);
+    bool tactic_nearpenaltyarea(double threshold, int playerNum = -1);
     bool tactic_ballchasing();
-    bool kickAtGoal();
+    bool kickAtGoal(int playerNum = -1);
 
     /** SHARED TACTIC VARIABLES */
     T_State t_state;

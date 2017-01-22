@@ -45,7 +45,7 @@ void Player::run() {
            if (isDone){ done(); }
            break;
        case GOTO:
-           isDone = goTo(command.pos1, command.speed);
+           isDone = goTo(command.pos1, command.speed, command.ca);
            if (isDone){ done(); }
            break;
        case BEFORE_KICK:

@@ -133,7 +133,7 @@ Can be improved, in my opinion
 3.If the ball is on the bottom border, the robot will stuck in the wall
 4.and so on
 */
-bool Master::tactic_nearpenaltyarea(double threshold)
+bool Master::tactic_nearpenaltyarea(double threshold, int playerNum)
 {
   // if the ball is too close to our gate/ penalty area
   if (ball.GetX() > threshold)
@@ -144,7 +144,11 @@ bool Master::tactic_nearpenaltyarea(double threshold)
     switch (t_state)
     {
       case STEP1: {
-        closestRobo = getClosest();
+        if (playerNum == -1) {
+            closestRobo = getClosest();
+        } else {
+            closestRobo = playerNum;
+        }
         t_state = STEP2;
         break;
       }
@@ -157,7 +161,9 @@ bool Master::tactic_nearpenaltyarea(double threshold)
         {
           return true;
         }
-        checkClosest(closestRobo);
+        if (playerNum == -1) {
+            checkClosest(closestRobo);
+        }
         break;
       default:
         cout << "No case for this step in tactic nearpenaltyarea" << t_state << endl;
@@ -214,33 +220,49 @@ bool Master::tactic_ballchasing()
 
 /**
  *	This tactic finds the closest robot to the ball and kicks the ball
- * 	towards the goal without hitting the goalkeeper
+ * 	towards the goal without hitting the goalkeeper.
+ * 	Provide a player number to do the goal kick with a spesific player.
+ * 	If a number is not provided, it will choose the closest one.
  */
-bool Master::kickAtGoal() {
+bool Master::kickAtGoal(int playerNum) {
     switch(t_state) {
     // Find closest robo to ball
     case STEP1: {
-        closestRobo = getClosest();
+        if (playerNum == -1) {
+            closestRobo = getClosest();
+        } else {
+            closestRobo = playerNum;
+        }
         cout << "Closest robo is: " << closestRobo << endl;
         t_state = STEP2;
         break;
     }
-    // Find the position of the goalkeeper
-    case STEP2:
+    case STEP2: {
+        if (playerNum == -1) {
+            cout << "Closest robo in STEP3 is: " << closestRobo << endl;
+        }
         t_target = Position(1.27 * -side, 0);
+        if (otherKeeperInGoalArea() == 1) {
+            Position keeperPos = getOtherKeeperPos();
+            double modifier = 0;
+            if (keeperPos.GetY() > 0) {
+                modifier = -0.1;
+            } else {
+                modifier = 0.1;
+            }
+            t_target.SetY(keeperPos.GetY() + modifier);
+        }
+        send(Command(ACTION_KICK, t_target, 2.5, 2.0), closestRobo);
         t_state = STEP3;
         break;
-    case STEP3: {
-        cout << "Closest robo in STEP3 is: " << closestRobo << endl;
-        send(Command(ACTION_KICK, t_target, 2.5, 2.0), closestRobo);
-        t_state = STEP4;
-        break;
     }
-    case STEP4:
+    case STEP3:
         if (!player[closestRobo].isBusy()) {
             return true;
         }
-        checkClosest(closestRobo);
+        if (playerNum == -1) {
+            checkClosest(closestRobo);
+        }
         break;
     default:
         cout << "No case in kickAtGoal" << endl;

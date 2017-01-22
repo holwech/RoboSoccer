@@ -117,6 +117,7 @@ void Master::strategyController() {
 /** Add your strategies or tactics here. (Yes, I know, misleading function name) */
 void Master::strategies() {
     int answer = -1;
+    closestRobo = 0;
 
     while(1) {
         updateSide();
@@ -148,9 +149,12 @@ void Master::strategies() {
         case 7:
             strategy_offensive2();
             break;
-        case 8:
-            strategy_offensive3();
+        case 8: {
+            closestRobo = setClosest(closestRobo);
+            cout << closestRobo << endl;
+            sleep(1);
             break;
+        }
         case 9:
             tacticDone = bounceForward();
             if (tacticDone) { answer = -1; }
@@ -160,18 +164,23 @@ void Master::strategies() {
             cout << "Closest robo is: " << closestRobo << endl;
             sleep(1);
             break;
+        case 11:
+            strategy_best();
+            usleep(10);
+            break;
         default:
             cout << "Select one of the following strategies/tactics: "<<endl;
-            cout << "   1. Cross and Pass" << endl;
-            cout << "   2. Tactic_nearpenaltyarea"<<endl;
-            cout << "   3. Tactic_ballchasing"<<endl;
-            cout << "   4. Strategy_defensive"<<endl;
-            cout << "   5. strategy_offensive"<<endl;
-            cout << "   6. kickAtGoal" << endl;
-            cout << "   7. Strategy_offensive2"<<endl;
-            cout << "	8. Monitor positions" << endl;
+            cout << "	1. Cross and Pass" << endl;
+            cout << "	2. Tactic_nearpenaltyarea"<<endl;
+            cout << "	3. Tactic_ballchasing"<<endl;
+            cout << "	4. Strategy_defensive"<<endl;
+            cout << "	5. strategy_offensive"<<endl;
+            cout << "	6. kickAtGoal" << endl;
+            cout << "	7. Strategy_offensive2"<<endl;
+            cout << "	8. Test random stuff" << endl;
             cout << "	9. bounce forward" << endl;
             cout << "	10. test closest robo" << endl;
+            cout << "	11. Strategy best" << endl;
             resetTVariables();
             cin >> answer;
             break;
@@ -185,6 +194,7 @@ void Master::manual() {
     int answer;
     int robot;
     double posX, posY, speed, approachSpeed;
+    bool ca;
     while(1) {
         updateSide();
         updatePositions();
@@ -213,7 +223,9 @@ void Master::manual() {
             cin >> posY;
             cout << "Speed (1-2 recommended): " << endl;
             cin >> speed;
-            send(Command(ACTION_GOTO, Position(posX, posY), speed), robot);
+            cout << "Collision avoidance (1/0): ";
+            cin >> ca;
+            send(Command(ACTION_GOTO, Position(posX, posY), speed, ca), robot);
             break;
         case 2:
             cout << "Approach speed: ";
@@ -315,6 +327,15 @@ int Master::getClosest(bool withKeeper) {
     }
 }
 
+// Gets the player further away
+int Master::getNotClosest() {
+    if (player[1].getPos().DistanceTo(ball.GetPos()) > player[2].getPos().DistanceTo(ball.GetPos())) {
+      return 1;
+    } else {
+      return 2;
+    }
+}
+
 // Gives the number of the closest robo and also stops the what the current robot is doing
 // and resets the tactic if reset is set to true
 int Master::setClosest(int currClosest, bool resetTactic, bool withKeeper) {
@@ -332,4 +353,38 @@ int Master::setClosest(int currClosest, bool resetTactic, bool withKeeper) {
 // Checks wether it is closest or not. If it has change, the tactic will reset
 void Master::checkClosest(int currClosest, bool withKeeper) {
     setClosest(currClosest, true, withKeeper);
+}
+
+// Returns the position of the other teams keeper
+Position Master::getOtherKeeperPos() {
+    for (int p = 3; p < 6; p++) {
+        double posX = positions[p].GetX();
+        double posY = positions[p].GetY();
+        if (fabs(posY) < 0.340 && fabs(posX) > 1.2) {
+            return positions[p];
+        }
+    }
+    return Position(0.0, 0.0);
+}
+
+// Return 1 if keeper in goal area. 0 if no keeper in goal area. -1 if multiple players
+// were registered in the goal area
+int Master::otherKeeperInGoalArea() {
+    bool keeperInArea = false;
+    for (int p = 3; p < 6; p++) {
+        double posX = positions[p].GetX();
+        double posY = positions[p].GetY();
+        if (fabs(posY) < 0.340 && fabs(posX) > 1.2) {
+            if (keeperInArea == true) {
+                return -1;
+            } else {
+                keeperInArea = true;
+            }
+        }
+    }
+    if (keeperInArea == false) {
+        return 0;
+    } else {
+        return 1;
+    }
 }
