@@ -72,6 +72,8 @@ private:
     void checkClosest(int currClosest, bool withKeeper = false);
     Position getOtherKeeperPos();
     int otherKeeperInGoalArea();
+    int getClosestToTeamGoal();
+    int getNotClosestToTeamGoal();
     vector<Channel> channel;
     vector<Player> player;
     vector<Position> positions;
@@ -117,11 +119,13 @@ private:
     bool tactic_nearpenaltyarea(double threshold, int playerNum = -1);
     bool tactic_ballchasing();
     bool kickAtGoal(int playerNum = -1);
+    bool throughPass();
 
     /** SHARED TACTIC VARIABLES */
     T_State t_state;
     T_State t_state2;
     int closestRobo;
+    int notClosestRobo;
     double maxDistance;
     Position t_target;
 

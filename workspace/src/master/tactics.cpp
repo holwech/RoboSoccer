@@ -270,3 +270,35 @@ bool Master::kickAtGoal(int playerNum) {
     }
     return false;
 }
+
+bool Master::throughPass() {
+    switch(t_state2) {
+    case STEP1:{
+        closestRobo = getClosestToTeamGoal();
+        notClosestRobo = getNotClosestToTeamGoal();
+        Position receivingPos(0.8 * -side, 0.6);
+        t_target = Position(0.8 * -side, 0.4);
+        if (positions[closestRobo].GetY() > 0.0) {
+            receivingPos.SetY(-0.6);
+            t_target.SetY(-0.4);
+        }
+        cout << "Not closest robo: " << notClosestRobo << "/" << closestRobo << endl;
+        send(Command(ACTION_GOTO, Position(0.0, 0.0), true), notClosestRobo);
+        send(Command(ACTION_KICK, t_target, 2.5, 2.0), closestRobo);
+        t_state2 = STEP2;
+        break;
+    }
+    case STEP2:
+        if (!player[closestRobo].isBusy()) {
+            t_state2 = STEP3;
+        }
+        break;
+    case STEP3:
+        return kickAtGoal(notClosestRobo);
+        break;
+    default:
+        cout << "No case in throughPass" << endl;
+        break;
+    }
+    return false;
+}

@@ -129,7 +129,7 @@ void Player::defend()
     if(true || !(ball.GetVelocity() < 0.01 && abs(ball.GetX()) < 1.0) ){
         POS.SetX(goalkeeperx);
         POS.SetY(goalkeepery);
-        robo.GotoPos(POS, 0.7);
+        robo.GotoPos(POS, 1.5);
     }
 
 
