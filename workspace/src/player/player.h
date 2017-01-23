@@ -93,7 +93,7 @@ private:
     /** General Variables and Functions*/
     void idle();
     bool stop();
-    bool goTo(Position target, double speed = 1);
+    bool goTo(Position target, double speed = 1, bool ca = false);
     bool before_kick(Position kick_position, Position target_of_kick, double before_kick_speed); //Get to position before kick -> can be used for attacker's kick and pass
     bool before_kick_improved(Position kick_position, Position target_of_kick, double before_kick_speed);
     double lengthToBall;

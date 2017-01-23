@@ -9,9 +9,9 @@ bool Player::stop() {
   return true;
 }
 
-bool Player::goTo(Position target, double speed)
+bool Player::goTo(Position target, double speed, bool ca)
 {
-    robo.GotoPos(target, speed);
+  robo.GotoPos(target, speed, ca);
   if (robo.isArrived(0.1))
   {
     playerPrint("State set to IDLE");
@@ -19,7 +19,7 @@ bool Player::goTo(Position target, double speed)
   }
   else
   {
-    robo.GotoPos(target, speed);
+    robo.GotoPos(target, speed, ca);
   }
   return false;
 }
@@ -204,12 +204,16 @@ bool Player::angeled_behind_ball(Position targetPos, double speed){
     Position pos_behind_ball;
 
     switch (state_before_kick){
-    case STEP1:
+    case STEP1:{
+        /*double speedModifier = 0.5;
+        if (!ball.isStopped()) {
+            speedModifier = 0.7;
+        }*/
         pos_behind_ball_x = ballPos.GetX() + direction.GetX() * 3 * scale / length;
         pos_behind_ball_y = ballPos.GetY() + direction.GetY() * 3 * scale / length;
         pos_behind_ball = Position(pos_behind_ball_x, pos_behind_ball_y);
-        if (robo.isArrived(0.3)) {
-            robo.GotoPos(pos_behind_ball, speed * 0.3);
+        if (robo.isArrived(0.2)) {
+            robo.GotoPos(pos_behind_ball, speed * 0.5);
         } else {
             robo.GotoPos(pos_behind_ball, speed);
         }
@@ -219,6 +223,7 @@ bool Player::angeled_behind_ball(Position targetPos, double speed){
             lengthToBall = robo.GetPos().DistanceTo(ball.GetPos());
         }
         break;
+    }
     case STEP2:
         //if the ball has moved far away, go back to step1
         if ( lengthToBall +0.05 < robo.GetPos().DistanceTo(ball.GetPos()) ){
