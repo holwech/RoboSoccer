@@ -81,6 +81,7 @@ private:
     Position ballPos;
     bool tacticDone;
     double chrossandpassy; // used for tactics: Chross and Pass
+    vector<Command> prevCommand;
 
 
     /** These are variables that all strategies can and should use.

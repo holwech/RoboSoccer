@@ -112,6 +112,7 @@ private:
     AState kick_state;
     Position endKickPos;
     double passSpeed;
+    Position prevTarget;
 
 
     Angle ang;

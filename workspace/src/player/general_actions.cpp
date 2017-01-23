@@ -12,14 +12,11 @@ bool Player::stop() {
 bool Player::goTo(Position target, double speed, bool ca)
 {
   robo.GotoPos(target, speed, ca);
+  //cout << "Target: " << target << " prevTarget: " << prevTarget << " isArrived: " << robo.isArrived(0.1) << endl;
   if (robo.isArrived(0.1))
   {
     playerPrint("State set to IDLE");
     return true; // Done
-  }
-  else
-  {
-    robo.GotoPos(target, speed, ca);
   }
   return false;
 }
@@ -201,8 +198,8 @@ bool Player::angeled_behind_ball(Position targetPos, double speed){
         if (!ball.isStopped()) {
             speedModifier = 0.7;
         }*/
-        pos_behind_ball_x = ballPos.GetX() + direction.GetX() * 3 * scale / length;
-        pos_behind_ball_y = ballPos.GetY() + direction.GetY() * 3 * scale / length;
+        pos_behind_ball_x = ballPos.GetX() + direction.GetX() * 2 * scale / length;
+        pos_behind_ball_y = ballPos.GetY() + direction.GetY() * 2 * scale / length;
         pos_behind_ball = Position(pos_behind_ball_x, pos_behind_ball_y);
         if (robo.isArrived(0.2)) {
             robo.GotoPos(pos_behind_ball, speed * 0.5);

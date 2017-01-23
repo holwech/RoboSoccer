@@ -22,7 +22,17 @@ Master::Master(string& team, RTDBConn& DBC, vector<int>& rfNumber) :
                     Player(&channel[4], DBC, rfNumber[4]),
                     Player(&channel[5], DBC, rfNumber[5])
                 }),
-                positions(6) {
+                positions(6),
+                prevCommand({
+                     Command(ACTION_IDLE),
+                     Command(ACTION_IDLE),
+                     Command(ACTION_IDLE),
+                     Command(ACTION_IDLE),
+                     Command(ACTION_IDLE),
+                     Command(ACTION_IDLE)
+                })
+
+{
     state = REFEREE_INIT;
     referee.Init();
     resetTVariables();
@@ -44,7 +54,8 @@ void Master::run() {
         strategies();
     }
 
-    cout << "Starting state machine..." << endl;
+    cout << "Now running state machine" << endl;
+    send(Command(ACTION_DEFEND), 0);
     while(1) {
         updateSide();
         updatePositions();
@@ -116,6 +127,12 @@ void Master::ActDuringPenalty(){
 
 /** Sends a command to a given robot. Assumes robo 0 if number is out of bounds */
 void Master::send(Command command, int roboNum) {
+    // If the prev command is the same as the current one,
+    // do nothing, so to not spam the system with messages
+    if (prevCommand[roboNum] == command) {
+        prevCommand[roboNum] = command;
+        return;
+    }
     if (roboNum > 2 || roboNum < 0) {
         cout << "Robo " << roboNum << " does not exist" << endl;
         roboNum = 0;
@@ -124,6 +141,7 @@ void Master::send(Command command, int roboNum) {
         player[roboNum].setBusy(true);
     }
     channel[roboNum].write(command);
+    prevCommand[roboNum] = command;
 }
 
 void Master::updatePositions() {
@@ -188,7 +206,6 @@ void Master::strategies() {
             break;
         case 8: {
             send(Command(ACTION_GOTO, Position(0, 0), 1.5, bool(1)), 0);
-            answer = -1;
             break;
         }
         case 9:
