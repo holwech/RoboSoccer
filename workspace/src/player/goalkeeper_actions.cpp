@@ -111,8 +111,11 @@ void Player::defend()
     //if not mooving and far out, dont move
         POS.SetX(goalkeeperx);
         POS.SetY(goalkeepery);
+
         robo.GotoPos(POS, 1);
 //        robo.CruisetoXY(goalkeeperx,goalkeepery,130);
+
+
 
 
 

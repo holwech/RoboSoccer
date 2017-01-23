@@ -53,13 +53,16 @@ void Master::run() {
         case REFEREE_INIT:
             break;
         case BEFORE_KICK_OFF:
+            before_kick_off();
             break;
         case KICK_OFF:
-            exampleTactic();
+            strategy_best();
             break;
         case BEFORE_PENALTY:
+            GoToBeforePenaltyPosition();
             break;
         case PENALTY:
+            ActDuringPenalty();
             break;
         case PLAY_ON:
             break;
@@ -76,6 +79,40 @@ void Master::run() {
     threadRobo1.join();
     threadRobo2.join();
 }
+
+void Master::GoToBeforePenaltyPosition(){
+    resetTVariables();
+    if(side==-1){ // We are goal keeper during penalty shooting
+
+        send(Command(ACTION_GOTO, Position(-1.19, 0), 1.5, bool(1)), 0);
+        send(Command(ACTION_GOTO, Position(0.8, 0.3), 1.5, bool(1)), 1);
+        send(Command(ACTION_GOTO, Position(0.8, -0.3), 1.5, bool(1)), 2);
+
+    }else{ // We are attacker during penalty shooting
+
+        send(Command(ACTION_GOTO, Position(0, 0), 1.5, bool(1)), 0);
+        send(Command(ACTION_GOTO, Position(1, 0.3), 1.5, bool(1)), 1);
+        send(Command(ACTION_GOTO, Position(1, -0.3), 1.5, bool(1)), 2);
+
+    }
+
+}
+
+
+void Master::ActDuringPenalty(){
+    if(side==-1){ // We are goal keeper during penalty shooting
+
+        send(Command(ACTION_DEFEND), 0);
+
+    }else{ // We are attacker during penalty shooting
+        kickAtGoal(0,true);
+        //send(Command(ACTION_GOTO, Position(0, 0), 1.5, bool(1)), 0);    
+    }
+
+
+}
+
+
 
 /** Sends a command to a given robot. Assumes robo 0 if number is out of bounds */
 void Master::send(Command command, int roboNum) {
@@ -150,9 +187,8 @@ void Master::strategies() {
             strategy_offensive2();
             break;
         case 8: {
-            closestRobo = setClosest(closestRobo);
-            cout << closestRobo << endl;
-            sleep(1);
+            tacticDone = throughPass();
+            if (tacticDone) { answer = -1; }
             break;
         }
         case 9:
@@ -209,6 +245,8 @@ void Master::manual() {
         cout << "	7. TEST BALL CLASS" << endl;
         cout << "	8. STOP" << endl;
         cout << "	9. TEST POS_TO_BOUNCE" << endl;
+        cout << " 10.Test of before penalty" << endl;
+         cout << " 11.Test of shoot penalty" << endl;
 
         cin >> answer;
         cout << "Which robot? (0-2)" << endl;
@@ -264,6 +302,12 @@ void Master::manual() {
             break;
         case 9:
             send(Command(ACTION_BLOCK_BALL, Position(0,0) ), 1);
+            break;
+        case 10:
+            GoToBeforePenaltyPosition();
+            break;
+        case 11:
+            ActDuringPenalty();
             break;
         default:
             cout << "No action created for this choice yet in master.manual" << endl;
@@ -336,6 +380,23 @@ int Master::getNotClosest() {
     }
 }
 
+int Master::getClosestToTeamGoal() {
+    if (player[1].getPos().DistanceTo(Position(1.27 * side, 0.0)) < player[2].getPos().DistanceTo(Position(1.27 * side, 0.0))) {
+      return 1;
+    } else {
+      return 2;
+    }
+}
+
+int Master::getNotClosestToTeamGoal() {
+    if (player[1].getPos().DistanceTo(Position(1.27 * side, 0.0)) > player[2].getPos().DistanceTo(Position(1.27 * side, 0.0))) {
+      return 1;
+    } else {
+      return 2;
+    }
+}
+
+
 // Gives the number of the closest robo and also stops the what the current robot is doing
 // and resets the tactic if reset is set to true
 int Master::setClosest(int currClosest, bool resetTactic, bool withKeeper) {
@@ -388,3 +449,67 @@ int Master::otherKeeperInGoalArea() {
         return 1;
     }
 }
+
+
+
+//send(Command(ACTION_GOTO, Position(x, y), 1.0), robonumber);
+void Master::before_kick_off(){
+
+    if (referee.GetSide()==0) {
+        //we kick the ball at left, so we take a attack position at left
+        if (side == LEFT){
+            send(Command(ACTION_GOTO, Position(-1.36, 0), 1.0), 0);
+            send(Command(ACTION_GOTO, Position(-0.2, -0.2), 1.0), 1);
+            send(Command(ACTION_GOTO, Position(-0.1, 0.3), 1.0), 2);
+        }
+        //enemy kick the ball at left, so we take a defend position at right
+        else {
+            send(Command(ACTION_GOTO, Position(1.36, 0), 1.0), 0);
+            send(Command(ACTION_GOTO, Position(0.2, 0), 1.0), 1);
+            send(Command(ACTION_GOTO, Position(0.6, 0), 1.0), 2);
+        }
+
+    }
+
+    else {
+        //we kick the ball at right, so we take a attack position at right
+        if (side == RIGHT){
+            send(Command(ACTION_GOTO, Position(1.36, 0), 1.0), 0);
+            send(Command(ACTION_GOTO, Position(0.2, -0.2), 1.0), 1);
+            send(Command(ACTION_GOTO, Position(0.1, 0.3), 1.0), 2);
+        }
+        //enemy kick the ball at right, so we take a defend position at left
+        else {
+            send(Command(ACTION_GOTO, Position(-1.36, 0), 1.0), 0);
+            send(Command(ACTION_GOTO, Position(-0.2, 0), 1.0), 1);
+            send(Command(ACTION_GOTO, Position(-0.6, 0), 1.0), 2);
+        }
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

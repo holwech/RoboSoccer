@@ -224,7 +224,7 @@ bool Master::tactic_ballchasing()
  * 	Provide a player number to do the goal kick with a spesific player.
  * 	If a number is not provided, it will choose the closest one.
  */
-bool Master::kickAtGoal(int playerNum) {
+bool Master::kickAtGoal(int playerNum, bool is_penalty) {
     switch(t_state) {
     // Find closest robo to ball
     case STEP1: {
@@ -252,7 +252,12 @@ bool Master::kickAtGoal(int playerNum) {
             }
             t_target.SetY(keeperPos.GetY() + modifier);
         }
-        send(Command(ACTION_KICK, t_target, 2.5, 2.0), closestRobo);
+        if(is_penalty){
+            send(Command(ACTION_KICK, t_target, 2.5, 1.4), closestRobo);
+        }else{
+            send(Command(ACTION_KICK, t_target, 2.5, 2.0), closestRobo);
+        }
+
         t_state = STEP3;
         break;
     }
@@ -266,6 +271,38 @@ bool Master::kickAtGoal(int playerNum) {
         break;
     default:
         cout << "No case in kickAtGoal" << endl;
+        break;
+    }
+    return false;
+}
+
+bool Master::throughPass() {
+    switch(t_state2) {
+    case STEP1:{
+        closestRobo = getClosestToTeamGoal();
+        notClosestRobo = getNotClosestToTeamGoal();
+        Position receivingPos(0.8 * -side, 0.6);
+        t_target = Position(0.8 * -side, 0.4);
+        if (positions[closestRobo].GetY() > 0.0) {
+            receivingPos.SetY(-0.6);
+            t_target.SetY(-0.4);
+        }
+        cout << "Not closest robo: " << notClosestRobo << "/" << closestRobo << endl;
+        send(Command(ACTION_GOTO, Position(0.0, 0.0), true), notClosestRobo);
+        send(Command(ACTION_KICK, t_target, 2.5, 2.0), closestRobo);
+        t_state2 = STEP2;
+        break;
+    }
+    case STEP2:
+        if (!player[closestRobo].isBusy()) {
+            t_state2 = STEP3;
+        }
+        break;
+    case STEP3:
+        return kickAtGoal(notClosestRobo);
+        break;
+    default:
+        cout << "No case in throughPass" << endl;
         break;
     }
     return false;
