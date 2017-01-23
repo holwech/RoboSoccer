@@ -10,8 +10,7 @@ Player::Player(Channel* channel, RTDBConn &DBC, const int deviceNr) :
                 positions(6),
                 ball(DBC),
                 channel(channel),
-                robo(DBC, deviceNr),
-                prevTarget(0.0, 0.0)
+                robo(DBC, deviceNr)
                 {
     //ballangle = 0;
     //ballx = 0;
