@@ -12,7 +12,6 @@
 
 //Use Goto to set target position. Remember to also run the driveWithCA() 100 times a second
 
-
 void Robo::GotoPos(Position target, double speed, bool ca){
     isIdle = false;
     this->toggleCA = ca;
@@ -78,7 +77,7 @@ Position Robo::movePosInBounce(Position pos){
     else if(pos.GetX() > 1.2){
         if (pos.GetY() < -0.62){
             //top not door
-            cornerScale = midPosRight.DistanceTo(pos)/1.07;
+            cornerScale = midPosRight.DistanceTo(pos)/1.09;
             cout << "Cornerscale: " << cornerScale << endl;
             if (cornerScale > 1){
                 cout << "SCALED POS IN CORNER" << endl;
@@ -87,7 +86,7 @@ Position Robo::movePosInBounce(Position pos){
         }
         else if(pos.GetY() > 0.6){
             //bottom not door
-            cornerScale = midPosRight.DistanceTo(pos)/1.06;
+            cornerScale = midPosRight.DistanceTo(pos)/1.07;
             cout << "Cornerscale: " << cornerScale << endl;
             if (cornerScale > 1){
                 cout << "SCALED POS IN CORNER" << endl;
@@ -105,7 +104,7 @@ Position Robo::movePosInBounce(Position pos){
     }
 
     if(pos.GetY() < 0){
-        scaleY = pos.GetY()/-0.83;
+        scaleY = pos.GetY()/-0.85;
     }
     else if(pos.GetY() > 0){
         scaleY = pos.GetY()/0.81;
@@ -223,6 +222,7 @@ void Robo::goalieDrive(){
     }
 }
 
+
 //Drive functions must be run 100 times a second for robot to drive. Target position set by Goto()
 void Robo::driveWithCA() {
     if(isIdle){
@@ -232,7 +232,30 @@ void Robo::driveWithCA() {
        makeTurn();
     }
     else{
-        updatePids(targetPosition, true);
+
+        if(GetPos().DistanceTo(sampeled_pos) < 0.05){
+            not_moving_count++;
+        }
+        else{
+            sampeled_pos = GetPos();
+            not_moving_count = 0;
+        }
+        if (not_moving_count > 150){
+            go_to_mid = true;
+            not_moving_count = 0;
+        }
+
+        if(go_to_mid){
+            updatePids(Position(0,0));
+            go_to_mid_count++;
+            if(go_to_mid_count > 50){
+                go_to_mid = false;
+                go_to_mid_count = 0;
+            }
+        }
+        else{
+            updatePids(targetPosition, true);
+        }
         // Get designated pid values
         double driveSpeed = pidDistance.getInput();
         double angleInput = pidAngle.getInput();

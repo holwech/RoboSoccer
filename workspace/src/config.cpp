@@ -41,6 +41,12 @@ struct Command {
         this->pos1 = pos1;
         this->pos2 = pos2;
     }
+    bool operator==(const Command& other) {
+        if (action == other.action && pos1 == other.pos1 && pos2 == other.pos2) {
+            return true;
+        }
+        return false;
+    }
 };
 
 struct Channel {

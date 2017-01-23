@@ -185,7 +185,6 @@ void Master::strategy_offensive()
 void Master::strategy_best() {
     switch(s_case) {
     case INIT:
-        send(Command(ACTION_DEFEND), 0);
         send(Command(ACTION_GOTO, Position(0.5 * side, 0.0), 1.5, true), 1);
         send(Command(ACTION_GOTO, Position(0.1 * side, 0.0), 1.5, true), 2);
         nextMove();

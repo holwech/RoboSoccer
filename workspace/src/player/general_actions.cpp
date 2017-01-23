@@ -12,14 +12,11 @@ bool Player::stop() {
 bool Player::goTo(Position target, double speed, bool ca)
 {
   robo.GotoPos(target, speed, ca);
-  if (robo.isArrived(0.1))
+  //cout << "Target: " << target << " prevTarget: " << prevTarget << " isArrived: " << robo.isArrived(0.1) << endl;
+  if (robo.isArrived(0.04))
   {
     playerPrint("State set to IDLE");
     return true; // Done
-  }
-  else
-  {
-    robo.GotoPos(target, speed, ca);
   }
   return false;
 }
@@ -201,11 +198,11 @@ bool Player::angeled_behind_ball(Position targetPos, double speed){
         if (!ball.isStopped()) {
             speedModifier = 0.7;
         }*/
-        pos_behind_ball_x = ballPos.GetX() + direction.GetX() * 3 * scale / length;
-        pos_behind_ball_y = ballPos.GetY() + direction.GetY() * 3 * scale / length;
+        pos_behind_ball_x = ballPos.GetX() + direction.GetX() * 2 * scale / length;
+        pos_behind_ball_y = ballPos.GetY() + direction.GetY() * 2 * scale / length;
         pos_behind_ball = Position(pos_behind_ball_x, pos_behind_ball_y);
         if (robo.isArrived(0.2)) {
-            robo.GotoPos(pos_behind_ball, speed * 0.5);
+            robo.GotoPos(pos_behind_ball, speed * 0.2);
         } else {
             robo.GotoPos(pos_behind_ball, speed);
         }
@@ -223,10 +220,10 @@ bool Player::angeled_behind_ball(Position targetPos, double speed){
             cout << "BALL TOO FAR AWAY, GOING TO STEP 1" << endl;
         }
 
-        pos_behind_ball_x = ballPos.GetX() + direction.GetX() * 1 * scale / length;
-        pos_behind_ball_y = ballPos.GetY() + direction.GetY() * 1 * scale / length;
+        pos_behind_ball_x = ballPos.GetX() + direction.GetX() * 0.7 * scale / length;
+        pos_behind_ball_y = ballPos.GetY() + direction.GetY() * 0.7 * scale / length;
         pos_behind_ball = Position(pos_behind_ball_x, pos_behind_ball_y);
-        robo.GotoPos(pos_behind_ball, speed * 0.35);
+        robo.GotoPos(pos_behind_ball, speed * 0.5);
         if (robo.isArrived(0.05)) {
             //cout << endl << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl << endl;
             cout << "Angled behind ball DONE" << endl;
