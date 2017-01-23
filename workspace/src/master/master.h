@@ -64,6 +64,7 @@ private:
     Referee referee;
     ePlayMode state;
     fieldSide side;
+    eSide kside;
     void updateSide();
     void updatePositions();
     void send(Command command, int roboNum);
@@ -103,6 +104,7 @@ private:
     void strategy_best();
     void nextMove();
     int getNotClosest();
+    void before_kick_off();
 
     void GoToBeforePenaltyPosition(); // Used to manoever robots to the position before penalty
     void ActDuringPenalty(); //Make robots act during penalty shooting
