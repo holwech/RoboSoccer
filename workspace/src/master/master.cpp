@@ -55,7 +55,7 @@ void Master::run() {
         case BEFORE_KICK_OFF:
             break;
         case KICK_OFF:
-            exampleTactic();
+            strategy_best();
             break;
         case BEFORE_PENALTY:
             GoToBeforePenaltyPosition();
@@ -190,9 +190,8 @@ void Master::strategies() {
             strategy_offensive2();
             break;
         case 8: {
-            closestRobo = setClosest(closestRobo);
-            cout << closestRobo << endl;
-            sleep(1);
+            tacticDone = throughPass();
+            if (tacticDone) { answer = -1; }
             break;
         }
         case 9:
@@ -383,6 +382,23 @@ int Master::getNotClosest() {
       return 2;
     }
 }
+
+int Master::getClosestToTeamGoal() {
+    if (player[1].getPos().DistanceTo(Position(1.27 * side, 0.0)) < player[2].getPos().DistanceTo(Position(1.27 * side, 0.0))) {
+      return 1;
+    } else {
+      return 2;
+    }
+}
+
+int Master::getNotClosestToTeamGoal() {
+    if (player[1].getPos().DistanceTo(Position(1.27 * side, 0.0)) > player[2].getPos().DistanceTo(Position(1.27 * side, 0.0))) {
+      return 1;
+    } else {
+      return 2;
+    }
+}
+
 
 // Gives the number of the closest robo and also stops the what the current robot is doing
 // and resets the tactic if reset is set to true
