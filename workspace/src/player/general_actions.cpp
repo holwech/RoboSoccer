@@ -5,10 +5,13 @@ void Player::idle()
   robo.idle();
 }
 
-bool Player::goTo(Position target, double speed)
+bool Player::stop() {
+  return true;
+}
+
+bool Player::goTo(Position target, double speed, bool ca)
 {
-  cout << "IN PLAYER GOTO!" << endl;
-  robo.GotoPos(target, speed);
+  robo.GotoPos(target, speed, ca);
   if (robo.isArrived(0.1))
   {
     playerPrint("State set to IDLE");
@@ -16,7 +19,7 @@ bool Player::goTo(Position target, double speed)
   }
   else
   {
-    robo.GotoPos(target, speed);
+    robo.GotoPos(target, speed, ca);
   }
   return false;
 }
@@ -30,13 +33,13 @@ bool Player::pass(Position target)
     case A_STEP1:
       // Calculates Speed according to distance
       distance = ball.GetPos().DistanceTo(target);
-      speedparam = distance / 2;
-      passSpeed = speedparam * 2.6;
+      speedparam = distance;
+      passSpeed = speedparam * 2.0;
       pass_state = A_STEP2;
       break;
     case A_STEP2:
       {
-        bool passDone = kick(target, passSpeed);
+        bool passDone = kick(target, passSpeed, 2.0);
         if (passDone)
         {
           return true;
@@ -73,8 +76,8 @@ bool Player::kick(Position target, double speed, double approach_speed)
       length = sqrt((dirx * dirx) + (diry * diry));
       dirx = dirx / length;
       diry = diry / length;
-      endKickPos.SetX(ball.GetX() + (dirx / 5));
-      endKickPos.SetY(ball.GetY() + (diry / 5));
+      endKickPos.SetX(ball.GetX() + (dirx / 10));
+      endKickPos.SetY(ball.GetY() + (diry / 10));
       cout << "Position: " << endKickPos.GetX() << ", " << endKickPos.GetY() << endl;
       kick_state = A_STEP3;
       break;
@@ -193,12 +196,21 @@ bool Player::angeled_behind_ball(Position targetPos, double speed){
     Position pos_behind_ball;
 
     switch (state_before_kick){
-    case STEP1:
+    case STEP1:{
+        /*double speedModifier = 0.5;
+        if (!ball.isStopped()) {
+            speedModifier = 0.7;
+        }*/
         pos_behind_ball_x = ballPos.GetX() + direction.GetX() * 3 * scale / length;
         pos_behind_ball_y = ballPos.GetY() + direction.GetY() * 3 * scale / length;
         pos_behind_ball = Position(pos_behind_ball_x, pos_behind_ball_y);
+<<<<<<< HEAD
         if (robo.isArrived(0.5)) {
             robo.GotoPos(pos_behind_ball, speed * 0.3);
+=======
+        if (robo.isArrived(0.2)) {
+            robo.GotoPos(pos_behind_ball, speed * 0.5);
+>>>>>>> 7e0edbece0cdf6634842de724eb252f47f6cfdbe
         } else {
             robo.GotoPos(pos_behind_ball, speed);
         }
@@ -208,6 +220,7 @@ bool Player::angeled_behind_ball(Position targetPos, double speed){
             lengthToBall = robo.GetPos().DistanceTo(ball.GetPos());
         }
         break;
+    }
     case STEP2:
         //if the ball has moved far away, go back to step1
         if ( lengthToBall +0.05 < robo.GetPos().DistanceTo(ball.GetPos()) ){

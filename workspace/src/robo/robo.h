@@ -33,12 +33,13 @@ public:
                                             onlyTurn(false),
                                             isIdle(true),
                                             avoidBall(false),
-                                            precise(false){}
+                                            precise(false),
+                                            toggleCA(false){}
     //Robo(RoboControl& other): RoboControl(other){}
     pidController pidAngle;
     pidController pidDistance;
     CA ca;
-    void GotoPos(Position target, double speed = 1);
+    void GotoPos(Position target, double speed = 1, bool ca = false);
     void driveWithCA();
     void goalieDrive();
     void updatePids(Position targetPos, bool ca);
@@ -47,6 +48,7 @@ public:
     void turn(Position targetPos);
     bool isArrived(double radius);
     void idle();
+    void stop();
     void setAvoidBall(bool avoid);
     void setPrecise(bool val);
     Position movePosInBounce(Position pos);
@@ -74,6 +76,7 @@ private:
     bool avoidBall;
     bool avoidAll;
     bool precise;
+    bool toggleCA;
 };
 
 #endif // ROBO_H

@@ -67,12 +67,16 @@ private:
     void updateSide();
     void updatePositions();
     void send(Command command, int roboNum);
+    int getClosest(bool withKeeper = false);
+    int setClosest(int prevClosest, bool resetTactic = false, bool withKeeper = false);
+    void checkClosest(int currClosest, bool withKeeper = false);
+    Position getOtherKeeperPos();
+    int otherKeeperInGoalArea();
     vector<Channel> channel;
     vector<Player> player;
     vector<Position> positions;
     Position ballPos;
     bool tacticDone;
-    int robonr; // used for tactics: near_penalty
     double chrossandpassy; // used for tactics: Chross and Pass
 
 
@@ -94,6 +98,12 @@ private:
     void nextDefensiveMove();
     void offensiveNextMove();
     bool bounceForward();
+    void strategy_best();
+    void nextMove();
+    int getNotClosest();
+
+    void GoToBeforePenaltyPosition(); // Used to manoever robots to the position before penalty
+    void ActDuringPenalty(); //Make robots act during penalty shooting
 
 
     /** Please prefix all tactic-specific variables with some kind of identifier
@@ -107,9 +117,9 @@ private:
     void exampleTactic();
 
     bool crossPassAndShoot();
-    bool tactic_nearpenaltyarea(double threshold);
+    bool tactic_nearpenaltyarea(double threshold, int playerNum = -1);
     bool tactic_ballchasing();
-    bool kickAtGoal();
+    bool kickAtGoal(int playerNum = -1, bool is_penalty = false);
 
     /** SHARED TACTIC VARIABLES */
     T_State t_state;

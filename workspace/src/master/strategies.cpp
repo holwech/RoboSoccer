@@ -2,53 +2,17 @@
 
 /** Include all strategies here
  */
-#define KICK_SPEED 3
-#define APPROACH_SPEED 2
+#define KICK_SPEED 3.0
+#define APPROACH_SPEED 2.0
 
 void Master::debugContinue() {
-    if (DEBUG) {
+    if (0) {
         cout << ">> STRATEGY STATE: " << strategyStateNames[s_case] << endl;
         cout << ">> Continue (y)? " << endl;
         string ans;
         cin >> ans;
     }
 }
-
-
-/*
-void Master::strategy_offensive3(){ ////////// Modification of original offensive3
-
-
-    if(side)
-    {
-        if(ball.GetX() < 0.2){
-
-            crossPassAndShoot();
-
-        }else{
-
-
-            bounceForward();
-
-        }
-
-    }else{
-
-        if(ball.GetX() > -0.2){
-
-            crossPassAndShoot();
-
-        }else{
-
-
-            bounceForward();
-
-        }
-
-    }
-}
-
-*/
 
 void Master::strategy_offensive3(){
     switch(s_case){
@@ -69,10 +33,10 @@ void Master::strategy_offensive3(){
     case SHOOT_AT_GOAL:
         if(player[1].getPos().DistanceTo(ball.GetPos()) < player[2].getPos().DistanceTo(ball.GetPos()) + 0.3)
         {
-            send(Command(ACTION_GOTO, Position(0.75 * -side, -0.4), 2), 2);
+            send(Command(ACTION_GOTO, Position(0.75 * -side, -0.4), 2.0), 2);
             send(Command(ACTION_KICK, Position(1.38*-side, 0), KICK_SPEED, APPROACH_SPEED), 1);
         }else{
-            send(Command(ACTION_GOTO, Position(0.9 * -side, 0.4), 2), 1);
+            send(Command(ACTION_GOTO, Position(0.9 * -side, 0.4), 2.0), 1);
             send(Command(ACTION_KICK, Position(1.38*-side, 0), KICK_SPEED, APPROACH_SPEED), 2);
         }
         break;
@@ -198,7 +162,7 @@ void Master::strategy_offensive()
 
         case POSITION:
         if (!player[0].isBusy() && !player[1].isBusy() && ball.GetVelocity() < 0.01 ){
-            send(Command(ACTION_GOTO, Position(0.9, 0), 1), 1);
+            send(Command(ACTION_GOTO, Position(0.9, 0), 1.0), 1);
             cout << "Position" << endl;
             }
         s_case = INTERRUPT;
@@ -215,6 +179,58 @@ void Master::strategy_offensive()
         default:
             cout << "No case for this case in strategy offensive" << endl;
             break;
+    }
+}
+
+void Master::strategy_best() {
+    switch(s_case) {
+    case INIT:
+        send(Command(ACTION_DEFEND), 0);
+        send(Command(ACTION_GOTO, Position(0.5 * side, 0.0), 1.5, true), 1);
+        send(Command(ACTION_GOTO, Position(0.1 * side, 0.0), 1.5, true), 2);
+        nextMove();
+        break;
+    case SHOOT_AT_GOAL:
+      {
+        bool kickAtGoalDone = kickAtGoal(getClosest());
+        send(Command(ACTION_GOTO,
+             Position(player[getNotClosest()].getPos().GetX(),
+             ball.GetPos().GetY()), 1.5, true),
+             getNotClosest());
+        if (kickAtGoalDone)
+        {
+          resetTVariables();
+        }
+        nextMove();
+        break;
+      }
+    case BLOCK:
+      {
+        bool nearPenaltyDone = tactic_nearpenaltyarea(0.2 * -side);
+        if (nearPenaltyDone) {
+            resetTVariables();
+        }
+        nextMove();
+        break;
+      }
+    default:
+        cout << "No case for this in strategy defensive" << endl;
+        break;
+    }
+}
+
+void Master::nextMove() {
+    S_Case nextState = s_case;
+    if (ball.inGoalArea()) {
+        nextState = INIT;
+    // If ball is on the other teams field, shoot at goal
+    } else {
+        nextState = SHOOT_AT_GOAL;
+    }
+    if (nextState != s_case) {
+        resetTVariables();
+        s_case = nextState;
+        debugContinue();
     }
 }
 
@@ -240,26 +256,18 @@ void Master::strategy_defensive() {
         bool kickAtGoalDone = kickAtGoal();
         if (kickAtGoalDone)
         {
-          cout << "Strategy defensive: WAIT S" << endl;
           resetTVariables();
-          s_case = WAIT;
-          debugContinue();
-        } else {
-            nextDefensiveMove();
         }
+        nextDefensiveMove();
         break;
       }
     case BLOCK:
       {
         bool nearPenaltyDone = tactic_nearpenaltyarea(0.2 * -side);
         if (nearPenaltyDone) {
-            cout << "Strategy defensive: WAIT B" << endl;
             resetTVariables();
-            s_case = WAIT;
-            debugContinue();
-        } else {
-            nextDefensiveMove();
         }
+        nextDefensiveMove();
         break;
       }
     default:
@@ -280,7 +288,6 @@ void Master::nextDefensiveMove() {
                    (side == RIGHT && ball.GetPos().GetX() >= -0.2)) {
         nextState = BLOCK;
     }
-        cout << "side: " << side << " ball: " << ball.GetPos() << endl;
     if (nextState != s_case) {
         resetTVariables();
         s_case = nextState;

@@ -13,8 +13,9 @@
 //Use Goto to set target position. Remember to also run the driveWithCA() 100 times a second
 
 
-void Robo::GotoPos(Position target, double speed){
+void Robo::GotoPos(Position target, double speed, bool ca){
     isIdle = false;
+    this->toggleCA = ca;
     if(onlyTurn){
         onlyTurn = false;
         this->pidAngle.changeParams(ANGLE_KP_DRIVE, ANGLE_KI_DRIVE, ANGLE_KD_DRIVE);
@@ -33,6 +34,10 @@ void Robo::turn(Position targetPos){
         this->pidAngle.changeParams(ANGLE_KP_TURN, ANGLE_KI_TURN, ANGLE_KD_TURN);
     }
     this->targetPosition = targetPos;
+}
+
+void Robo::stop() {
+    idle();
 }
 
 void Robo::idle(){
@@ -109,12 +114,11 @@ Position Robo::movePosInBounce(Position pos){
     //If inside, return original, or scale and return scaled version
     //cout << "scaleX, scaleY: " << scaleX << ", " << scaleY;
     if (scaleX <= 1 && scaleY <=1){
-        cout << endl;
         return pos;
     }
     else{
         double largestScale = std::max(scaleY, scaleX);
-        cout << "largestScale: " << largestScale << endl;
+        //cout << "largestScale: " << largestScale << endl;
         return Position(pos.GetX()/largestScale, pos.GetY()/largestScale);
     }
 }
@@ -130,7 +134,7 @@ void Robo::updatePositions(vector<Position> positions) {
         if (p <= 2) {
             posTeam[p] = positions[p];
         } else {
-            posOtherTeam[p - 3] = positions[p - 3];
+            posOtherTeam[p - 3] = positions[p];
         }
     }
     posTeam.erase(posTeam.begin() + rfNumber);
@@ -166,12 +170,12 @@ void Robo::setPrecise(bool val){
 }
 
 void Robo::updateAnglePidWithoutCA(Position targetPos){
-    this->angleErrorRad = getReferenceAngleErrRad(targetPos, false);
+    this->angleErrorRad = getReferenceAngleErrRad(targetPos, toggleCA);
     double sinAngleErrorRad = sin(this->angleErrorRad/2);
     pidAngle.updateInput(sinAngleErrorRad);
 }
 void Robo::updateAnglePidWithCA(Position targetPos){
-    this->angleErrorRad = getReferenceAngleErrRad(targetPos, false);
+    this->angleErrorRad = getReferenceAngleErrRad(targetPos, toggleCA);
     double sinAngleErrorRad = sin(this->angleErrorRad/2);
     pidAngle.updateInput(sinAngleErrorRad);
 }

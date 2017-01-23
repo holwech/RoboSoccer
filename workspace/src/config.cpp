@@ -7,6 +7,7 @@
 
 typedef enum {
     ACTION_IDLE,
+    ACTION_STOP,
     ACTION_BEFORE_PASS,
     ACTION_PASS,
     ACTION_GOTO,
@@ -24,10 +25,13 @@ struct Command {
     Position pos2;
     double speed;
     double approach_speed;
+    bool ca;
     Command(Action action) : action(action), pos1(Position(0.0, 0.0)), pos2(Position(0.0, 0.0)) {}
     Command(Action action,  Position pos1, Position pos2) : action(action), pos1(pos1), pos2(pos2) {}
-    Command(Action action, Position pos1) : action(action), pos1(pos1), pos2(Position(0.0, 0.0)) {}
-    Command(Action action, Position pos1, double speed) : action(action), pos1(pos1), pos2(Position(0.0, 0.0)), speed(speed){}
+    Command(Action action, Position pos1) : action(action), pos1(pos1), pos2(Position(0.0, 0.0)), ca(false) {}
+    Command(Action action, Position pos1, bool ca) : action(action), pos1(pos1), pos2(Position(0.0, 0.0)), ca(ca) {}
+    Command(Action action, Position pos1, double speed) : action(action), pos1(pos1), pos2(Position(0.0, 0.0)), speed(speed), ca(false) {}
+    Command(Action action, Position pos1, double speed, bool ca) : action(action), pos1(pos1), pos2(Position(0.0, 0.0)), speed(speed), ca(ca){}
     Command(Action action, Position pos1, double speed, double approach_speed) : action(action), pos1(pos1), pos2(Position(0.0, 0.0)), speed(speed), approach_speed(approach_speed){}
     Command(Action action, Position pos1, Position pos2, double speed) : action(action), pos1(pos1), pos2(pos2), speed(speed){}
     Command() : action(ACTION_IDLE), pos1(Position(0.0, 0.0)), pos2(Position(0.0, 0.0)) {}

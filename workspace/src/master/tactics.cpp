@@ -45,7 +45,7 @@ bool Master::crossPassAndShoot()
       else{
           chrossandpassy=0.5;
       }
-      send(Command(ACTION_GOTO, Position(0.7, chrossandpassy), 1.5 ), 0);
+      send(Command(ACTION_GOTO, Position(0.7, chrossandpassy), 1.5, 2.0 ), 0);
       t_state = STEP2;
       break;
       // Passes the ball to the other robot
@@ -61,9 +61,9 @@ bool Master::crossPassAndShoot()
       // Positions the receiving robot according to the ball
     case STEP3:
       //       if (!player[2].isBusy()) {
-      if (ball.GetVelocity() < 0.00001 && !player[1].isBusy() && !player[0].isBusy())  //wait for the ball stop, if not stopping, the ball.GetPos() will not updating because the state changes.
+      if (ball.GetVelocity() < 0.0001 && !player[1].isBusy() && !player[0].isBusy())  //wait for the ball stop, if not stopping, the ball.GetPos() will not updating because the state changes.
       {
-        send(Command(ACTION_KICK, Position(1.4, 0.0), 2.6, 0.4), 0);
+        send(Command(ACTION_KICK, Position(1.4, 0.0), 2.6, 2.0), 0);
         t_state = STEP5;
       }
       break;
@@ -89,19 +89,19 @@ bool Master::crossPassAndShoot()
 bool Master::bounceForward() {
     switch(t_state2) {
     case STEP1: {
-        Position kickerPos = player[1].getPos();
-        Position target(0.8 * -side, -0.3);
-        double midpointXDist = (kickerPos.GetX() - target.GetX()) / 2;
+        double flipY = ball.GetPos().GetY() > 0 ? 1.0 : -1.0;
+        Position target(0.8 * -side, 0.3 * flipY);
+        double midpointXDist = (ball.GetPos().GetX() - target.GetX()) / 2;
         double midpointX = target.GetX() + midpointXDist;
-        Position targetWall(midpointX, -0.89);
-        send(Command(ACTION_KICK, targetWall, 3.0, 2.0), 1);
-        send(Command(ACTION_GOTO, Position(midpointX, -0.3), 2.0), 2);
+        Position targetWall(midpointX, 0.89 * flipY);
+        send(Command(ACTION_KICK, targetWall, 2.0, 1.5), 1);
+        send(Command(ACTION_GOTO, Position(midpointX, ball.GetPos().GetY()), 2.0), 2);
         t_state2 = STEP2;
         break;
     }
     case STEP2:
         if (!player[1].isBusy() && !player[2].isBusy()) {
-            send(Command(ACTION_GOTO, Position(0.8 * side, 0.0), 2.0), 2);
+            send(Command(ACTION_GOTO, Position(0.8 * side, 0.0), 2.0), 1);
             t_state2 = STEP3;
         }
         break;
@@ -133,7 +133,7 @@ Can be improved, in my opinion
 3.If the ball is on the bottom border, the robot will stuck in the wall
 4.and so on
 */
-bool Master::tactic_nearpenaltyarea(double threshold)
+bool Master::tactic_nearpenaltyarea(double threshold, int playerNum)
 {
   // if the ball is too close to our gate/ penalty area
   if (ball.GetX() > threshold)
@@ -143,24 +143,26 @@ bool Master::tactic_nearpenaltyarea(double threshold)
     // Position robots accordingly
     switch (t_state)
     {
-      case STEP1:
-
-
-        if (player[1].getPos().DistanceTo(ball.GetPos()) < player[2].getPos().DistanceTo(ball.GetPos()))
-        {
-          robonr = 1;
+      case STEP1: {
+        if (playerNum == -1) {
+            closestRobo = getClosest();
         } else {
-          robonr = 2;
+            closestRobo = playerNum;
         }
-
-        send(Command(ACTION_KICK, Position(-1.0, ball.GetPos().GetY()), 2.5, 2.0), robonr);
-        cout << "NEARPENALTY" << endl;
         t_state = STEP2;
         break;
+      }
       case STEP2:
-        if (!player[robonr].isBusy())
+        send(Command(ACTION_KICK, Position(-1.0, ball.GetPos().GetY()), 2.5, 2.0), closestRobo);
+        t_state = STEP3;
+        break;
+      case STEP3:
+        if (!player[closestRobo].isBusy())
         {
           return true;
+        }
+        if (playerNum == -1) {
+            checkClosest(closestRobo);
         }
         break;
       default:
@@ -218,32 +220,53 @@ bool Master::tactic_ballchasing()
 
 /**
  *	This tactic finds the closest robot to the ball and kicks the ball
- * 	towards the goal without hitting the goalkeeper
+ * 	towards the goal without hitting the goalkeeper.
+ * 	Provide a player number to do the goal kick with a spesific player.
+ * 	If a number is not provided, it will choose the closest one.
  */
-bool Master::kickAtGoal() {
+bool Master::kickAtGoal(int playerNum, bool is_penalty) {
     switch(t_state) {
     // Find closest robo to ball
-    case STEP1:
-        if (player[1].getPos().DistanceTo(ball.GetPos()) < player[2].getPos().DistanceTo(ball.GetPos())) {
-          closestRobo = 1;
+    case STEP1: {
+        if (playerNum == -1) {
+            closestRobo = getClosest();
         } else {
-          closestRobo = 2;
+            closestRobo = playerNum;
         }
+        cout << "Closest robo is: " << closestRobo << endl;
         t_state = STEP2;
         break;
-    // Find the position of the goalkeeper
-    case STEP2:
+    }
+    case STEP2: {
+        if (playerNum == -1) {
+            cout << "Closest robo in STEP3 is: " << closestRobo << endl;
+        }
         t_target = Position(1.27 * -side, 0);
+        if (otherKeeperInGoalArea() == 1) {
+            Position keeperPos = getOtherKeeperPos();
+            double modifier = 0;
+            if (keeperPos.GetY() > 0) {
+                modifier = -0.1;
+            } else {
+                modifier = 0.1;
+            }
+            t_target.SetY(keeperPos.GetY() + modifier);
+        }
+        if(is_penalty){
+            send(Command(ACTION_KICK, t_target, 2.5, 1.4), closestRobo);
+        }else{
+            send(Command(ACTION_KICK, t_target, 2.5, 2.0), closestRobo);
+        }
+
         t_state = STEP3;
         break;
-    case STEP3: {
-        send(Command(ACTION_KICK, t_target, 2.5, 2.0), closestRobo);
-        t_state = STEP4;
-        break;
     }
-    case STEP4:
+    case STEP3:
         if (!player[closestRobo].isBusy()) {
             return true;
+        }
+        if (playerNum == -1) {
+            checkClosest(closestRobo);
         }
         break;
     default:
