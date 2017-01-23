@@ -224,7 +224,7 @@ bool Master::tactic_ballchasing()
  * 	Provide a player number to do the goal kick with a spesific player.
  * 	If a number is not provided, it will choose the closest one.
  */
-bool Master::kickAtGoal(int playerNum) {
+bool Master::kickAtGoal(int playerNum, bool is_penalty) {
     switch(t_state) {
     // Find closest robo to ball
     case STEP1: {
@@ -252,7 +252,12 @@ bool Master::kickAtGoal(int playerNum) {
             }
             t_target.SetY(keeperPos.GetY() + modifier);
         }
-        send(Command(ACTION_KICK, t_target, 2.5, 2.0), closestRobo);
+        if(is_penalty){
+            send(Command(ACTION_KICK, t_target, 2.5, 1.4), closestRobo);
+        }else{
+            send(Command(ACTION_KICK, t_target, 2.5, 2.0), closestRobo);
+        }
+
         t_state = STEP3;
         break;
     }

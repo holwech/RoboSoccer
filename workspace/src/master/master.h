@@ -102,6 +102,9 @@ private:
     void nextMove();
     int getNotClosest();
 
+    void GoToBeforePenaltyPosition(); // Used to manoever robots to the position before penalty
+    void ActDuringPenalty(); //Make robots act during penalty shooting
+
 
     /** Please prefix all tactic-specific variables with some kind of identifier
      * 	so that we get conflicting variables with the same name. Tactic variables
@@ -116,7 +119,7 @@ private:
     bool crossPassAndShoot();
     bool tactic_nearpenaltyarea(double threshold, int playerNum = -1);
     bool tactic_ballchasing();
-    bool kickAtGoal(int playerNum = -1);
+    bool kickAtGoal(int playerNum = -1, bool is_penalty = false);
 
     /** SHARED TACTIC VARIABLES */
     T_State t_state;
