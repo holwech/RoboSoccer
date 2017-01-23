@@ -58,8 +58,10 @@ void Master::run() {
             strategy_best();
             break;
         case BEFORE_PENALTY:
+            GoToBeforePenaltyPosition();
             break;
         case PENALTY:
+            ActDuringPenalty();
             break;
         case PLAY_ON:
             break;
@@ -76,6 +78,44 @@ void Master::run() {
     threadRobo1.join();
     threadRobo2.join();
 }
+
+void Master::GoToBeforePenaltyPosition(){
+
+    if(side==-1){ // We are goal keeper during penalty shooting
+
+        send(Command(ACTION_GOTO, Position(-1.19, 0), 1.5, bool(1)), 0);
+        send(Command(ACTION_GOTO, Position(0.8, 0.3), 1.5, bool(1)), 1);
+        send(Command(ACTION_GOTO, Position(0.8, -0.3), 1.5, bool(1)), 2);
+
+    }else{ // We are attacker during penalty shooting
+
+        send(Command(ACTION_GOTO, Position(0, 0), 1.5, bool(1)), 0);
+        send(Command(ACTION_GOTO, Position(1, 0.3), 1.5, bool(1)), 1);
+        send(Command(ACTION_GOTO, Position(1, -0.3), 1.5, bool(1)), 2);
+
+    }
+
+}
+
+
+void Master::ActDuringPenalty(){
+    bool kickIsDone = false;
+
+    if(side==-1){ // We are goal keeper during penalty shooting
+
+        send(Command(ACTION_DEFEND), 0);
+
+    }else{ // We are attacker during penalty shooting
+        kickIsDone = kickAtGoal(0,true);
+        //send(Command(ACTION_GOTO, Position(0, 0), 1.5, bool(1)), 0);    
+    }
+    if (kickIsDone) {
+        resetTVariables();
+    }
+
+}
+
+
 
 /** Sends a command to a given robot. Assumes robo 0 if number is out of bounds */
 void Master::send(Command command, int roboNum) {
@@ -208,6 +248,8 @@ void Master::manual() {
         cout << "	7. TEST BALL CLASS" << endl;
         cout << "	8. STOP" << endl;
         cout << "	9. TEST POS_TO_BOUNCE" << endl;
+        cout << " 10.Test of before penalty" << endl;
+         cout << " 11.Test of shoot penalty" << endl;
 
         cin >> answer;
         cout << "Which robot? (0-2)" << endl;
@@ -263,6 +305,12 @@ void Master::manual() {
             break;
         case 9:
             send(Command(ACTION_BLOCK_BALL, Position(0,0) ), 1);
+            break;
+        case 10:
+            GoToBeforePenaltyPosition();
+            break;
+        case 11:
+            ActDuringPenalty();
             break;
         default:
             cout << "No action created for this choice yet in master.manual" << endl;
