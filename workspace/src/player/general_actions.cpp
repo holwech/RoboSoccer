@@ -204,13 +204,8 @@ bool Player::angeled_behind_ball(Position targetPos, double speed){
         pos_behind_ball_x = ballPos.GetX() + direction.GetX() * 3 * scale / length;
         pos_behind_ball_y = ballPos.GetY() + direction.GetY() * 3 * scale / length;
         pos_behind_ball = Position(pos_behind_ball_x, pos_behind_ball_y);
-<<<<<<< HEAD
-        if (robo.isArrived(0.5)) {
-            robo.GotoPos(pos_behind_ball, speed * 0.3);
-=======
         if (robo.isArrived(0.2)) {
             robo.GotoPos(pos_behind_ball, speed * 0.5);
->>>>>>> 7e0edbece0cdf6634842de724eb252f47f6cfdbe
         } else {
             robo.GotoPos(pos_behind_ball, speed);
         }
