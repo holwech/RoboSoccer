@@ -25,6 +25,10 @@ public:
                                             pidAngle(ANGLE_KP_DRIVE, ANGLE_KI_DRIVE, ANGLE_KD_DRIVE),
                                             pidDistance(80.0, 0.0, 0.0),
                                             ca(),
+                                             sampeled_pos(0,0),
+                                            not_moving_count(0),
+                                            go_to_mid(false),
+                                            go_to_mid_count(0),
                                             rfNumber(deviceNr),
                                             posTeam({Position(0.0, 0.0), Position(0.0, 0.0)}),
                                             posOtherTeam({Position(0.0, 0.0), Position(0.0, 0.0), Position(0.0, 0.0)}),
@@ -53,6 +57,11 @@ public:
     void setPrecise(bool val);
     Position movePosInBounce(Position pos);
 private:
+    Position sampeled_pos;
+    int not_moving_count;
+    bool go_to_mid;
+    int go_to_mid_count;
+
     Position targetPosition;
     int rfNumber;
     void makeTurn();

@@ -112,7 +112,7 @@ private:
     AState kick_state;
     Position endKickPos;
     double passSpeed;
-
+    timer stuck_timer;
 
     Angle ang;
     double delta;
