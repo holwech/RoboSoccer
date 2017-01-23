@@ -42,34 +42,47 @@ void Player::defend()
 
     //initial goalkeeper position depending on which side
     Mid = Position(1.4*side,0);
-    goalkeeperx = 1.39*side;
+    goalkeeperx = 1.4*side;
 
-    //get position of ball and angle of the ball
+    //get position and angle of the ball
+    if (ball.isStopped())
+    {
+        goalkeepery = 0;
+    }
+
     for(i=0;i<10;i++)
     {
         ballangle = ball.GetPhi().Deg()+ballangle/10;
     }
-
-
     for(i=0;i<10;i++)
     {
         ballx += ball.GetX()/10;
         bally += ball.GetY()/10;
     }
 
+// if the ball stops
+    if (ball.isStopped())
+    {
+        goalkeepery = 0;
+    }
+
+// if the ball is too near to our penalty area, goalkeepery = bally
+    if(ballx>1.1||ballx<-1.1)
+    {
+        goalkeepery = bally;
+    }
+
 // if the ball is moving towards our gate, goalie moves. If the ball is moving far from gate, goalie goes to the initial position
+
     if(ball.GetPhi().Deg()<90 && ball.GetPhi().Deg()>-90 && side)
     {
-        goalkeepery = tan(ballangle*M_PI/180)*(goalkeeperx-ballx)+bally;
+        goalkeepery = tan(ballangle*M_PI/180)*((goalkeeperx-0.042*side)-ballx)+bally;
     }
 
-    if(!(ball.GetPhi().Deg()<90 && ball.GetPhi().Deg()>-90) && !side)
+    else if(!(ball.GetPhi().Deg()<90 && ball.GetPhi().Deg()>-90) && !side)
     {
-        goalkeepery = tan(ballangle*M_PI/180)*(goalkeeperx-ballx)+bally;
+        goalkeepery = tan(ballangle*M_PI/180)*((goalkeeperx-0.042*side)-ballx)+bally;
     }
-
-
-
 
 
 /*    if (ball.GetPhi().Deg()>=80||ball.GetPhi().Deg()<-80)
@@ -80,10 +93,6 @@ void Player::defend()
             goalkeepery = -0.1;
     }
 */
-    if (ball.isStopped())
-    {
-        goalkeepery = 0;
-    }
 
 
 //    if(side==RIGHT&&)
@@ -103,18 +112,27 @@ void Player::defend()
 //        }
 //    }
 
-    if(goalkeepery>0.26)
-        goalkeepery = 0.15;
-    else if(goalkeepery<-0.245)
-        goalkeepery = -0.15;
+// not let goalie go away from penalty area
 
-    //if not mooving and far out, dont move
+
+    if(goalkeepery>0.15)
+        goalkeepery = 0.15;
+    else if(goalkeepery<-0.16)
+        goalkeepery = -0.16;
+
+    cout << "y pos " << goalkeepery<<endl;
+
+
         POS.SetX(goalkeeperx);
         POS.SetY(goalkeepery);
 
         robo.GotoPos(POS, 1);
 //        robo.CruisetoXY(goalkeeperx,goalkeepery,130);
 
+        if(ball.isStopped() && ball.inGoalArea())
+        {
+            // I do not know whether I can use T_State
+        }
 
 
 
@@ -122,7 +140,7 @@ void Player::defend()
     //distance to move too small, dont try to move
     //delta = sqrt((robo.GetX()-goalkeeperx)*(robo.GetX()-goalkeeperx)+(robo.GetY()-goalkeepery)*(robo.GetY()-goalkeepery));
     //if(delta<0.06) robo.StopAction();
-        cout<<"ballangle"<<ball.GetPhi().Deg()<<endl;
+//        cout<<"ballangle"<<ball.GetPhi().Deg()<<endl;
 
 }
 
