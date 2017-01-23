@@ -186,8 +186,8 @@ void Master::strategies() {
             strategy_offensive2();
             break;
         case 8: {
-            tacticDone = throughPass();
-            if (tacticDone) { answer = -1; }
+            send(Command(ACTION_GOTO, Position(0, 0), 1.5, bool(1)), 0);
+            answer = -1;
             break;
         }
         case 9:
