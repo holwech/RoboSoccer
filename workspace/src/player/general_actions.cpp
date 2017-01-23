@@ -7,7 +7,8 @@ void Player::idle()
 
 bool Player::goTo(Position target, double speed)
 {
-    robo.GotoPos(target, speed);
+  cout << "IN PLAYER GOTO!" << endl;
+  robo.GotoPos(target, speed);
   if (robo.isArrived(0.1))
   {
     playerPrint("State set to IDLE");
@@ -160,23 +161,15 @@ bool Player::before_kick_improved(Position kick_position, Position target_of_kic
     bool done = false;
     switch(edge){
     case E_NONE:
-        done = angeled_behind_ball(target_of_kick, before_kick_speed);
-        break;
     case E_BOTTOM:
-        break;
     case E_BOTTOM_LEFT:
-        break;
     case E_BOTTOM_RIGHT:
-        break;
     case E_LEFT:
-        break;
     case E_RIGHT:
-        break;
     case E_TOP:
-        break;
     case E_TOP_LEFT:
-        break;
     case E_TOP_RIGHT:
+        done = angeled_behind_ball(target_of_kick, before_kick_speed);
         break;
     default:
         cout << "No case for this edge in before_kick_improved" << endl;
@@ -204,12 +197,12 @@ bool Player::angeled_behind_ball(Position targetPos, double speed){
         pos_behind_ball_x = ballPos.GetX() + direction.GetX() * 3 * scale / length;
         pos_behind_ball_y = ballPos.GetY() + direction.GetY() * 3 * scale / length;
         pos_behind_ball = Position(pos_behind_ball_x, pos_behind_ball_y);
-        if (robo.isArrived(0.3)) {
+        if (robo.isArrived(0.5)) {
             robo.GotoPos(pos_behind_ball, speed * 0.3);
         } else {
             robo.GotoPos(pos_behind_ball, speed);
         }
-        if(robo.isArrived(0.04)){
+        if(robo.isArrived(0.05)){
             cout << "STEP1 DONE" << endl;
             state_before_kick = STEP2;
             lengthToBall = robo.GetPos().DistanceTo(ball.GetPos());
@@ -226,7 +219,7 @@ bool Player::angeled_behind_ball(Position targetPos, double speed){
         pos_behind_ball_y = ballPos.GetY() + direction.GetY() * 1 * scale / length;
         pos_behind_ball = Position(pos_behind_ball_x, pos_behind_ball_y);
         robo.GotoPos(pos_behind_ball, speed * 0.35);
-        if (robo.isArrived(0.04)) {
+        if (robo.isArrived(0.05)) {
             //cout << endl << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl << endl;
             cout << "Angled behind ball DONE" << endl;
             return true;

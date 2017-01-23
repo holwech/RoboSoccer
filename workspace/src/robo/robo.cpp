@@ -4,6 +4,8 @@
 #define DEBUG false
 #define ARRIVED_DIST 0.04
 
+
+
 /** To complete task 2.1 part 1, we have to implement multithreading it seems
   * like. We will have problems controlling all robots at the same time without
   */
@@ -18,10 +20,11 @@ void Robo::GotoPos(Position target, double speed){
         this->pidAngle.changeParams(ANGLE_KP_DRIVE, ANGLE_KI_DRIVE, ANGLE_KD_DRIVE);
     }
     this->speed = speed;
-    this->targetPosition = movePosInBounce(target);
-    //this->AbortGotoXY();
+    //cout << "Target BEFORE:" << target << endl;
+    Position movedTarget = movePosInBounce(target);
+    //cout << "Target AFTER:" << movedTarget << endl;
+    this->targetPosition = movedTarget;
 }
-
 
 void Robo::turn(Position targetPos){
     isIdle = false;
@@ -52,51 +55,55 @@ Position Robo::movePosInBounce(Position pos){
             //bottom door
             cornerScale = midPosLeft.DistanceTo(pos)/1.04;
             cout << "Cornerscale: " << cornerScale << endl;
-            if (cornerScale > 1)
+            if (cornerScale > 1){
                 cout << "SCALED POS IN CORNER" << endl;
                 return Position(pos.GetX()/cornerScale, pos.GetY()/cornerScale);
+            }
         }
         else if(pos.GetY() < -0.58){
             //top door
-            cornerScale = midPosLeft.DistanceTo(pos)/1.07;
+            cornerScale = midPosLeft.DistanceTo(pos)/1.04;
             cout << "Cornerscale: " << cornerScale << endl;
-            if (cornerScale > 1)
+            if (cornerScale > 1){
                 cout << "SCALED POS IN CORNER" << endl;
                 return Position(pos.GetX()/cornerScale, pos.GetY()/cornerScale);
+            }
         }
     }
     else if(pos.GetX() > 1.2){
         if (pos.GetY() < -0.62){
             //top not door
-            cornerScale = midPosRight.DistanceTo(pos)/1.04;
+            cornerScale = midPosRight.DistanceTo(pos)/1.07;
             cout << "Cornerscale: " << cornerScale << endl;
-            if (cornerScale > 1)
+            if (cornerScale > 1){
                 cout << "SCALED POS IN CORNER" << endl;
                 return Position(pos.GetX()/cornerScale, pos.GetY()/cornerScale);
+            }
         }
         else if(pos.GetY() > 0.6){
             //bottom not door
             cornerScale = midPosRight.DistanceTo(pos)/1.06;
             cout << "Cornerscale: " << cornerScale << endl;
-            if (cornerScale > 1)
+            if (cornerScale > 1){
                 cout << "SCALED POS IN CORNER" << endl;
                 return Position(pos.GetX()/cornerScale, pos.GetY()/cornerScale);
+            }
         }
     }
 
     //door
     if(pos.GetX() <  0){
-        scaleX = pos.GetX()/-1.38;
+        scaleX = pos.GetX()/-1.33;
     }
     else if(pos.GetX() > 0){
         scaleX = pos.GetX()/1.38;
     }
 
     if(pos.GetY() < 0){
-        scaleY = pos.GetY()/-0.85;
+        scaleY = pos.GetY()/-0.83;
     }
     else if(pos.GetY() > 0){
-        scaleY = pos.GetY()/0.83;
+        scaleY = pos.GetY()/0.81;
     }
 
     //If inside, return original, or scale and return scaled version
