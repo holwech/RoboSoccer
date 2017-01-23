@@ -99,15 +99,18 @@ void Master::GoToBeforePenaltyPosition(){
 
 
 void Master::ActDuringPenalty(){
+    bool kickIsDone = false;
 
     if(side==-1){ // We are goal keeper during penalty shooting
 
         send(Command(ACTION_DEFEND), 0);
 
     }else{ // We are attacker during penalty shooting
-        kickAtGoal(0,true);
-        //send(Command(ACTION_GOTO, Position(0, 0), 1.5, bool(1)), 0);
-
+        kickIsDone = kickAtGoal(0,true);
+        //send(Command(ACTION_GOTO, Position(0, 0), 1.5, bool(1)), 0);    
+    }
+    if (kickIsDone) {
+        resetTVariables();
     }
 
 }
