@@ -53,6 +53,7 @@ void Master::run() {
         case REFEREE_INIT:
             break;
         case BEFORE_KICK_OFF:
+            before_kick_off();
             break;
         case KICK_OFF:
             strategy_best();
@@ -448,3 +449,67 @@ int Master::otherKeeperInGoalArea() {
         return 1;
     }
 }
+
+
+
+//send(Command(ACTION_GOTO, Position(x, y), 1.0), robonumber);
+void Master::before_kick_off(){
+
+    if (referee.GetSide()==0) {
+        //we kick the ball at left, so we take a attack position at left
+        if (side == LEFT){
+            send(Command(ACTION_GOTO, Position(-1.36, 0), 1.0), 0);
+            send(Command(ACTION_GOTO, Position(-0.2, -0.2), 1.0), 1);
+            send(Command(ACTION_GOTO, Position(-0.1, 0.3), 1.0), 2);
+        }
+        //enemy kick the ball at left, so we take a defend position at right
+        else {
+            send(Command(ACTION_GOTO, Position(1.36, 0), 1.0), 0);
+            send(Command(ACTION_GOTO, Position(0.2, 0), 1.0), 1);
+            send(Command(ACTION_GOTO, Position(0.6, 0), 1.0), 2);
+        }
+
+    }
+
+    else {
+        //we kick the ball at right, so we take a attack position at right
+        if (side == RIGHT){
+            send(Command(ACTION_GOTO, Position(1.36, 0), 1.0), 0);
+            send(Command(ACTION_GOTO, Position(0.2, -0.2), 1.0), 1);
+            send(Command(ACTION_GOTO, Position(0.1, 0.3), 1.0), 2);
+        }
+        //enemy kick the ball at right, so we take a defend position at left
+        else {
+            send(Command(ACTION_GOTO, Position(-1.36, 0), 1.0), 0);
+            send(Command(ACTION_GOTO, Position(-0.2, 0), 1.0), 1);
+            send(Command(ACTION_GOTO, Position(-0.6, 0), 1.0), 2);
+        }
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
