@@ -64,6 +64,7 @@ private:
     Referee referee;
     ePlayMode state;
     fieldSide side;
+    eSide kside;
     void updateSide();
     void updatePositions();
     void send(Command command, int roboNum);
@@ -101,6 +102,7 @@ private:
     void strategy_best();
     void nextMove();
     int getNotClosest();
+    void before_kick_off();
 
 
     /** Please prefix all tactic-specific variables with some kind of identifier
