@@ -52,6 +52,7 @@ public:
     Player(Channel* channel, RTDBConn& DBC, const int deviceNr);
     void run();
     void update(vector<Position> pos);
+//    void nextDefenderState();
     fieldSide side;
     PState getState();
     PState getPrevState();
@@ -89,6 +90,7 @@ private:
     atomic<PState> state;
     atomic<bool> busy;
     mutable std::mutex mutex;
+    AState defender_state;
 
     /** General Variables and Functions*/
     void idle();

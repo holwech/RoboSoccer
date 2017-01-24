@@ -17,7 +17,7 @@ Player::Player(Channel* channel, RTDBConn &DBC, const int deviceNr) :
     //bally = 0;
     control = 0;
     delta = 0.09;
-
+    defender_state = A_STEP1;
     counter = 0;
     phase = 0;
     passSpeed = 0;
@@ -76,6 +76,7 @@ void Player::run() {
            isGoalkeeper = true;
            //defend_tom();
            defend();
+           cout << "Loop still running" << endl;
            break;
        case KICK_OUT:
            break;
@@ -85,6 +86,7 @@ void Player::run() {
            cout << "Case for state: " << state << endl;
            break;
        }
+       cout << "Yes really" << endl;
        updateRobo(isGoalkeeper);
        readCommand();
        usleep(10000);
@@ -189,6 +191,7 @@ void Player::done() {
     kick_state = A_STEP1;
     pass_state = A_STEP1;
     state_before_kick = STEP1;
+    defender_state = A_STEP1;
 }
 
 /** Checks if the player is busy performing an action */
@@ -233,6 +236,7 @@ Player::Player(Player&& other) : DBC(other.DBC), ball(other.DBC), robo(other.DBC
     deviceNr = std::move(other.deviceNr);
     prevState.store(std::move(other.prevState.load()));
     state_before_kick = std::move(other.state_before_kick);
+    defender_state = std::move(other.defender_state);
     state.store(std::move(state.load()));
     busy.store(std::move(busy.load()));
 }
@@ -245,6 +249,7 @@ Player::Player(const Player& other) : DBC(other.DBC), ball(other.DBC), robo(othe
     deviceNr = other.deviceNr;
     prevState.store(other.prevState.load());
     state_before_kick = other.state_before_kick;
+    defender_state = other.defender_state;
     state.store(state.load());
     busy.store(busy.load());
 }
@@ -261,6 +266,7 @@ Player& Player::operator = (Player&& other) {
     robo = std::move(other.robo);
     prevState.store(std::move(other.prevState.load()));
     state_before_kick = std::move(other.state_before_kick);
+    defender_state = std::move(other.defender_state);
     state.store(std::move(state.load()));
     busy.store(std::move(busy.load()));
     return *this;
@@ -278,6 +284,7 @@ Player& Player::operator = (const Player& other) {
     robo = other.robo;
     prevState.store(other.prevState.load());
     state_before_kick = other.state_before_kick;
+    defender_state = other.defender_state;
     state.store(state.load());
     busy.store(busy.load());
     return *this;
