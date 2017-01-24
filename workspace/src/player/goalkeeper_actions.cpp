@@ -28,7 +28,7 @@ void Player::defend_tom(){
     }
 }
 
-/*
+/*--------------------clammer in if sentence
 void Player::nextDefenderState() {
     if(ball.isStopped() && ball.inGoalArea() && fabs(goalkeeperx)-fabs(ballx)>0 && fabs(goalkeeperx)-fabs(ballx)<0.2 )
     {
@@ -50,12 +50,12 @@ double Goalie_y(double goalkeeperx, double goalkeepery,double ballx,double bally
     // if the ball stops, the goalie will follow the y-axis of the ball
     if(ball.GetPhi().Deg()<90 && ball.GetPhi().Deg()>-90 && side)
     {
-        goalkeepery = tan(ballangle*M_PI/180)*((goalkeeperx-0.047*side)-ballx)+bally;
+        goalkeepery = tan(ballangle*M_PI/180)*((goalkeeperx-0.047*side)-ballx)+bally;//------------------
     }
 
     else if(!(ball.GetPhi().Deg()<90 && ball.GetPhi().Deg()>-90) && !side)
     {
-        goalkeepery = tan(ballangle*M_PI/180)*((goalkeeperx-0.047*side)-ballx)+bally;
+        goalkeepery = tan(ballangle*M_PI/180)*((goalkeeperx-0.047*side)-ballx)+bally;//------------------
     }
 
     if(goalkeepery>0.17)
@@ -93,8 +93,8 @@ void Player::defend()
         ballx += ball.GetX();
         bally += ball.GetY();
     }
-    ballx /= 10;
-    bally /= 10;
+    ballx /= 10; //------change
+    bally /= 10;//-------change
 
     switch (defender_state)
     {
