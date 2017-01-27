@@ -1,8 +1,10 @@
 #ifndef BALL_H
 #define BALL_H
 #include "raw_ball.h"
+#include "timer.h"
 #define BOUND_X 1.3
 #define BOUND_Y 0.780
+#define NUM_SAMPLES 10
 
 /**
  * LEFT = -x, RIGHT = x, TOP = y, BOTTOM = -y
@@ -21,12 +23,19 @@ enum edges{
 
 class Ball : public RawBall
 {
+    friend class test_ball;
 public:
     Ball(RTDBConn &DBC);
     double GetVelocity();
+    //Position GetPos();
     bool inGoalArea();
     edges nearEdge();
     bool isStopped();
+    void updateSample();
+private:
+    timer ballTimer;
+    vector<Position> samples;
+    int sampleCount;
 };
 
 #endif // BALL_H

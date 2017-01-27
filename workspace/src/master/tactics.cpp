@@ -12,6 +12,10 @@ void Master::t_debugContinue() {
     }
 }
 
+void printStrategy(string str) {
+    cout << "\033[1;36m#STRATEGY: " << str << "\033[0m" << endl;
+}
+
 void Master::exampleTactic()
 {
   Position target = Position(1.0, 0.0);
@@ -233,7 +237,8 @@ bool Master::kickAtGoal(int playerNum, bool is_penalty) {
         } else {
             closestRobo = playerNum;
         }
-        cout << "Closest robo is: " << closestRobo << endl;
+        //cout << "Closest robo is: " << closestRobo << endl;
+        masterPrint("kickAtGoal: STEP1 DONE");
         t_state = STEP2;
         break;
     }
@@ -257,12 +262,13 @@ bool Master::kickAtGoal(int playerNum, bool is_penalty) {
         }else{
             send(Command(ACTION_KICK, t_target, 2.5, 2.0), closestRobo);
         }
-
+        masterPrint("kickAtGoal: STEP2 DONE");
         t_state = STEP3;
         break;
     }
     case STEP3:
         if (!player[closestRobo].isBusy()) {
+            masterPrint("kickAtGoal: DONE");
             return true;
         }
         if (playerNum == -1) {
@@ -283,24 +289,30 @@ bool Master::throughPass() {
         notClosestRobo = getNotClosestToTeamGoal();
         Position receivingPos(0.8 * -side, 0.6);
         t_target = Position(0.8 * -side, 0.4);
-        if (positions[closestRobo].GetY() > 0.0) {
+        if (ball.GetPos().GetY() < 0.0) {
             receivingPos.SetY(-0.6);
             t_target.SetY(-0.4);
         }
-        cout << "Not closest robo: " << notClosestRobo << "/" << closestRobo << endl;
-        send(Command(ACTION_GOTO, Position(0.0, 0.0), true), notClosestRobo);
+        send(Command(ACTION_GOTO, receivingPos, 2.5, true), notClosestRobo);
         send(Command(ACTION_KICK, t_target, 2.5, 2.0), closestRobo);
+        printStrategy("throughPass: STEP1 DONE");
         t_state2 = STEP2;
         break;
     }
     case STEP2:
         if (!player[closestRobo].isBusy()) {
+            printStrategy("throughPass: STEP2 DONE");
             t_state2 = STEP3;
         }
         break;
-    case STEP3:
-        return kickAtGoal(notClosestRobo);
+    case STEP3: {
+        bool kickDone = kickAtGoal(notClosestRobo);
+        if (kickDone) {
+            printStrategy("throughPass: DONE");
+            return true;
+        }
         break;
+    }
     default:
         cout << "No case in throughPass" << endl;
         break;

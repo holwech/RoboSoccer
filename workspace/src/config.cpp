@@ -21,6 +21,7 @@ typedef enum {
 
 const vector<string> action_names({"ILDE", "STOP", "BEFORE_PASS", "PASS", "GOTO", "BEFORE_KICK", "KICK", "BLOCK_BALL", "DEFEND", "KICK_OUT", "TEST"});
 
+
 struct Command {
     Action action;
     Position pos1;

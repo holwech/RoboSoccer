@@ -58,6 +58,7 @@ private:
     void strategies();
     void strategyController();
     void manual();
+    void masterPrint(string str);
     int client_nr;
     string team;
     Ball ball;

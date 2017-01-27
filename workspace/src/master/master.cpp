@@ -44,7 +44,7 @@ void Master::run() {
     thread threadRobo0(&Player::run, std::ref(player[0]));
     thread threadRobo1(&Player::run, std::ref(player[1]));
     thread threadRobo2(&Player::run, std::ref(player[2]));
-    usleep(1000);
+    usleep(10000);
     string answer;
     cout << "Enter manual/strategy/normal mode? (m/s/any key) ";
     cin >> answer;
@@ -130,12 +130,14 @@ void Master::ActDuringPenalty(){
 void Master::send(Command command, int roboNum) {
     // If the prev command is the same as the current one,
     // do nothing, so to not spam the system with messages
+    /*
     if (prevCommand[roboNum] == command) {
+        cout << "Command: " << action_names[command.action] << " rejected" << endl;
         prevCommand[roboNum] = command;
         return;
-    }
-    if (true && prevCommand[roboNum].action != command.action) {
-        cout << "Sending action: " << action_names[command.action] << endl;
+    }*/
+    if (DEBUG || prevCommand[roboNum].action != command.action) {
+        cout << "\033[1;31m#MASTER: Sending action to robo #" << roboNum << ": " << action_names[command.action] << "\033[0m" << endl;
     }
     if (roboNum > 2 || roboNum < 0) {
         cout << "Robo " << roboNum << " does not exist" << endl;
@@ -173,6 +175,10 @@ void Master::strategyController() {
     }
 }
 
+void Master::masterPrint(string str) {
+    cout << "\033[1;31m#MASTER: " << str << "\033[0m" << endl;
+}
+
 /** Add your strategies or tactics here. (Yes, I know, misleading function name) */
 void Master::strategies() {
     int answer = -1;
@@ -202,14 +208,16 @@ void Master::strategies() {
             strategy_offensive();
             break;
         case 6:
-            tacticDone = kickAtGoal();
-            //if (tacticDone) { answer = -1; }
+            tacticDone = kickAtGoal(1);
+            if (tacticDone) {
+                resetTVariables(); }
             break;   
         case 7:
             strategy_offensive2();
             break;
         case 8: {
-            send(Command(ACTION_GOTO, Position(0, 0), 1.5, bool(1)), 0);
+            tacticDone = throughPass();
+            if (tacticDone) { answer = -1; }
             break;
         }
         case 9:
@@ -242,7 +250,6 @@ void Master::strategies() {
             cin >> answer;
             break;
         }
-        usleep(10000);
     }
 }
 

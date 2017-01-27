@@ -80,7 +80,8 @@ void Player::run() {
        case KICK_OUT:
            break;
        case TEST:
-
+           isDone = goTo(Position(0.0,0.0), 2, false);
+           if (isDone){ done(); }
            break;
        default:
            cout << "Case for state: " << state << endl;
@@ -88,7 +89,6 @@ void Player::run() {
        }
        updateRobo(isGoalkeeper);
        readCommand();
-       usleep(10000);
        //cout << "State: " << state << endl;
    }
 }
@@ -100,6 +100,7 @@ void Player::readCommand() {
         return;
     }
     command = channel->read();
+    playerPrint("Received command " + action_names[command.action]);
 
     switch(command.action) {
     case ACTION_GOTO:
@@ -145,13 +146,29 @@ void Player::readCommand() {
 }
 
 void Player::playerPrintState(string message) {
+    string color = "\033[1;31m";
+    if (deviceNr == 0) {
+        color = "\033[1;32m";
+    } else if (deviceNr == 1) {
+        color = "\033[1;33m";
+    } else {
+        color = "\033[1;34m";
+    }
     if (getPrevPrevState() != getState()) {
-        cout << "#P" << deviceNr << ": " << message << endl;
+        cout << color << "#P" << deviceNr << ": " << message << "\033[0m" << endl;
     }
 }
 
 void Player::playerPrint(string message) {
-    cout << "#P" << deviceNr << ": " << message << endl;
+    string color = "\033[1;31m";
+    if (deviceNr == 0) {
+        color = "\033[1;32m";
+    } else if (deviceNr == 1) {
+        color = "\033[1;33m";
+    } else {
+        color = "\033[1;34m";
+    }
+    cout << color << "#P" << deviceNr << ": " << message << "\033[0m" << endl;
 }
 
 /** Updates the positions of other robos */

@@ -8,6 +8,7 @@ void test_ball::test(int side) {
     cout << "3. nearEdge" << endl;
     cout << "4. ball position" << endl;
     cout << "5. isStopped" << endl;
+    cout << "6. updateSamples" << endl;
     int answer;
     cin >> answer;
     while(1) {
@@ -30,12 +31,20 @@ void test_ball::test(int side) {
             break;
         case 4:
             cout << ball.GetPos() << endl;
+            cout << "Original: " << ball.RawBall::GetPos() << endl;
             sleep(1);
             break;
         case 5:
             cout << "Is stopped: " << ball.isStopped() << endl;
             cout << "Velocity: " << ball.GetVelocity() << endl;
             sleep(1);
+            break;
+        case 6:
+            ball.updateSample();
+            if (ball.sampleCount == 0) {
+                cout << "---------" << endl;
+                cout << "Original: " << ball.RawBall::GetPos() << endl;
+            }
             break;
         default:
             cout << "No case for this answer in test_ball" << endl;
