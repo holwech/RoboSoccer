@@ -19,11 +19,17 @@ void Robo::GotoPos(Position target, double speed, bool ca){
         onlyTurn = false;
         this->pidAngle.changeParams(ANGLE_KP_DRIVE, ANGLE_KI_DRIVE, ANGLE_KD_DRIVE);
     }
+    else if (isGoalkeeper){
+        this->targetPosition = target;
+    }
+    else{
+        //cout << "Target BEFORE:" << target << endl;
+        Position movedTarget = movePosInBounce(target);
+        //cout << "Target AFTER:" << movedTarget << endl;
+        this->targetPosition = movedTarget;
+    }
+
     this->speed = speed;
-    //cout << "Target BEFORE:" << target << endl;
-    Position movedTarget = movePosInBounce(target);
-    //cout << "Target AFTER:" << movedTarget << endl;
-    this->targetPosition = movedTarget;
 }
 
 void Robo::turn(Position targetPos){
@@ -58,18 +64,18 @@ Position Robo::movePosInBounce(Position pos){
         if (pos.GetY() > 0.61){
             //bottom door
             cornerScale = midPosLeft.DistanceTo(pos)/1.04;
-            cout << "Cornerscale: " << cornerScale << endl;
+            //cout << "Cornerscale: " << cornerScale << endl;
             if (cornerScale > 1){
-                cout << "SCALED POS IN CORNER" << endl;
+                //cout << "SCALED POS IN CORNER" << endl;
                 return Position(pos.GetX()/cornerScale, pos.GetY()/cornerScale);
             }
         }
         else if(pos.GetY() < -0.58){
             //top door
             cornerScale = midPosLeft.DistanceTo(pos)/1.04;
-            cout << "Cornerscale: " << cornerScale << endl;
+            //cout << "Cornerscale: " << cornerScale << endl;
             if (cornerScale > 1){
-                cout << "SCALED POS IN CORNER" << endl;
+                //cout << "SCALED POS IN CORNER" << endl;
                 return Position(pos.GetX()/cornerScale, pos.GetY()/cornerScale);
             }
         }
@@ -78,18 +84,18 @@ Position Robo::movePosInBounce(Position pos){
         if (pos.GetY() < -0.62){
             //top not door
             cornerScale = midPosRight.DistanceTo(pos)/1.09;
-            cout << "Cornerscale: " << cornerScale << endl;
+            //cout << "Cornerscale: " << cornerScale << endl;
             if (cornerScale > 1){
-                cout << "SCALED POS IN CORNER" << endl;
+                //cout << "SCALED POS IN CORNER" << endl;
                 return Position(pos.GetX()/cornerScale, pos.GetY()/cornerScale);
             }
         }
         else if(pos.GetY() > 0.6){
             //bottom not door
             cornerScale = midPosRight.DistanceTo(pos)/1.07;
-            cout << "Cornerscale: " << cornerScale << endl;
+            //cout << "Cornerscale: " << cornerScale << endl;
             if (cornerScale > 1){
-                cout << "SCALED POS IN CORNER" << endl;
+                //cout << "SCALED POS IN CORNER" << endl;
                 return Position(pos.GetX()/cornerScale, pos.GetY()/cornerScale);
             }
         }
@@ -197,6 +203,7 @@ void Robo::makeTurn(){
 
 //DRIVE - related functions
 void Robo::goalieDrive(){
+    isGoalkeeper = true;
     if(isIdle){
         return;
     }
@@ -225,6 +232,7 @@ void Robo::goalieDrive(){
 
 //Drive functions must be run 100 times a second for robot to drive. Target position set by Goto()
 void Robo::driveWithCA() {
+    isGoalkeeper = false;
     if(isIdle){
         return;
     }
@@ -232,7 +240,7 @@ void Robo::driveWithCA() {
        makeTurn();
     }
     else{
-
+/*		  // CHECK IF IN SAME POSITION WHILE TRYING TO MOVE, IF TOO LONG, DRIVE TOWARDS MIDDLE
         if(GetPos().DistanceTo(sampeled_pos) < 0.05){
             not_moving_count++;
         }
@@ -246,16 +254,16 @@ void Robo::driveWithCA() {
         }
 
         if(go_to_mid){
-            updatePids(Position(0,0));
+            updatePids(Position(0,0), true);
             go_to_mid_count++;
             if(go_to_mid_count > 50){
                 go_to_mid = false;
                 go_to_mid_count = 0;
             }
-        }
-        else{
+        }*/
+ //       else{
             updatePids(targetPosition, true);
-        }
+  //      }
         // Get designated pid values
         double driveSpeed = pidDistance.getInput();
         double angleInput = pidAngle.getInput();

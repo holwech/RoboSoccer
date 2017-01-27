@@ -14,6 +14,13 @@ void Master::debugContinue() {
     }
 }
 
+void Master::statePrint(S_Case current_case) {
+    if (current_case != s_case_prev) {
+        cout << ">> STRATEGY STATE: " << strategyStateNames[current_case] << endl;
+    }
+    s_case_prev = current_case;
+}
+
 void Master::strategy_offensive3(){
     switch(s_case){
     case INIT:
@@ -229,6 +236,7 @@ void Master::nextMove() {
     if (nextState != s_case) {
         resetTVariables();
         s_case = nextState;
+        statePrint(s_case);
         debugContinue();
     }
 }

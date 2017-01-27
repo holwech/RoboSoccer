@@ -10,7 +10,8 @@ Player::Player(Channel* channel, RTDBConn &DBC, const int deviceNr) :
                 positions(6),
                 ball(DBC),
                 channel(channel),
-                robo(DBC, deviceNr)
+                robo(DBC, deviceNr),
+                Gstate(DYNAMIC_DEFEND)
                 {
     //ballangle = 0;
     //ballx = 0;
@@ -80,6 +81,7 @@ void Player::run() {
        case KICK_OUT:
            break;
        case TEST:
+
            break;
        default:
            cout << "Case for state: " << state << endl;
@@ -102,13 +104,13 @@ void Player::readCommand() {
 
     switch(command.action) {
     case ACTION_GOTO:
-        playerPrint("Robo in state GOTO");
         //cout << "GOTO: " << command.pos1.GetX() << ", " << command.pos1.GetY() << endl;
         setState(GOTO);
+        playerPrintState("Robo in state GOTO");
         break;
     case ACTION_STOP:
-        playerPrint("Robo in state STOP");
         setState(STOP);
+        playerPrintState("Robo in state STOP");
         break;
     case ACTION_TEST:
         setState(TEST);
@@ -118,28 +120,34 @@ void Player::readCommand() {
         setState(IDLE);
         break;
     case ACTION_DEFEND:
-        playerPrint("Robo in state DEFENED");
         setState(DEFEND);
+        playerPrintState("Robo in state DEFENED");
         break;
     case ACTION_BEFORE_KICK:
-        playerPrint("Robo in state BEFORE_KICK");
         setState(BEFORE_KICK);
+        playerPrintState("Robo in state BEFORE_KICK");
         break;
     case ACTION_KICK:
-        playerPrint("Robo in state KICK");
         setState(KICK);
+        playerPrintState("Robo in state KICK");
         break;
     case ACTION_PASS:
-        playerPrint("Robo in state PASS");
         setState(PASS);
+        playerPrintState("Robo in state PASS");
         break;
     case ACTION_BLOCK_BALL:
-        playerPrint("Robo in state BLOCK_BALL");
         setState(BLOCK_BALL);
+        playerPrintState("Robo in state BLOCK_BALL");
         break;
     default:
-        playerPrint("No case for this state");
+        playerPrintState("No case for this state");
         break;
+    }
+}
+
+void Player::playerPrintState(string message) {
+    if (getPrevPrevState() != getState()) {
+        cout << "#P" << deviceNr << ": " << message << endl;
     }
 }
 
@@ -199,11 +207,13 @@ bool Player::isBusy() {
 /** Sets the player to busy when an action is started */
 void Player::setBusy(bool flag) {
    busy.store(flag);
+   /*
    if (busy.load()) {
       playerPrint("Robot is busy");
    } else {
       playerPrint("Robot is not busy");
    }
+   */
 }
 
 
@@ -217,8 +227,13 @@ PState Player::getPrevState() {
     return prevState.load();
 }
 
+PState Player::getPrevPrevState() {
+    return prevPrevState;
+}
+
 /** Sets the state of the player */
 void Player::setState(PState newState) {
+    prevPrevState = prevState.load();
     prevState.store(state.load());
     state.store(newState);
 }

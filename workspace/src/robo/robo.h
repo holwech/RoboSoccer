@@ -14,7 +14,7 @@
 #define ANGLE_KI_TURN 3
 #define ANGLE_KD_TURN 1
 
-#define ANGLE_KP_DRIVE 50.0
+#define ANGLE_KP_DRIVE 70
 #define ANGLE_KI_DRIVE 0.5
 #define ANGLE_KD_DRIVE 1
 
@@ -86,6 +86,7 @@ private:
     bool avoidAll;
     bool precise;
     bool toggleCA;
+    bool isGoalkeeper;
 };
 
 #endif // ROBO_H
