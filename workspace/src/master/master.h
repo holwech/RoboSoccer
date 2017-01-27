@@ -82,6 +82,7 @@ private:
     bool tacticDone;
     double chrossandpassy; // used for tactics: Chross and Pass
     vector<Command> prevCommand;
+    vector<Action> prevAction;
 
 
     /** These are variables that all strategies can and should use.
@@ -89,11 +90,13 @@ private:
      * 	the same time
      */
     S_State s_state;
+    S_Case s_case_prev;
     S_Case s_case;
     timer s_timer;
     const vector<string> strategyStateNames = {"INIT", "NEXT", "BLOCK", "COUNTER", "SHOOT", "SHOOT_AT_GOAL", "POSITION", "INTERRUPT", "WAIT"};
     void debugContinue();
     void t_debugContinue();
+    void statePrint(S_Case currentState);
     void strategy_defensive();
     void strategy_offensive();
     void strategy_offensive2();

@@ -58,18 +58,18 @@ Position Robo::movePosInBounce(Position pos){
         if (pos.GetY() > 0.61){
             //bottom door
             cornerScale = midPosLeft.DistanceTo(pos)/1.04;
-            cout << "Cornerscale: " << cornerScale << endl;
+            //cout << "Cornerscale: " << cornerScale << endl;
             if (cornerScale > 1){
-                cout << "SCALED POS IN CORNER" << endl;
+                //cout << "SCALED POS IN CORNER" << endl;
                 return Position(pos.GetX()/cornerScale, pos.GetY()/cornerScale);
             }
         }
         else if(pos.GetY() < -0.58){
             //top door
             cornerScale = midPosLeft.DistanceTo(pos)/1.04;
-            cout << "Cornerscale: " << cornerScale << endl;
+            //cout << "Cornerscale: " << cornerScale << endl;
             if (cornerScale > 1){
-                cout << "SCALED POS IN CORNER" << endl;
+                //cout << "SCALED POS IN CORNER" << endl;
                 return Position(pos.GetX()/cornerScale, pos.GetY()/cornerScale);
             }
         }
@@ -78,18 +78,18 @@ Position Robo::movePosInBounce(Position pos){
         if (pos.GetY() < -0.62){
             //top not door
             cornerScale = midPosRight.DistanceTo(pos)/1.09;
-            cout << "Cornerscale: " << cornerScale << endl;
+            //cout << "Cornerscale: " << cornerScale << endl;
             if (cornerScale > 1){
-                cout << "SCALED POS IN CORNER" << endl;
+                //cout << "SCALED POS IN CORNER" << endl;
                 return Position(pos.GetX()/cornerScale, pos.GetY()/cornerScale);
             }
         }
         else if(pos.GetY() > 0.6){
             //bottom not door
             cornerScale = midPosRight.DistanceTo(pos)/1.07;
-            cout << "Cornerscale: " << cornerScale << endl;
+            //cout << "Cornerscale: " << cornerScale << endl;
             if (cornerScale > 1){
-                cout << "SCALED POS IN CORNER" << endl;
+                //cout << "SCALED POS IN CORNER" << endl;
                 return Position(pos.GetX()/cornerScale, pos.GetY()/cornerScale);
             }
         }
@@ -232,7 +232,7 @@ void Robo::driveWithCA() {
        makeTurn();
     }
     else{
-
+/*
         if(GetPos().DistanceTo(sampeled_pos) < 0.05){
             not_moving_count++;
         }
@@ -252,10 +252,10 @@ void Robo::driveWithCA() {
                 go_to_mid = false;
                 go_to_mid_count = 0;
             }
-        }
-        else{
+        }*/
+ //       else{
             updatePids(targetPosition, true);
-        }
+  //      }
         // Get designated pid values
         double driveSpeed = pidDistance.getInput();
         double angleInput = pidAngle.getInput();

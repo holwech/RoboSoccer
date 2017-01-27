@@ -15,7 +15,6 @@ bool Player::goTo(Position target, double speed, bool ca)
   //cout << "Target: " << target << " prevTarget: " << prevTarget << " isArrived: " << robo.isArrived(0.1) << endl;
   if (robo.isArrived(0.04))
   {
-    playerPrint("State set to IDLE");
     return true; // Done
   }
   return false;
@@ -198,15 +197,17 @@ bool Player::angeled_behind_ball(Position targetPos, double speed){
         if (!ball.isStopped()) {
             speedModifier = 0.7;
         }*/
-        pos_behind_ball_x = ballPos.GetX() + direction.GetX() * 2 * scale / length;
-        pos_behind_ball_y = ballPos.GetY() + direction.GetY() * 2 * scale / length;
+        pos_behind_ball_x = ballPos.GetX() + direction.GetX() * 3 * scale / length;
+        pos_behind_ball_y = ballPos.GetY() + direction.GetY() * 3 * scale / length;
         pos_behind_ball = Position(pos_behind_ball_x, pos_behind_ball_y);
+        // Reduce speed close to turning point
         if (robo.isArrived(0.2)) {
             robo.GotoPos(pos_behind_ball, speed * 0.2);
         } else {
             robo.GotoPos(pos_behind_ball, speed);
         }
-        if(robo.isArrived(0.05)){
+        // Arrived at turning point
+        if(robo.isArrived(0.1)){
             cout << "STEP1 DONE" << endl;
             state_before_kick = STEP2;
             lengthToBall = robo.GetPos().DistanceTo(ball.GetPos());

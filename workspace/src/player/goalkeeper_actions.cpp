@@ -120,7 +120,7 @@ void Player::defend()
     else if(goalkeepery<-0.16)
         goalkeepery = -0.16;
 
-    cout << "y pos " << goalkeepery<<endl;
+    //cout << "y pos " << goalkeepery<<endl;
 
 
         POS.SetX(goalkeeperx);
@@ -140,12 +140,6 @@ void Player::defend()
     //distance to move too small, dont try to move
     //delta = sqrt((robo.GetX()-goalkeeperx)*(robo.GetX()-goalkeeperx)+(robo.GetY()-goalkeepery)*(robo.GetY()-goalkeepery));
     //if(delta<0.06) robo.StopAction();
-<<<<<<< HEAD
-//        cout<<"ballangle"<<ball.GetPhi().Deg()<<endl;
-=======
-       // cout<<"ballangle"<<ball.GetPhi().Deg()<<endl;
->>>>>>> 0ff354f440c319a6d8cd73612fcb1dc74c37346e
-
 }
 
 

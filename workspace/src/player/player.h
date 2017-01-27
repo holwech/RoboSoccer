@@ -8,6 +8,8 @@
 #include "config.cpp"
 #include "timer.h"
 
+#define PLAYER_DEBUG 0
+
 
 /** These functions should be called doing something else probably
  *  I was just lazy, so copy paste from goalkeeper
@@ -69,11 +71,13 @@ private:
     enum{ STEP1 = 1, STEP2, STEP3} state_before_kick;
     void debugContinue();
     void playerPrint(string message);
+    void playerPrintState(string message);
     void readCommand();
     void setState(PState newState);
     void updateRobo(bool isGoalkeeper);
     void done();
     bool angeled_behind_ball(Position targetPos, double speed = 1.5);
+    PState getPrevPrevState();
     /** 0 is goalkeeper
      *  1 and 2 is team playes
      *  3-5 is other team
@@ -85,6 +89,7 @@ private:
     Channel* channel;
     Command command;
     Robo robo;
+    PState prevPrevState;
     atomic<PState> prevState;
     atomic<PState> state;
     atomic<bool> busy;

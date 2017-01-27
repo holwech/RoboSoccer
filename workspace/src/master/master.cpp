@@ -51,6 +51,7 @@ void Master::run() {
     if(answer == "m") {
         manual();
     } else if (answer == "s") {
+        send(Command(ACTION_DEFEND), 0);
         strategies();
     }
 
@@ -132,6 +133,9 @@ void Master::send(Command command, int roboNum) {
     if (prevCommand[roboNum] == command) {
         prevCommand[roboNum] = command;
         return;
+    }
+    if (true && prevCommand[roboNum].action != command.action) {
+        cout << "Sending action: " << action_names[command.action] << endl;
     }
     if (roboNum > 2 || roboNum < 0) {
         cout << "Robo " << roboNum << " does not exist" << endl;
@@ -419,7 +423,7 @@ int Master::getNotClosestToTeamGoal() {
 int Master::setClosest(int currClosest, bool resetTactic, bool withKeeper) {
     int newClosest = getClosest(withKeeper);
     if (currClosest != newClosest && currClosest != -1) {
-        cout << "NEW CLOSEST ROBO: " << newClosest << " OLD: " << currClosest << endl;
+        //cout << "NEW CLOSEST ROBO: " << newClosest << " OLD: " << currClosest << endl;
         send(Command(ACTION_STOP), currClosest);
         if (resetTactic) {
            t_state = STEP1;
