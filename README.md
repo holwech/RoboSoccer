@@ -13,7 +13,7 @@ This updates the code, incase someone else have been working on it since you las
 
 1.`git add .`
 
-2.`git commit -am "Write some message here about what you have done with the code`
+2.`git commit -am "Write some message here about what you have done with the code"`
 
 3.`git push`
 
