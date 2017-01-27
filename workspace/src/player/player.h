@@ -42,6 +42,14 @@ enum fieldSide{
     RIGHT = 1
 };
 
+enum GoalkeeperState{
+    BLOCK_WINDOW = 0,
+    BLOCK_NOT_WINDOW = 1,
+    GOALKEEPER_STOP,
+    DYNAMIC_DEFEND,
+    GOALKEEPER_KICK
+};
+
 /**
  *	Remember to have everything async. That means: no while-loops that block for a certain time, no usleep.
  * 	Do not use anything that blocks stalls the function.
@@ -135,5 +143,7 @@ private:
     /** Attacker variables and functions */
     bool blockBall(int xcord);
 
+    GoalkeeperState Gstate;
+    void getNextGoalkeeperState();
 };
 #endif // PLAYER_H
