@@ -30,7 +30,6 @@ void Player::defend_tom(){
 }
 
 void Player::getNextGoalkeeperState(){
-    cout << "IN NEXT GOALKEEPERSTATE" << endl;
     //Right close corner
     Position ballpos = ball.GetPos();
     switch(Gstate){
@@ -61,7 +60,6 @@ void Player::getNextGoalkeeperState(){
 }
 
 void Player::defend(){
-    cout << "IN DEFEND _______" << Gstate << endl;
     double goalypos_x  = 0;
     double goalypos_y  = 0;
     double ballangle = 0;
@@ -94,7 +92,6 @@ void Player::defend(){
         goalypos_y = -0.19;
         pos.SetX(goalypos_x);
         pos.SetY(goalypos_y);
-        cout << "GO TO POS BLOCK_WINDOW" << endl;
         if(robo.GetPos().DistanceTo(pos) < 0.03){
             robo.stop();
         }else{
@@ -105,7 +102,6 @@ void Player::defend(){
         goalypos_y = 0.19;
         pos.SetX(goalypos_x);
         pos.SetY(goalypos_y);
-        cout << "GO TO POS BLOCK_NOT_WINDOW" << endl;
         if(robo.GetPos().DistanceTo(pos) < 0.03){
             robo.stop();
         }else{
