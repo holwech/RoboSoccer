@@ -206,7 +206,7 @@ bool Player::angeled_behind_ball(Position targetPos, double speed){
         } else {
             robo.GotoPos(pos_behind_ball, speed);
         }
-        if(robo.isArrived(0.05)){
+        if(robo.isArrived(0.1)){
             cout << "STEP1 DONE" << endl;
             state_before_kick = STEP2;
             lengthToBall = robo.GetPos().DistanceTo(ball.GetPos());
