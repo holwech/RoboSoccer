@@ -32,6 +32,7 @@ public:
     edges nearEdge();
     bool isStopped();
     void updateSample();
+    Position predictInY(double xLine);
 private:
     timer ballTimer;
     vector<Position> samples;

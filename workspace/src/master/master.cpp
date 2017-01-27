@@ -136,7 +136,7 @@ void Master::send(Command command, int roboNum) {
         prevCommand[roboNum] = command;
         return;
     }*/
-    if (DEBUG || prevCommand[roboNum].action != command.action) {
+    if (DEBUG && prevCommand[roboNum].action != command.action) {
         cout << "\033[1;31m#MASTER: Sending action to robo #" << roboNum << ": " << action_names[command.action] << "\033[0m" << endl;
     }
     if (roboNum > 2 || roboNum < 0) {
@@ -216,8 +216,7 @@ void Master::strategies() {
             strategy_offensive2();
             break;
         case 8: {
-            tacticDone = throughPass();
-            if (tacticDone) { answer = -1; }
+            send(Command(ACTION_GOTO, ball.predictInY(0.0), 1.5), 0);
             break;
         }
         case 9:

@@ -67,6 +67,10 @@ Position Ball::GetPos() {
 
 */
 
+Position Ball::predictInY(double xLine) {
+    return Position(xLine, tan(GetPhi() * M_PI / 180) * (xLine - GetPos().GetY()) + GetPos().GetY());
+}
+
 double Ball::GetVelocity() {
     vector<double> samples;
     for (int sample = 0; sample < 10; sample++) {

@@ -192,8 +192,6 @@ void Master::strategy_offensive()
 void Master::strategy_best() {
     switch(s_case) {
     case INIT:
-        send(Command(ACTION_GOTO, Position(0.5 * side, 0.0), 1.5, true), 1);
-        send(Command(ACTION_GOTO, Position(0.1 * side, 0.0), 1.5, true), 2);
         nextMove();
         break;
     case SHOOT_AT_GOAL:
@@ -210,6 +208,13 @@ void Master::strategy_best() {
         nextMove();
         break;
       }
+    case COUNTER: {
+        bool throughDone = throughPass();
+        if (throughDone) {
+            resetTVariables();
+        }
+        break;
+    }
     case BLOCK:
       {
         bool nearPenaltyDone = tactic_nearpenaltyarea(0.2 * -side);
@@ -227,9 +232,11 @@ void Master::strategy_best() {
 
 void Master::nextMove() {
     S_Case nextState = s_case;
-    if (ball.inGoalArea()) {
-        nextState = INIT;
     // If ball is on the other teams field, shoot at goal
+    if (fabs(ball.GetPos().GetY()) > 0.4 &&
+       ((side == 1 && ball.GetPos().GetX() > 0.8) ||
+        (side == -1 && ball.GetPos().GetX() < -0.8))) {
+        nextState = COUNTER;
     } else {
         nextState = SHOOT_AT_GOAL;
     }
