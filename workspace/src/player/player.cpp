@@ -80,6 +80,7 @@ void Player::run() {
        case KICK_OUT:
            break;
        case TEST:
+
            break;
        default:
            cout << "Case for state: " << state << endl;
