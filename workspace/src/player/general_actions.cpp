@@ -201,11 +201,14 @@ bool Player::angeled_behind_ball(Position targetPos, double speed){
         pos_behind_ball_y = ballPos.GetY() + direction.GetY() * 4 * scale / length;
         pos_behind_ball = Position(pos_behind_ball_x, pos_behind_ball_y);
         // Reduce speed close to turning point
+        robo.GotoPos(pos_behind_ball, speed * 0.2);
+        /*
         if (robo.isArrived(0.2)) {
             robo.GotoPos(pos_behind_ball, speed * 0.2);
         } else {
             robo.GotoPos(pos_behind_ball, speed);
         }
+        */
         // Arrived at turning point
         if(robo.isArrived(0.1)){
             playerPrint("BEFORE_KICK: STEP1 Done");
