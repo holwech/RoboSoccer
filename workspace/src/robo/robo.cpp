@@ -36,7 +36,6 @@ double Robo::speedModifier(Position target, double speed) {
     // Lower number gives a sharper slow down
     double modifier = 0.2;
     double scale = distance / (distance + modifier);
-    cout << "Scale is: " << scale << endl;
     /*
     if (scale < 0.2) {
         return speed * 0.2;

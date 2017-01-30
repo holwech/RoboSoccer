@@ -135,7 +135,6 @@ void Master::send(Command command, int roboNum) {
         prevCommand[roboNum] = command;
         return;
     }*/
-    cout << "Current command: " << command.action << " Prev command: " << prevCommand[roboNum].action << " is it true? " << (command.action != prevCommand[roboNum].action) << endl;
     if (DEBUG && (prevCommand[roboNum].action != command.action)) {
         cout << "\033[1;31m#MASTER: Sending action to robo #" << roboNum << ": " << action_names[command.action] << "\033[0m" << endl;
     }
