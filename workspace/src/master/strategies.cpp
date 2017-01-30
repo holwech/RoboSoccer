@@ -203,9 +203,9 @@ void Master::strategy_best() {
         break;
     case WAIT: {
         bool waitDone = false;
-        if (!player[1].isBusy() && !player[2].isBusy()) {
+       /* if (!player[1].isBusy() && !player[2].isBusy()) {
             waitDone = true;
-        }
+        }*/
         nextMove(waitDone);
         break;
     }

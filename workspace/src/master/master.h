@@ -29,7 +29,7 @@ enum S_Case {
     WAIT
 };
 
-enum T_State {
+enum T_State { //Tactics
     STEP1,
     STEP2,
     STEP3,
