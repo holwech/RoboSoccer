@@ -189,7 +189,7 @@ void Master::strategy_offensive()
 
 Position Master::trackBall() {
     Position ballPos = ball.GetPos();
-    double xLine = ballPos.GetX() + 0.5 * side;
+    double xLine = ballPos.GetX() + 0.6 * side;
     if (fabs(xLine) > 1.2) {
         xLine = 1.2 * side;
     }
@@ -212,7 +212,7 @@ void Master::strategy_best() {
     case SHOOT_AT_GOAL:
       {
         bool kickAtGoalDone = kickAtGoal(2);
-        send(Command(ACTION_GOTO, Position(trackBall()), 1.5, true), 1);
+        send(Command(ACTION_GOTO, Position(trackBall()), 2.5, true), 1);
         nextMove(kickAtGoalDone);
         break;
       }
@@ -255,7 +255,7 @@ void Master::nextMove(bool moveDone) {
     bool ballTowardsTeamGoal = fabs(ball.predictInY(1.4 * side).GetY()) < 0.3 &&
                                 ((side == RIGHT && fabs(ball.GetPhi().Deg()) < 90) || (side == LEFT && fabs(ball.GetPhi().Deg()) > 90));
     bool ballOnTeamSide = (ball.GetPos().GetX() < 0 && side == LEFT) || (ball.GetPos().GetX() > 0 && side == RIGHT);
-    if (ballInEnemyGoalArea && s_case == WAIT) {
+    if ((ballInEnemyGoalArea || ballInTeamGoalArea) && s_case == WAIT) {
         // wait
     } else if (ballInEnemyGoalArea) {
         nextState = POSITION_ENEMY;
