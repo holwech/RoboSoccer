@@ -261,7 +261,7 @@ void Robo::driveWithCA() {
             sampeled_pos = GetPos();
             not_moving_count = 0;
         }
-        if (not_moving_count > 150){
+        if (not_moving_count > 50){
             go_to_mid = true;
             not_moving_count = 0;
         }
@@ -269,7 +269,7 @@ void Robo::driveWithCA() {
         if(go_to_mid){
             updatePids(Position(0,0), true);
             go_to_mid_count++;
-            if(go_to_mid_count > 50){
+            if(go_to_mid_count > 20){
                 go_to_mid = false;
                 go_to_mid_count = 0;
             }

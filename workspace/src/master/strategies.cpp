@@ -211,8 +211,8 @@ void Master::strategy_best() {
     }
     case SHOOT_AT_GOAL:
       {
-        bool kickAtGoalDone = kickAtGoal(1);
-        send(Command(ACTION_GOTO, Position(trackBall()), 1.5, true), 2);
+        bool kickAtGoalDone = kickAtGoal(2);
+        send(Command(ACTION_GOTO, Position(trackBall()), 1.5, true), 1);
         nextMove(kickAtGoalDone);
         break;
       }
