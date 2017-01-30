@@ -27,7 +27,8 @@ class Ball : public RawBall
 public:
     Ball(RTDBConn &DBC);
     double GetVelocity();
-    //Position GetPos();
+    Position GetPos();
+    Angle GetPhi();
     bool inGoalArea();
     edges nearEdge();
     bool isStopped();
@@ -35,8 +36,11 @@ public:
     Position predictInY(double xLine);
 private:
     timer ballTimer;
-    vector<Position> samples;
-    int sampleCount;
+    timer refreshTimer;
+    vector<Position> posSamples;
+    vector<double> velocitySamples;
+    vector<Angle> phiSamples;
+    Angle prevAngle;
 };
 
 #endif // BALL_H

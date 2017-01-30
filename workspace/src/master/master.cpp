@@ -58,8 +58,7 @@ void Master::run() {
     cout << "Now running state machine" << endl;
     send(Command(ACTION_DEFEND), 0);
     while(1) {
-        updateSide();
-        updatePositions();
+        update();
         state = referee.GetPlayMode();
         switch(state) {
         case REFEREE_INIT:
@@ -136,7 +135,8 @@ void Master::send(Command command, int roboNum) {
         prevCommand[roboNum] = command;
         return;
     }*/
-    if (DEBUG && prevCommand[roboNum].action != command.action) {
+    cout << "Current command: " << command.action << " Prev command: " << prevCommand[roboNum].action << " is it true? " << (command.action != prevCommand[roboNum].action) << endl;
+    if (DEBUG && (prevCommand[roboNum].action != command.action)) {
         cout << "\033[1;31m#MASTER: Sending action to robo #" << roboNum << ": " << action_names[command.action] << "\033[0m" << endl;
     }
     if (roboNum > 2 || roboNum < 0) {
@@ -185,8 +185,7 @@ void Master::strategies() {
     closestRobo = 0;
 
     while(1) {
-        updateSide();
-        updatePositions();
+        update();
         switch(answer) {
         case 1:
             tacticDone = crossPassAndShoot();
@@ -259,8 +258,7 @@ void Master::manual() {
     double posX, posY, speed, approachSpeed;
     bool ca;
     while(1) {
-        updateSide();
-        updatePositions();
+        update();
         cout << "Choose an action" << endl;
         cout << "	0. EXIT" << endl;
         cout << "	1. ACTION_GOTO" << endl;
@@ -351,6 +349,12 @@ void Master::printRefereeStats(){
     cout << "\tGetSide: " << referee.GetSide() << endl;
     cout << "\tGetBlueSide: " << referee.GetBlueSide() << endl;
     cout << "\tCalculated side: " << side << endl;
+}
+
+void Master::update() {
+    updateSide();
+    updatePositions();
+    ball.updateSample();
 }
 
 void Master::updateSide(){

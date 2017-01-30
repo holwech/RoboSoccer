@@ -9,13 +9,17 @@ void test_ball::test(int side) {
     cout << "4. ball position" << endl;
     cout << "5. isStopped" << endl;
     cout << "6. updateSamples" << endl;
+    cout << "7. check refresh rate" << endl;
+    cout << "8. GetPhi" << endl;
     int answer;
     cin >> answer;
+    double prevVelocity = 0;
     while(1) {
         switch (answer) {
         case 1: {
-            double v = ball.GetVelocity();
-            cout << "Velocity: " << v << endl;
+            ball.updateSample();
+            cout << "Old velocity: " << ball.RawBall::GetVelocity() << endl;
+            cout << "New velocity: " << ball.GetVelocity() << endl;
             sleep(1);
             break;
         }
@@ -41,9 +45,25 @@ void test_ball::test(int side) {
             break;
         case 6:
             ball.updateSample();
-            if (ball.sampleCount == 0) {
+            if (ball.ballTimer.getTime() > std::chrono::duration<double, std::milli>(34)) {
                 cout << "---------" << endl;
                 cout << "Original: " << ball.RawBall::GetPos() << endl;
+                cout << "New: " << ball.GetPos() << endl;
+            }
+            break;
+        case 7:
+            if (prevVelocity != ball.RawBall::GetVelocity()) {
+                cout << "Time is: " << ball.refreshTimer.getTime().count() << endl;
+                prevVelocity = ball.RawBall::GetVelocity();
+                ball.refreshTimer.reset();
+            }
+            break;
+        case 8:
+            ball.updateSample();
+            if (ball.refreshTimer.getTime() > std::chrono::duration<double, std::milli>(1000)){
+                cout << "Old phi: " << ball.RawBall::GetPhi() << endl;
+                cout << "New phi: " << ball.GetPhi() << endl;
+                ball.refreshTimer.reset();
             }
             break;
         default:

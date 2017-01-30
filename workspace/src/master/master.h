@@ -66,6 +66,7 @@ private:
     ePlayMode state;
     fieldSide side;
     eSide kside;
+    void update();
     void updateSide();
     void updatePositions();
     void send(Command command, int roboNum);

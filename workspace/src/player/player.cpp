@@ -101,7 +101,9 @@ void Player::readCommand() {
         return;
     }
     command = channel->read();
-    playerPrint("Received command " + action_names[command.action]);
+    if (getPrevPrevState() != getState()) {
+        playerPrint("Received command " + action_names[command.action]);
+    }
 
     switch(command.action) {
     case ACTION_GOTO:
@@ -203,6 +205,7 @@ double Player::getY() {
 
 /** Updates the robo functions */
 void Player::updateRobo(bool isGoalkeeper) {
+    ball.updateSample();
     robo.updatePositions(positions);
     isGoalkeeper ? robo.goalieDrive() : robo.driveWithCA();
 }

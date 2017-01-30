@@ -63,7 +63,9 @@ private:
     int go_to_mid_count;
 
     Position targetPosition;
+    Position prevTargetPosition;
     int rfNumber;
+    double speedModifier(Position target, double speed);
     void makeTurn();
     double getDiffBetweenAnglesRad(double angle1, double angle2);
     void updateAnglePidGoalie(Position targetPos);
