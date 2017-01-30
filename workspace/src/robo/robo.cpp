@@ -123,7 +123,7 @@ Position Robo::movePosInBounce(Position pos){
     }
 
     if(pos.GetY() < 0){
-        scaleY = pos.GetY()/-0.85;
+        scaleY = pos.GetY()/-0.81;
     }
     else if(pos.GetY() > 0){
         scaleY = pos.GetY()/0.81;
