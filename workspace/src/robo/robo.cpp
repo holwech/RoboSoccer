@@ -173,13 +173,13 @@ void Robo::updatePidsGoalie(Position targetPos){
 }
 
 void Robo::updateDistancePid(Position targetPos){
-    double dist_error = this->GetPos().DistanceTo(targetPos);
-    if (dist_error < ( precise ? 0.15 : 0.06 )){
-        pidDistance.updateInput(5*dist_error);
-    }
-    else{
+    //double dist_error = this->GetPos().DistanceTo(targetPos);
+    //if (dist_error < ( precise ? 0.15 : 0.06 )){
+        //pidDistance.updateInput(5*dist_error);
+    //}
+    //else{
         pidDistance.updateInput(speed);
-    }
+    //}
 }
 
 void Robo::setPrecise(bool val){
@@ -252,7 +252,7 @@ void Robo::driveWithCA() {
        makeTurn();
     }
     else{
-/*		  // CHECK IF IN SAME POSITION WHILE TRYING TO MOVE, IF TOO LONG, DRIVE TOWARDS MIDDLE
+          // CHECK IF IN SAME POSITION WHILE TRYING TO MOVE, IF TOO LONG, DRIVE TOWARDS MIDDLE
         if(GetPos().DistanceTo(sampeled_pos) < 0.05){
             not_moving_count++;
         }
@@ -272,10 +272,10 @@ void Robo::driveWithCA() {
                 go_to_mid = false;
                 go_to_mid_count = 0;
             }
-        }*/
- //       else{
+        }
+        else{
             updatePids(targetPosition, true);
-  //      }
+        }
         // Get designated pid values
         double driveSpeed = pidDistance.getInput();
         double angleInput = pidAngle.getInput();
