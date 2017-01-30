@@ -38,9 +38,10 @@ double Robo::speedModifier(Position target, double speed) {
     double scale = distance / (distance + modifier);
     //cout << "Scale is: " << scale << endl;
     /*
-    if (scale < 0.2) {
-        return speed * 0.2;
-    }*/
+    if (scale < 0.05) {
+        return speed * 0.05;
+    }
+    */
     return scale * speed;
 }
 

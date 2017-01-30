@@ -73,8 +73,8 @@ bool Player::kick(Position target, double speed, double approach_speed)
       length = sqrt((dirx * dirx) + (diry * diry));
       dirx = dirx / length;
       diry = diry / length;
-      endKickPos.SetX(ball.GetX() + (dirx / 10));
-      endKickPos.SetY(ball.GetY() + (diry / 10));
+      endKickPos.SetX(ball.GetX() + (dirx / 5));
+      endKickPos.SetY(ball.GetY() + (diry / 5));
       cout << "Position: " << endKickPos.GetX() << ", " << endKickPos.GetY() << endl;
       playerPrint("KICK: STEP2 DONE");
       kick_state = A_STEP3;
@@ -201,7 +201,7 @@ bool Player::angeled_behind_ball(Position targetPos, double speed){
         pos_behind_ball_y = ballPos.GetY() + direction.GetY() * 4 * scale / length;
         pos_behind_ball = Position(pos_behind_ball_x, pos_behind_ball_y);
         // Reduce speed close to turning point
-        robo.GotoPos(pos_behind_ball, speed * 0.2);
+        robo.GotoPos(pos_behind_ball, speed);
         /*
         if (robo.isArrived(0.2)) {
             robo.GotoPos(pos_behind_ball, speed * 0.2);
@@ -227,7 +227,7 @@ bool Player::angeled_behind_ball(Position targetPos, double speed){
         pos_behind_ball_x = ballPos.GetX() + direction.GetX() * scale / length;
         pos_behind_ball_y = ballPos.GetY() + direction.GetY() * scale / length;
         pos_behind_ball = Position(pos_behind_ball_x, pos_behind_ball_y);
-        robo.GotoPos(pos_behind_ball, speed * 0.7);
+        robo.GotoPos(pos_behind_ball, speed);
         if (robo.isArrived(0.1)) {
             //cout << endl << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << endl << endl;
             playerPrint("BEFORE_KICK: Done");
