@@ -518,6 +518,15 @@ void Master::before_kick_off(){
             send(Command(ACTION_GOTO, Position(-0.6, 0), 1.0), 2);
         }
     }
+    if (!player[0].isBusy()&&!player[1].isBusy()&&!player[2].isBusy()){
+        if (team=='b'){
+            referee.SetBlueReady();
+        }
+        else{
+            referee.SetRedReady();
+        }
+
+    }
 
 }
 
