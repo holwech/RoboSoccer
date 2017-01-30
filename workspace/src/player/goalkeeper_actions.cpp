@@ -65,6 +65,7 @@ void Player::defend(){
     double ballangle = 0;
     double ballx = 0;
     double bally = 0;
+    bool debug = false;
     Position pos;
     if (side == LEFT){
         goalypos_x = -1.38;
@@ -89,7 +90,9 @@ void Player::defend(){
     getNextGoalkeeperState();
     switch(Gstate){
     case BLOCK_WINDOW:
-        cout << "In BLOCK_WINDOW" << endl;
+        if(debug){
+            cout << "In BLOCK_WINDOW" << endl;
+        }
         goalypos_y = -0.19;
         pos.SetX(goalypos_x);
         pos.SetY(goalypos_y);
@@ -100,7 +103,9 @@ void Player::defend(){
         }
         break;
     case BLOCK_NOT_WINDOW:
-        cout << "In BLOCK_NOT_WINDOW" << endl;
+        if(debug){
+            cout << "In BLOCK_NOT_WINDOW" << endl;
+        }
         goalypos_y = 0.19;
         pos.SetX(goalypos_x);
         pos.SetY(goalypos_y);
@@ -111,11 +116,15 @@ void Player::defend(){
         }
         break;
     case GOALKEEPER_STOP:
-        cout << "In GOALKEEPER_STOP" << endl;
+        if(debug){
+            cout << "In GOALKEEPER_STOP" << endl;
+        }
         robo.stop();
         break;
     case DYNAMIC_DEFEND:
-        cout << "In DYNAMIC_DEFEND" << endl;
+        if(debug){
+            cout << "In DYNAMIC_DEFEND" << endl;
+        }
         // towards our goal
         if (side == LEFT && !(ball.GetPhi().Deg()<90 && ball.GetPhi().Deg()>-90)){
             goalypos_y = tan(ballangle*M_PI/180)*((goalypos_x-0.047*side)-ballx)+bally;
