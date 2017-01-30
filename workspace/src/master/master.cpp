@@ -67,7 +67,9 @@ void Master::run() {
             before_kick_off();
             break;
         case KICK_OFF:
-            strategy_best();
+            if((referee.GetSide() == LEFT_SIDE && side==-1) || (referee.GetSide() == RIGHT_SIDE && side==1) || fabs(ball.GetX()) > 0.15){
+                strategy_best();
+            }
             break;
         case BEFORE_PENALTY:
             GoToBeforePenaltyPosition();
@@ -76,6 +78,7 @@ void Master::run() {
             ActDuringPenalty();
             break;
         case PLAY_ON:
+            strategy_best();
             break;
         case PAUSE:
             break;
@@ -135,7 +138,6 @@ void Master::send(Command command, int roboNum) {
         prevCommand[roboNum] = command;
         return;
     }*/
-    cout << "Current command: " << command.action << " Prev command: " << prevCommand[roboNum].action << " is it true? " << (command.action != prevCommand[roboNum].action) << endl;
     if (DEBUG && (prevCommand[roboNum].action != command.action)) {
         cout << "\033[1;31m#MASTER: Sending action to robo #" << roboNum << ": " << action_names[command.action] << "\033[0m" << endl;
     }
@@ -489,15 +491,15 @@ void Master::before_kick_off(){
     if (referee.GetSide()==0) {
         //we kick the ball at left, so we take a attack position at left
         if (side == LEFT){
-            send(Command(ACTION_GOTO, Position(-1.36, 0), 1.0), 0);
-            send(Command(ACTION_GOTO, Position(-0.2, -0.2), 1.0), 1);
-            send(Command(ACTION_GOTO, Position(-0.1, 0.3), 1.0), 2);
+            send(Command(ACTION_GOTO, Position(-1.36, 0), 1.0, true), 0);
+            send(Command(ACTION_GOTO, Position(-0.2, -0.2), 1.0, true), 1);
+            send(Command(ACTION_GOTO, Position(-0.1, 0.3), 1.0, true), 2);
         }
         //enemy kick the ball at left, so we take a defend position at right
         else {
-            send(Command(ACTION_GOTO, Position(1.36, 0), 1.0), 0);
-            send(Command(ACTION_GOTO, Position(0.2, 0), 1.0), 1);
-            send(Command(ACTION_GOTO, Position(0.6, 0), 1.0), 2);
+            send(Command(ACTION_GOTO, Position(1.36, 0), 1.0, true), 0);
+            send(Command(ACTION_GOTO, Position(0.2, 0), 1.0, true), 1);
+            send(Command(ACTION_GOTO, Position(0.6, 0), 1.0, true), 2);
         }
 
     }
@@ -505,16 +507,25 @@ void Master::before_kick_off(){
     else {
         //we kick the ball at right, so we take a attack position at right
         if (side == RIGHT){
-            send(Command(ACTION_GOTO, Position(1.36, 0), 1.0), 0);
-            send(Command(ACTION_GOTO, Position(0.2, -0.2), 1.0), 1);
-            send(Command(ACTION_GOTO, Position(0.1, 0.3), 1.0), 2);
+            send(Command(ACTION_GOTO, Position(1.36, 0), 1.0, true), 0);
+            send(Command(ACTION_GOTO, Position(0.2, -0.2), 1.0, true), 1);
+            send(Command(ACTION_GOTO, Position(0.1, 0.3), 1.0, true), 2);
         }
         //enemy kick the ball at right, so we take a defend position at left
         else {
-            send(Command(ACTION_GOTO, Position(-1.36, 0), 1.0), 0);
-            send(Command(ACTION_GOTO, Position(-0.2, 0), 1.0), 1);
-            send(Command(ACTION_GOTO, Position(-0.6, 0), 1.0), 2);
+            send(Command(ACTION_GOTO, Position(-1.36, 0), 1.0, true), 0);
+            send(Command(ACTION_GOTO, Position(-0.2, 0), 1.0, true), 1);
+            send(Command(ACTION_GOTO, Position(-0.6, 0), 1.0, true), 2);
         }
+    }
+    if (!player[0].isBusy()&&!player[1].isBusy()&&!player[2].isBusy()){
+        if (team=='b'){
+            referee.SetBlueReady();
+        }
+        else{
+            referee.SetRedReady();
+        }
+
     }
 
 }

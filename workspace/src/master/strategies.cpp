@@ -233,7 +233,9 @@ void Master::strategy_best() {
 void Master::nextMove() {
     S_Case nextState = s_case;
     // If ball is on the other teams field, shoot at goal
-    if (fabs(ball.GetPos().GetY()) > 0.4 &&
+    if (ball.inGoalArea()) {
+
+    } else if (fabs(ball.GetPos().GetY()) > 0.4 &&
        ((side == 1 && ball.GetPos().GetX() > 0.8) ||
         (side == -1 && ball.GetPos().GetX() < -0.8))) {
         nextState = COUNTER;
