@@ -13,19 +13,7 @@
 #include "config.cpp"
 #include "ball/test_ball.h"
 
-enum ePlayModePlus {
-    STATE_MENU,
-    STATE_GOALKEEPER,
-    STATE_PENALTY,
-    STATE_STARTPOS
-};
 
-/** Different strategy states. */
-enum S_State {
-    AGGRESSIVE,
-    DEFENSIVE,
-    BALANCED
-};
 
 enum S_Case {
     INIT,
@@ -35,6 +23,8 @@ enum S_Case {
     SHOOT,
     SHOOT_AT_GOAL,
     POSITION,
+    POSITION_ENEMY,
+    POSITION_TEAM,
     INTERRUPT,
     WAIT
 };
@@ -56,7 +46,6 @@ public:
 private:
     void resetTVariables();
     void strategies();
-    void strategyController();
     void manual();
     void masterPrint(string str);
     int client_nr;
@@ -92,7 +81,6 @@ private:
      * 	These variables will not conflict because only one strategy can be run at
      * 	the same time
      */
-    S_State s_state;
     S_Case s_case_prev;
     S_Case s_case;
     timer s_timer;

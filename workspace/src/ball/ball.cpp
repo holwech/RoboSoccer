@@ -124,13 +124,14 @@ Angle Ball::GetPhi() {
     return newAngle;
 }
 
-bool Ball::inGoalArea() {
+bool Ball::inGoalArea(int side) {
     if (fabs(RawBall::GetPos().GetY()) < 0.350 &&
         fabs(RawBall::GetPos().GetX()) > 1.15) {
-        return true;
-    } else {
-        return false;
+        if (side == 0 || (side == 1 && RawBall::GetPos().GetX() > 0) || (side == -1 && RawBall::GetPos().GetX() < 0)) {
+            return true;
+        }
     }
+    return false;
 }
 
 edges Ball::nearEdge() {
