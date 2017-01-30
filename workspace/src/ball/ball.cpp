@@ -7,7 +7,9 @@ Ball::Ball(RTDBConn &DBC): RawBall(DBC), ballTimer(), refreshTimer()
     for(int sample = 0; sample < NUM_SAMPLES; sample++) {
         posSamples.push_back(RawBall::GetPos());
         velocitySamples.push_back(RawBall::GetVelocity());
-        phiSamples.push_back(RawBall::GetPhi());
+        if (sample < 5) {
+            phiSamples.push_back(RawBall::GetPhi());
+        }
     }
 }
 
@@ -105,8 +107,6 @@ Angle Ball::GetPhi() {
     */
     std::sort(samples.begin(), samples.end());
     samples.pop_back();
-    samples.pop_back();
-    samples.erase(samples.begin());
     samples.erase(samples.begin());
     /*
     for (auto& vel : samples) {
@@ -118,7 +118,7 @@ Angle Ball::GetPhi() {
     for (auto& n : samples) {
         total += n.Get();
     }
-    total /= 6;
+    total /= 3;
     Angle newAngle(total);
     prevAngle = newAngle;
     return newAngle;

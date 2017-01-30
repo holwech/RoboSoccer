@@ -85,6 +85,7 @@ private:
     double chrossandpassy; // used for tactics: Chross and Pass
     vector<Command> prevCommand;
     vector<Action> prevAction;
+    timer ticker;
 
 
     /** These are variables that all strategies can and should use.
@@ -108,9 +109,10 @@ private:
     void offensiveNextMove();
     bool bounceForward();
     void strategy_best();
-    void nextMove();
+    void nextMove(bool moveDone);
     int getNotClosest();
     void before_kick_off();
+    Position trackBall();
 
     void GoToBeforePenaltyPosition(); // Used to manoever robots to the position before penalty
     void ActDuringPenalty(); //Make robots act during penalty shooting

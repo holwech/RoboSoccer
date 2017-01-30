@@ -74,18 +74,10 @@ void Player::defend(){
         goalypos_x = 1.40;
     }
         //get position and angle of the ball
-    for(int i=0;i<10;i++)
-    {
-        ballangle = ball.RawBall::GetPhi().Deg()+ballangle;
-    }
-    ballangle /= 10;
-    for(int i=0;i<10;i++)
-    {
-        ballx += ball.GetX();
-        bally += ball.GetY();
-    }
-    ballx /= 10; //------change
-    bally /= 10;//-------change
+    ballangle = ball.RawBall::GetPhi().Deg()+ballangle;
+    Position ballPos = ball.GetPos();
+    ballx = ballPos.GetX(); //------change
+    bally = ballPos.GetY();//-------change
 
     getNextGoalkeeperState();
     switch(Gstate){

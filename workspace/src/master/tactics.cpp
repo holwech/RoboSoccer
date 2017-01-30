@@ -260,7 +260,7 @@ bool Master::kickAtGoal(int playerNum, bool is_penalty) {
         if(is_penalty){
             send(Command(ACTION_KICK, t_target, 2.5, 1.4), closestRobo);
         }else{
-            send(Command(ACTION_KICK, t_target, 2.5, 2.0), closestRobo);
+            send(Command(ACTION_KICK, t_target, 3, 2.5), closestRobo);
         }
         masterPrint("kickAtGoal: STEP2 DONE");
         t_state = STEP3;

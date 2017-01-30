@@ -36,6 +36,7 @@ Master::Master(string& team, RTDBConn& DBC, vector<int>& rfNumber) :
     state = REFEREE_INIT;
     referee.Init();
     resetTVariables();
+    ticker.start();
 }
 
 
@@ -88,6 +89,7 @@ void Master::run() {
             cout << "No case for this state in master.run" << state << endl;
             break;
         }
+        usleep(30000);
     }
     threadRobo0.join();
     threadRobo1.join();
@@ -188,6 +190,10 @@ void Master::strategies() {
 
     while(1) {
         update();
+       if (ticker.getTime() > std::chrono::duration<double, std::milli>(5000)) {
+           cout << "Master alive!" << endl;
+            ticker.reset();
+       }
         switch(answer) {
         case 1:
             tacticDone = crossPassAndShoot();
@@ -250,6 +256,7 @@ void Master::strategies() {
             cin >> answer;
             break;
         }
+        usleep(30000);
     }
 }
 

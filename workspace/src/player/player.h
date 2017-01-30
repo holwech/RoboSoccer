@@ -102,6 +102,7 @@ private:
     atomic<PState> state;
     atomic<bool> busy;
     mutable std::mutex mutex;
+    timer playerTicker;
 
     /** General Variables and Functions*/
     void idle();
