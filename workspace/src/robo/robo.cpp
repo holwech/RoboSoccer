@@ -34,8 +34,9 @@ void Robo::GotoPos(Position target, double speed, bool ca){
 double Robo::speedModifier(Position target, double speed) {
     double distance = this->GetPos().DistanceTo(target);
     // Lower number gives a sharper slow down
-    double modifier = 0.2;
+    double modifier = isGoalkeeper ? 0.05 : 0.2;
     double scale = distance / (distance + modifier);
+    //cout << "Scale is: " << scale << endl;
     /*
     if (scale < 0.2) {
         return speed * 0.2;
