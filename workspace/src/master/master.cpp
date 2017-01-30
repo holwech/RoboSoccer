@@ -163,21 +163,6 @@ void Master::updatePositions() {
     }
 }
 
-void Master::strategyController() {
-    // Do something to choose strategies
-    switch(s_state) {
-    case BALANCED:
-        // Run the balanced strategy
-        break;
-    case AGGRESSIVE:
-        break;
-    case DEFENSIVE:
-        break;
-    default:
-        cout << "No strategy for this state" << endl;
-        break;
-    }
-}
 
 void Master::masterPrint(string str) {
     cout << "\033[1;31m#MASTER: " << str << "\033[0m" << endl;
@@ -389,7 +374,6 @@ void Master::updateSide(){
 }
 
 void Master::resetTVariables() {
-    s_state = BALANCED;
     s_case = INIT;
     t_state = STEP1;
     t_state2 = STEP1;

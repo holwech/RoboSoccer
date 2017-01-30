@@ -35,8 +35,6 @@ void Master::strategy_offensive3(){
         send(Command(ACTION_BLOCK_BALL,Position(0,0)) , 1);
         send(Command(ACTION_GOTO, Position(0.5*-side, 0.0)), 1);
         break;
-    case POSITION:
-        break;
     case SHOOT_AT_GOAL:
         if(player[1].getPos().DistanceTo(ball.GetPos()) < player[2].getPos().DistanceTo(ball.GetPos()) + 0.3)
         {
@@ -50,6 +48,7 @@ void Master::strategy_offensive3(){
     case NEXT:
         break;
     default:
+        cout << "no case for this in offensive strategy" << endl;
         break;
     }
     offensiveNextMove();
@@ -73,8 +72,6 @@ void Master::offensiveNextMove(){
             s_case = SHOOT_AT_GOAL;
         }*/
         break;
-    case BLOCK:
-    case POSITION:
     case SHOOT_AT_GOAL:
             //shoot even if far away form opponent goal
         if (!((side == LEFT && ball.GetPos().GetX() > 0.2) ||
@@ -84,6 +81,7 @@ void Master::offensiveNextMove(){
         }
         break;
     default:
+        cout << "No case for this in offensivenextmove function" << endl;
         break;
     }
 }
@@ -229,9 +227,15 @@ void Master::strategy_best() {
         nextMove(nearPenaltyDone);
         break;
       }
-    case POSITION:{
+    case POSITION_ENEMY:{
         send(Command(ACTION_GOTO, Position(0.8 * -side, 0.6), 2.5, true), 1);
         send(Command(ACTION_GOTO, Position(0.8 * -side, -0.6), 2.5, true), 2);
+        nextMove(true);
+        break;
+    }
+    case POSITION_TEAM:{
+        send(Command(ACTION_GOTO, Position(0.8 * side, 0.6), 2.5, true), 1);
+        send(Command(ACTION_GOTO, Position(0.8 * side, -0.6), 2.5, true), 2);
         nextMove(true);
         break;
     }
@@ -246,15 +250,29 @@ void Master::nextMove(bool moveDone) {
     S_Case nextState = s_case;
     bool ballOnSideOfField = fabs(ball.GetPos().GetY()) > 0.4;
     bool ballCloseToTeamGoal = ((side == 1 && ball.GetPos().GetX() > 0.8) || (side == -1 && ball.GetPos().GetX() < -0.8));
-    bool ballInGoalArea = ball.inGoalArea();
-    if (ballInGoalArea && s_case == WAIT) {
+    bool ballInEnemyGoalArea = ball.inGoalArea(-side);
+    bool ballInTeamGoalArea = ball.inGoalArea(side);
+    bool ballTowardsTeamGoal = fabs(ball.predictInY(1.4 * side).GetY()) < 0.3 &&
+                                ((side == RIGHT && fabs(ball.GetPhi().Deg()) < 90) || (side == LEFT && fabs(ball.GetPhi().Deg()) > 90));
+    bool ballOnTeamSide = (ball.GetPos().GetX() < 0 && side == LEFT) || (ball.GetPos().GetX() > 0 && side == RIGHT);
+    if (ballInEnemyGoalArea && s_case == WAIT) {
         // wait
-    } else if (ballInGoalArea) {
-        nextState = POSITION;
-        if (moveDone && s_case == POSITION) {
+    } else if (ballInEnemyGoalArea) {
+        nextState = POSITION_ENEMY;
+        if (moveDone && s_case == POSITION_ENEMY) {
             nextState = WAIT;
         }
-    } else if (ballOnSideOfField && ballCloseToTeamGoal && s_case != SHOOT_AT_GOAL) {
+    } else if (ballInTeamGoalArea) {
+        nextState = POSITION_TEAM;
+        if (moveDone && s_case == POSITION_TEAM) {
+            nextState = WAIT;
+        }
+    } else if (ballTowardsTeamGoal && ballOnTeamSide) {
+        nextState = BLOCK;
+        if (moveDone && s_case == BLOCK) {
+            nextState = SHOOT_AT_GOAL;
+        }
+    } else if (ballOnSideOfField && ballCloseToTeamGoal) {
         nextState = COUNTER;
         if (moveDone) {
             nextState = SHOOT_AT_GOAL;

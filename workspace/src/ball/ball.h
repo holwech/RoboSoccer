@@ -29,7 +29,7 @@ public:
     double GetVelocity();
     Position GetPos();
     Angle GetPhi();
-    bool inGoalArea();
+    bool inGoalArea(int side = 0);
     edges nearEdge();
     bool isStopped();
     void updateSample();

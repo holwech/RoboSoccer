@@ -294,7 +294,7 @@ bool Master::throughPass() {
             t_target.SetY(-0.4);
         }
         send(Command(ACTION_GOTO, receivingPos, 2.5, true), notClosestRobo);
-        send(Command(ACTION_KICK, t_target, 2.5, 2.0), closestRobo);
+        send(Command(ACTION_KICK, t_target, 3, 2.5), closestRobo);
         printStrategy("throughPass: STEP1 DONE");
         t_state2 = STEP2;
         break;
