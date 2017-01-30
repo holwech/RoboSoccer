@@ -3,7 +3,7 @@
 void Player::idle()
 {
   if (deviceNr == 4) {
-      cout << "idle" << endl;
+      //cout << "idle" << endl;
   }
   robo.idle();
 }
