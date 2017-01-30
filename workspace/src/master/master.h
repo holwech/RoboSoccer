@@ -84,7 +84,7 @@ private:
     S_Case s_case_prev;
     S_Case s_case;
     timer s_timer;
-    const vector<string> strategyStateNames = {"INIT", "NEXT", "BLOCK", "COUNTER", "SHOOT", "SHOOT_AT_GOAL", "POSITION", "INTERRUPT", "WAIT"};
+    const vector<string> strategyStateNames = {"INIT", "NEXT", "BLOCK", "COUNTER", "SHOOT", "SHOOT_AT_GOAL", "POSITION", "POSITION_ENEMY", "POSITION_TEAM", "INTERRUPT", "WAIT"};
     void debugContinue();
     void t_debugContinue();
     void statePrint(S_Case currentState);

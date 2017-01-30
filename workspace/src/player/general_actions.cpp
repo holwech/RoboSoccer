@@ -3,7 +3,7 @@
 void Player::idle()
 {
   if (deviceNr == 4) {
-      cout << "idle" << endl;
+      //cout << "idle" << endl;
   }
   robo.idle();
 }
@@ -16,12 +16,10 @@ bool Player::goTo(Position target, double speed, bool ca)
 {
   robo.GotoPos(target, speed, ca);
   if (deviceNr == 4) {
-      cout << "goto " << target << endl;
+      //cout << "goto " << target << endl;
   }
   if (robo.isArrived(0.04))
   {
-    cout << "going to: " << target << endl;
-    cout << "at position: " << robo.GetPos() << endl;
     return true; // Done
   }
   return false;
