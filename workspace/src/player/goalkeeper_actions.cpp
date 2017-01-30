@@ -83,8 +83,8 @@ void Player::defend(){
         ballx += ball.GetX();
         bally += ball.GetY();
     }
-    ballx /= 10; //------change
-    bally /= 10;//-------change
+    ballx /= 10;
+    bally /= 10;
 
     getNextGoalkeeperState();
     switch(Gstate){
@@ -95,7 +95,8 @@ void Player::defend(){
         if(robo.GetPos().DistanceTo(pos) < 0.03){
             robo.stop();
         }else{
-            robo.GotoPos(pos, 1);
+//            robo.GotoPos(pos, 1);
+            robo.CruisetoXY(goalypos_x,goalypos_y,130);
         }
         break;
     case BLOCK_NOT_WINDOW:
@@ -105,7 +106,8 @@ void Player::defend(){
         if(robo.GetPos().DistanceTo(pos) < 0.03){
             robo.stop();
         }else{
-            robo.GotoPos(pos, 1);
+//            robo.GotoPos(pos, 1);
+             robo.CruisetoXY(goalypos_x,goalypos_y,130);
         }
         break;
     case GOALKEEPER_STOP:
@@ -127,12 +129,12 @@ void Player::defend(){
         }
         pos.SetX(goalypos_x);
         pos.SetY(goalypos_y);
-        robo.GotoPos(pos, 1);
+//        robo.GotoPos(pos, 1);
+        robo.CruisetoXY(goalypos_x,goalypos_y,130);
         break;
     case GOALKEEPER_KICK:
         break;
     default:
-
         break;
     }
 }
