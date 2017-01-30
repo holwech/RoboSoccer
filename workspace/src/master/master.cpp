@@ -67,7 +67,9 @@ void Master::run() {
             before_kick_off();
             break;
         case KICK_OFF:
+            if((referee.GetSide() == LEFT_SIDE && side==-1) || (referee.GetSide() == RIGHT_SIDE && side==1) || fabs(ball.GetX()) > 0.15){
             strategy_best();
+            }
             break;
         case BEFORE_PENALTY:
             GoToBeforePenaltyPosition();
@@ -76,6 +78,7 @@ void Master::run() {
             ActDuringPenalty();
             break;
         case PLAY_ON:
+            strategy_best();
             break;
         case PAUSE:
             break;
