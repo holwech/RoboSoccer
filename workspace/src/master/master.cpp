@@ -69,7 +69,7 @@ void Master::run() {
             break;
         case KICK_OFF:
             if((referee.GetSide() == LEFT_SIDE && side==-1) || (referee.GetSide() == RIGHT_SIDE && side==1) || fabs(ball.GetX()) > 0.15){
-            strategy_best();
+                strategy_best();
             }
             break;
         case BEFORE_PENALTY:
