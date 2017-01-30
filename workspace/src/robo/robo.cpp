@@ -38,9 +38,10 @@ double Robo::speedModifier(Position target, double speed) {
     double scale = distance / (distance + modifier);
     //cout << "Scale is: " << scale << endl;
     /*
-    if (scale < 0.2) {
-        return speed * 0.2;
-    }*/
+    if (scale < 0.05) {
+        return speed * 0.05;
+    }
+    */
     return scale * speed;
 }
 
@@ -173,13 +174,15 @@ void Robo::updatePidsGoalie(Position targetPos){
 }
 
 void Robo::updateDistancePid(Position targetPos){
+    /*
     double dist_error = this->GetPos().DistanceTo(targetPos);
     if (dist_error < ( precise ? 0.15 : 0.06 )){
         pidDistance.updateInput(5*dist_error);
     }
     else{
+        */
         pidDistance.updateInput(speed);
-    }
+    //}
 }
 
 void Robo::setPrecise(bool val){
