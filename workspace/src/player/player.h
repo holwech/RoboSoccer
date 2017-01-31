@@ -102,6 +102,7 @@ private:
     atomic<PState> state;
     atomic<bool> busy;
     mutable std::mutex mutex;
+    timer playerTicker;
 
     /** General Variables and Functions*/
     void idle();
@@ -115,6 +116,7 @@ private:
     void drivingKick(Position target);
     bool old_pass(Position target);
     bool old_kick(Position target);
+    bool block_ball(double speed);
     int phase;
     //Position pos_before_kick_far;
     //Position pos_before_kick_near;
@@ -123,7 +125,9 @@ private:
     int control;
     AState pass_state;
     AState kick_state;
+    AState block_state;
     Position endKickPos;
+    Position block_target;
     double passSpeed;
     timer stuck_timer;
 

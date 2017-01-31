@@ -13,19 +13,7 @@
 #include "config.cpp"
 #include "ball/test_ball.h"
 
-enum ePlayModePlus {
-    STATE_MENU,
-    STATE_GOALKEEPER,
-    STATE_PENALTY,
-    STATE_STARTPOS
-};
 
-/** Different strategy states. */
-enum S_State {
-    AGGRESSIVE,
-    DEFENSIVE,
-    BALANCED
-};
 
 enum S_Case {
     INIT,
@@ -35,11 +23,13 @@ enum S_Case {
     SHOOT,
     SHOOT_AT_GOAL,
     POSITION,
+    POSITION_ENEMY,
+    POSITION_TEAM,
     INTERRUPT,
     WAIT
 };
 
-enum T_State {
+enum T_State { //Tactics
     STEP1,
     STEP2,
     STEP3,
@@ -56,7 +46,6 @@ public:
 private:
     void resetTVariables();
     void strategies();
-    void strategyController();
     void manual();
     void masterPrint(string str);
     int client_nr;
@@ -85,17 +74,17 @@ private:
     double chrossandpassy; // used for tactics: Chross and Pass
     vector<Command> prevCommand;
     vector<Action> prevAction;
+    timer ticker;
 
 
     /** These are variables that all strategies can and should use.
      * 	These variables will not conflict because only one strategy can be run at
      * 	the same time
      */
-    S_State s_state;
     S_Case s_case_prev;
     S_Case s_case;
     timer s_timer;
-    const vector<string> strategyStateNames = {"INIT", "NEXT", "BLOCK", "COUNTER", "SHOOT", "SHOOT_AT_GOAL", "POSITION", "INTERRUPT", "WAIT"};
+    const vector<string> strategyStateNames = {"INIT", "NEXT", "BLOCK", "COUNTER", "SHOOT", "SHOOT_AT_GOAL", "POSITION", "POSITION_ENEMY", "POSITION_TEAM", "INTERRUPT", "WAIT"};
     void debugContinue();
     void t_debugContinue();
     void statePrint(S_Case currentState);
@@ -108,9 +97,10 @@ private:
     void offensiveNextMove();
     bool bounceForward();
     void strategy_best();
-    void nextMove();
+    void nextMove(bool moveDone);
     int getNotClosest();
     void before_kick_off();
+    Position trackBall();
 
     void GoToBeforePenaltyPosition(); // Used to manoever robots to the position before penalty
     void ActDuringPenalty(); //Make robots act during penalty shooting
@@ -129,8 +119,9 @@ private:
     bool crossPassAndShoot();
     bool tactic_nearpenaltyarea(double threshold, int playerNum = -1);
     bool tactic_ballchasing();
-    bool throughPass();
+    bool throughPass(int closest, int notClosest);
     bool kickAtGoal(int playerNum = -1, bool is_penalty = false);
+    bool block(int playerNum);
 
     /** SHARED TACTIC VARIABLES */
     T_State t_state;
@@ -139,6 +130,7 @@ private:
     int notClosestRobo;
     double maxDistance;
     Position t_target;
+    Position t_target2;
 
 
     // crossPassAndShoot-variables

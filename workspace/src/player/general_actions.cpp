@@ -2,6 +2,9 @@
 #include "ball/ball.h"
 void Player::idle()
 {
+  if (deviceNr == 4) {
+      //cout << "idle" << endl;
+  }
   robo.idle();
 }
 
@@ -12,7 +15,9 @@ bool Player::stop() {
 bool Player::goTo(Position target, double speed, bool ca)
 {
   robo.GotoPos(target, speed, ca);
-  //cout << "Target: " << target << " prevTarget: " << prevTarget << " isArrived: " << robo.isArrived(0.1) << endl;
+  if (deviceNr == 4) {
+      //cout << "goto " << target << endl;
+  }
   if (robo.isArrived(0.04))
   {
     return true; // Done
@@ -183,7 +188,7 @@ bool Player::before_kick_improved(Position kick_position, Position target_of_kic
 }
 
 bool Player::angeled_behind_ball(Position targetPos, double speed){
-    Position ballPos = ball.GetPos();
+    Position ballPos = ball.RawBall::GetPos();
     double pos_behind_ball_x;
     double pos_behind_ball_y;
     Position direction = Position(ballPos.GetX() - targetPos.GetX(), ballPos.GetY() - targetPos.GetY() );
@@ -197,8 +202,8 @@ bool Player::angeled_behind_ball(Position targetPos, double speed){
         if (!ball.isStopped()) {
             speedModifier = 0.7;
         }*/
-        pos_behind_ball_x = ballPos.GetX() + direction.GetX() * 4 * scale / length;
-        pos_behind_ball_y = ballPos.GetY() + direction.GetY() * 4 * scale / length;
+        pos_behind_ball_x = ballPos.GetX() + direction.GetX() * 3 * scale / length;
+        pos_behind_ball_y = ballPos.GetY() + direction.GetY() * 3 * scale / length;
         pos_behind_ball = Position(pos_behind_ball_x, pos_behind_ball_y);
         // Reduce speed close to turning point
         robo.GotoPos(pos_behind_ball, speed);
@@ -213,13 +218,13 @@ bool Player::angeled_behind_ball(Position targetPos, double speed){
         if(robo.isArrived(0.1)){
             playerPrint("BEFORE_KICK: STEP1 Done");
             state_before_kick = STEP2;
-            lengthToBall = robo.GetPos().DistanceTo(ball.GetPos());
+            lengthToBall = robo.GetPos().DistanceTo(ball.RawBall::GetPos());
         }
         break;
     }
     case STEP2:
         //if the ball has moved far away, go back to step1
-        if ( lengthToBall +0.05 < robo.GetPos().DistanceTo(ball.GetPos()) ){
+        if ( lengthToBall +0.05 < robo.GetPos().DistanceTo(ball.RawBall::GetPos()) ){
             state_before_kick = STEP1;
             playerPrint("BEFORE_KICK: Ball too far away, going to STEP1");
         }
@@ -608,4 +613,35 @@ bool Player::old_kick(Position target)
   }
 
   return false;
+}
+
+
+bool Player::block_ball(double speed) {
+    robo.setAvoidBall(true);
+    switch(block_state) {
+    case A_STEP1: {
+        double xLine = ball.GetPos().GetX() + 0.3 * side;
+        if (fabs(xLine) > 1.2) {
+            xLine = 1.2 * side;
+        }
+        block_target = ball.predictInY(xLine);
+        if(goTo(block_target, speed)) {
+            block_state = A_STEP2;
+        }
+        break;
+    }
+    case A_STEP2:
+        if (fabs(ball.GetPos().GetX()) > fabs(robo.GetPos().GetX())) {
+            block_state = A_STEP1;
+        } else {
+            robo.setAvoidBall(false);
+            return true;
+        }
+        break;
+    default:
+        cout << "No case for this state in block_ball in player" << endl;
+        break;
+    }
+    robo.setAvoidBall(false);
+    return false;
 }

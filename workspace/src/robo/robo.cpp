@@ -34,7 +34,7 @@ void Robo::GotoPos(Position target, double speed, bool ca){
 double Robo::speedModifier(Position target, double speed) {
     double distance = this->GetPos().DistanceTo(target);
     // Lower number gives a sharper slow down
-    double modifier = isGoalkeeper ? 0.05 : 0.2;
+    double modifier = isGoalkeeper ? 0.1 : 0.2;
     double scale = distance / (distance + modifier);
     //cout << "Scale is: " << scale << endl;
     /*
@@ -123,7 +123,7 @@ Position Robo::movePosInBounce(Position pos){
     }
 
     if(pos.GetY() < 0){
-        scaleY = pos.GetY()/-0.85;
+        scaleY = pos.GetY()/-0.81;
     }
     else if(pos.GetY() > 0){
         scaleY = pos.GetY()/0.81;
@@ -261,7 +261,7 @@ void Robo::driveWithCA() {
             sampeled_pos = GetPos();
             not_moving_count = 0;
         }
-        if (not_moving_count > 150){
+        if (not_moving_count > 50){
             go_to_mid = true;
             not_moving_count = 0;
         }
@@ -269,7 +269,7 @@ void Robo::driveWithCA() {
         if(go_to_mid){
             updatePids(Position(0,0), true);
             go_to_mid_count++;
-            if(go_to_mid_count > 50){
+            if(go_to_mid_count > 20){
                 go_to_mid = false;
                 go_to_mid_count = 0;
             }
@@ -289,8 +289,8 @@ void Robo::driveWithCA() {
             cout << "rightwheel: " << rightWheel << endl;
         }
         this->MoveMs(leftWheel,rightWheel, 100, 10);
-        //out << endl <<robo1.GetPos().AngleOfLineToPos(ball.GetPos())-robo1.GetPhi() << endl;
-        //robo1.TurnAbs(robo1.GetPos().AngleOfLineToPos(ball.GetPos())-robo1.GetPhi());
+        //out << endl <<robo1.GetPos().AngleOfLineToPos(ball.RawBall::GetPos())-robo1.GetPhi() << endl;
+        //robo1.TurnAbs(robo1.GetPos().AngleOfLineToPos(ball.RawBall::GetPos())-robo1.GetPhi());
     }
 }
 
@@ -346,11 +346,11 @@ double Robo::getReferenceAngleErrRad(Position targetPos, bool ca = true){
     //get the error
     Position myPos = this->GetPos();
     double ref_deg;
-    if (ca){
-        ref_deg = getRefAngleWithCA(this->ca.getTotalPull(myPos, targetPos, posTeam, posOtherTeam, false), targetPos);
+    if(avoidBall){
+        ref_deg = getRefAngleWithCA(this->ca.getBallPull(myPos, targetPos, ball.RawBall::GetPos()), targetPos);
     }
-    else if(avoidBall){
-        ref_deg = getRefAngleWithCA(this->ca.getBallPull(myPos, targetPos, ball.GetPos()), targetPos);
+    else if (ca){
+        ref_deg = getRefAngleWithCA(this->ca.getTotalPull(myPos, ball.RawBall::GetPos(), targetPos, posTeam, posOtherTeam, false), targetPos);
     }else{
         ref_deg = getRefAngleWithoutCA(targetPos);
     }

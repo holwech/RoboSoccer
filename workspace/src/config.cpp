@@ -30,6 +30,7 @@ struct Command {
     double approach_speed;
     bool ca;
     Command(Action action) : action(action), pos1(Position(0.0, 0.0)), pos2(Position(0.0, 0.0)) {}
+    Command(Action action, double speed) : action(action), pos1(Position(0.0, 0.0)), pos2(Position(0.0, 0.0)), speed(speed), ca(false) {}
     Command(Action action,  Position pos1, Position pos2) : action(action), pos1(pos1), pos2(pos2) {}
     Command(Action action, Position pos1) : action(action), pos1(pos1), pos2(Position(0.0, 0.0)), ca(false) {}
     Command(Action action, Position pos1, bool ca) : action(action), pos1(pos1), pos2(Position(0.0, 0.0)), ca(ca) {}

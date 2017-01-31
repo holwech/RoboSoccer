@@ -18,6 +18,9 @@ Player::Player(Channel* channel, RTDBConn &DBC, const int deviceNr) :
     //bally = 0;
     control = 0;
     delta = 0.09;
+    playerTicker.start();
+    prevState.store(IDLE);
+    prevPrevState = IDLE;
 
     counter = 0;
     phase = 0;
@@ -31,6 +34,10 @@ void Player::run() {
    bool isGoalkeeper;
    while(1){
        isGoalkeeper = false;
+       if (playerTicker.getTime() > std::chrono::duration<double, std::milli>(34)) {
+           cout << deviceNr << endl;
+            cout << playerTicker.getTime().count() << endl;
+       }
        switch(state) {
        case IDLE:
            idle();
@@ -63,14 +70,7 @@ void Player::run() {
                done(); }
            break;
        case BLOCK_BALL:
-           //temporary test
-
-            while(true){
-                Position tempPos = robo.GetPos();
-                cout << "Position " << tempPos << " translated to " << robo.movePosInBounce(tempPos) << endl << endl;
-                sleep(1);
-            }
-           isDone = blockBall(command.pos1.GetX());
+           isDone = block_ball(command.speed);
            if (isDone){ done(); }
            break;
        case DEFEND:
@@ -90,6 +90,7 @@ void Player::run() {
        }
        updateRobo(isGoalkeeper);
        readCommand();
+       usleep(30000);
        //cout << "State: " << state << endl;
    }
 }
@@ -101,9 +102,11 @@ void Player::readCommand() {
         return;
     }
     command = channel->read();
+    /*
     if (getPrevPrevState() != getState()) {
         playerPrint("Received command " + action_names[command.action]);
     }
+    */
 
     switch(command.action) {
     case ACTION_GOTO:
@@ -150,9 +153,9 @@ void Player::readCommand() {
 
 void Player::playerPrintState(string message) {
     string color = "\033[1;31m";
-    if (deviceNr == 0) {
+    if (deviceNr == 0 || deviceNr == 3) {
         color = "\033[1;32m";
-    } else if (deviceNr == 1) {
+    } else if (deviceNr == 1 || deviceNr == 4) {
         color = "\033[1;33m";
     } else {
         color = "\033[1;34m";
@@ -217,6 +220,7 @@ void Player::done() {
     kick_state = A_STEP1;
     pass_state = A_STEP1;
     state_before_kick = STEP1;
+    block_state = A_STEP1;
 }
 
 /** Checks if the player is busy performing an action */
@@ -227,13 +231,11 @@ bool Player::isBusy() {
 /** Sets the player to busy when an action is started */
 void Player::setBusy(bool flag) {
    busy.store(flag);
-   /*
-   if (busy.load()) {
+   if (busy.load() && deviceNr == 4) {
       playerPrint("Robot is busy");
-   } else {
+   } else if (deviceNr == 4) {
       playerPrint("Robot is not busy");
    }
-   */
 }
 
 

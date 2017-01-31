@@ -35,8 +35,6 @@ void Master::strategy_offensive3(){
         send(Command(ACTION_BLOCK_BALL,Position(0,0)) , 1);
         send(Command(ACTION_GOTO, Position(0.5*-side, 0.0)), 1);
         break;
-    case POSITION:
-        break;
     case SHOOT_AT_GOAL:
         if(player[1].getPos().DistanceTo(ball.GetPos()) < player[2].getPos().DistanceTo(ball.GetPos()) + 0.3)
         {
@@ -50,6 +48,7 @@ void Master::strategy_offensive3(){
     case NEXT:
         break;
     default:
+        cout << "no case for this in offensive strategy" << endl;
         break;
     }
     offensiveNextMove();
@@ -73,8 +72,6 @@ void Master::offensiveNextMove(){
             s_case = SHOOT_AT_GOAL;
         }*/
         break;
-    case BLOCK:
-    case POSITION:
     case SHOOT_AT_GOAL:
             //shoot even if far away form opponent goal
         if (!((side == LEFT && ball.GetPos().GetX() > 0.2) ||
@@ -84,6 +81,7 @@ void Master::offensiveNextMove(){
         }
         break;
     default:
+        cout << "No case for this in offensivenextmove function" << endl;
         break;
     }
 }
@@ -189,58 +187,104 @@ void Master::strategy_offensive()
     }
 }
 
+Position Master::trackBall() {
+    Position ballPos = ball.GetPos();
+    double xLine = ballPos.GetX() + 0.6 * side;
+    if (fabs(xLine) > 1.2) {
+        xLine = 1.2 * side;
+    }
+    return ball.predictInY(xLine);
+}
+
 void Master::strategy_best() {
     switch(s_case) {
     case INIT:
-        nextMove();
+        nextMove(true);
         break;
+    case WAIT: {
+        bool waitDone = false;
+       /* if (!player[1].isBusy() && !player[2].isBusy()) {
+            waitDone = true;
+        }*/
+        nextMove(waitDone);
+        break;
+    }
     case SHOOT_AT_GOAL:
       {
         bool kickAtGoalDone = kickAtGoal(getClosest());
-        send(Command(ACTION_GOTO,
-             Position(player[getNotClosest()].getPos().GetX(),
-             ball.GetPos().GetY()), 1.5, true),
-             getNotClosest());
-        if (kickAtGoalDone)
-        {
-          resetTVariables();
-        }
-        nextMove();
+        send(Command(ACTION_GOTO, Position(trackBall()), 2.5, true), getNotClosest());
+        nextMove(kickAtGoalDone);
         break;
       }
     case COUNTER: {
-        bool throughDone = throughPass();
-        if (throughDone) {
-            resetTVariables();
-        }
+        bool throughDone = throughPass(getClosest(), getNotClosest());
+        nextMove(throughDone);
         break;
     }
     case BLOCK:
       {
-        bool nearPenaltyDone = tactic_nearpenaltyarea(0.2 * -side);
-        if (nearPenaltyDone) {
-            resetTVariables();
-        }
-        nextMove();
+        bool blockDone = block(getClosest());
+        Position trackPos = ball.GetPos();
+        trackPos.SetX(0.3 * -side);
+        send(Command(ACTION_GOTO, trackPos, 2.5, true), getNotClosest());
+        nextMove(blockDone);
         break;
       }
+    case POSITION_ENEMY:{
+        send(Command(ACTION_GOTO, Position(0.8 * -side, 0.6), 2.5, true), 1);
+        send(Command(ACTION_GOTO, Position(0.8 * -side, -0.6), 2.5, true), 2);
+        nextMove(true);
+        break;
+    }
+    case POSITION_TEAM:{
+        send(Command(ACTION_GOTO, Position(0.8 * side, 0.6), 2.5, true), 1);
+        send(Command(ACTION_GOTO, Position(0.8 * side, -0.6), 2.5, true), 2);
+        nextMove(true);
+        break;
+    }
     default:
         cout << "No case for this in strategy defensive" << endl;
         break;
     }
 }
 
-void Master::nextMove() {
-    S_Case nextState = s_case;
-    // If ball is on the other teams field, shoot at goal
-    if (ball.inGoalArea()) {
 
-    } else if (fabs(ball.GetPos().GetY()) > 0.4 &&
-       ((side == 1 && ball.GetPos().GetX() > 0.8) ||
-        (side == -1 && ball.GetPos().GetX() < -0.8))) {
+void Master::nextMove(bool moveDone) {
+    S_Case nextState = s_case;
+    bool ballOnSideOfField = ball.onSideOfField();
+    bool ballCloseToTeamGoal = ball.closeToTeamGoal(side);
+    bool ballInEnemyGoalArea = ball.inEnemyGoalArea(side);
+    bool ballInTeamGoalArea = ball.inTeamGoalArea(side);
+    bool ballTowardsTeamGoal = ball.movingTowardsTeamGoal(side);
+    bool ballOnTeamSide = ball.onTeamSide(side);
+    if ((ballInEnemyGoalArea || ballInTeamGoalArea) && s_case == WAIT) {
+        // wait
+    } else if (ballInEnemyGoalArea) {
+        nextState = POSITION_ENEMY;
+        if (moveDone && s_case == POSITION_ENEMY) {
+            nextState = WAIT;
+        }
+    } else if (ballInTeamGoalArea) {
+        nextState = POSITION_TEAM;
+        if (moveDone && s_case == POSITION_TEAM) {
+            nextState = WAIT;
+        }
+    } else if (ballTowardsTeamGoal && ballOnTeamSide) {
+        cout << "ballTowardsTeamGoal: " << ballTowardsTeamGoal << " ballOnTeamSide: " << ballOnTeamSide << endl;
+        nextState = BLOCK;
+        if (moveDone && s_case == BLOCK) {
+            resetTVariables();
+        }
+    } else if (ballOnSideOfField && ballCloseToTeamGoal) {
         nextState = COUNTER;
+        if (moveDone && s_case == COUNTER) {
+            resetTVariables();
+        }
     } else {
         nextState = SHOOT_AT_GOAL;
+        if (moveDone) {
+            resetTVariables();
+        }
     }
     if (nextState != s_case) {
         resetTVariables();

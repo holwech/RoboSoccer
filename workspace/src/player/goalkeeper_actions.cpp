@@ -2,6 +2,8 @@
 #include "player/player.h"
 #include "cmath"
 
+#define GOALKEEPER_SPEED 1.5
+
 void Player::defend_tom(){
     //int x=ball.GetX();
     double x = ball.GetX();
@@ -68,24 +70,17 @@ void Player::defend(){
     bool debug = false;
     Position pos;
     if (side == LEFT){
-        goalypos_x = -1.38;
+        goalypos_x = -1.36;
     }
     else{
         goalypos_x = 1.40;
     }
         //get position and angle of the ball
-    for(int i=0;i<10;i++)
-    {
-        ballangle = ball.RawBall::GetPhi().Deg()+ballangle;
-    }
-    ballangle /= 10;
-    for(int i=0;i<10;i++)
-    {
-        ballx += ball.GetX();
-        bally += ball.GetY();
-    }
-    ballx /= 10;
-    bally /= 10;
+
+    ballangle = ball.GetPhi().Deg()+ballangle;
+    Position ballPos = ball.GetPos();
+    ballx = ballPos.GetX(); //------change
+    bally = ballPos.GetY();//-------change
 
     getNextGoalkeeperState();
     switch(Gstate){
@@ -99,8 +94,9 @@ void Player::defend(){
         if(robo.GetPos().DistanceTo(pos) < 0.03){
             robo.stop();
         }else{
-//            robo.GotoPos(pos, 1);
-            robo.CruisetoXY(goalypos_x,goalypos_y,130);
+
+            robo.GotoPos(pos, GOALKEEPER_SPEED);
+
         }
         break;
     case BLOCK_NOT_WINDOW:
@@ -113,8 +109,9 @@ void Player::defend(){
         if(robo.GetPos().DistanceTo(pos) < 0.03){
             robo.stop();
         }else{
-//            robo.GotoPos(pos, 1);
-             robo.CruisetoXY(goalypos_x,goalypos_y,130);
+
+            robo.GotoPos(pos, GOALKEEPER_SPEED);
+
         }
         break;
     case GOALKEEPER_STOP:
@@ -128,11 +125,22 @@ void Player::defend(){
             cout << "In DYNAMIC_DEFEND" << endl;
         }
         // towards our goal
-        if (side == LEFT && !(ball.GetPhi().Deg()<90 && ball.GetPhi().Deg()>-90)){
-            goalypos_y = tan(ballangle*M_PI/180)*((goalypos_x-0.047*side)-ballx)+bally;
+        if(side == LEFT){
+            if (!(ball.GetPhi().Deg()<90 && ball.GetPhi().Deg()>-90)){
+                goalypos_y = tan(ballangle*M_PI/180)*((goalypos_x-0.047*side)-ballx)+bally;
+            }
+            else{
+                goalypos_y = bally;
+            }
         }
-        else if(side == RIGHT && ball.GetPhi().Deg()<90 && ball.GetPhi().Deg()>-90){
-            goalypos_y = tan(ballangle*M_PI/180)*((goalypos_x-0.047*side)-ballx)+bally;
+        else if(side == RIGHT){
+            if(ball.GetPhi().Deg()<90 && ball.GetPhi().Deg()>-90){
+                goalypos_y = tan(ballangle*M_PI/180)*((goalypos_x-0.047*side)-ballx)+bally;
+            }
+            else{
+                goalypos_y = bally;
+            }
+
         }
         if (goalypos_y > 0.19){
             goalypos_y = 0.19;
@@ -142,8 +150,9 @@ void Player::defend(){
         }
         pos.SetX(goalypos_x);
         pos.SetY(goalypos_y);
-//        robo.GotoPos(pos, 1);
-        robo.CruisetoXY(goalypos_x,goalypos_y,130);
+
+        robo.GotoPos(pos, GOALKEEPER_SPEED);
+
         break;
     case GOALKEEPER_KICK:
         break;
@@ -243,6 +252,3 @@ void Player::defend(){
 
 
 
-void Player::goalkeeperkick(){
-
-}
