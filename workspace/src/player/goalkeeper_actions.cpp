@@ -3,6 +3,7 @@
 #include "cmath"
 
 #define GOALKEEPER_SPEED 1.5
+#define GOALKEEPER_KICK_SPEED 2
 
 void Player::defend_tom(){
     //int x=ball.GetX();
@@ -160,7 +161,7 @@ void Player::defend(){
     case GOALKEEPER_KICK:
         pos.SetX(ballx);
         pos.SetY(bally);
-        robo.GotoPos(pos, GOALKEEPER_SPEED);
+        robo.GotoPos(pos, GOALKEEPER_KICK_SPEED);
         break;
     default:
         break;
