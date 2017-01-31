@@ -4,7 +4,7 @@
 #include "timer.h"
 #define BOUND_X 1.3
 #define BOUND_Y 0.780
-#define NUM_SAMPLES 10
+#define NUM_SAMPLES 5
 
 /**
  * LEFT = -x, RIGHT = x, TOP = y, BOTTOM = -y
@@ -34,6 +34,12 @@ public:
     bool isStopped();
     void updateSample();
     Position predictInY(double xLine);
+    bool onSideOfField();
+    bool closeToTeamGoal(int side);
+    bool inEnemyGoalArea(int side);
+    bool inTeamGoalArea(int side);
+    bool movingTowardsTeamGoal(int side);
+    bool onTeamSide(int side);
 private:
     timer ballTimer;
     timer refreshTimer;

@@ -258,9 +258,9 @@ bool Master::kickAtGoal(int playerNum, bool is_penalty) {
             t_target.SetY(keeperPos.GetY() + modifier);
         }
         if(is_penalty){
-            send(Command(ACTION_KICK, t_target, 2.5, 1.4), closestRobo);
+            send(Command(ACTION_KICK, t_target, 5.0, 2.0), closestRobo);
         }else{
-            send(Command(ACTION_KICK, t_target, 3, 2.5), closestRobo);
+            send(Command(ACTION_KICK, t_target, 4.0, 2.5), closestRobo);
         }
         masterPrint("kickAtGoal: STEP2 DONE");
         t_state = STEP3;
@@ -282,31 +282,29 @@ bool Master::kickAtGoal(int playerNum, bool is_penalty) {
     return false;
 }
 
-bool Master::throughPass() {
+bool Master::throughPass(int closest, int notClosest) {
     switch(t_state2) {
     case STEP1:{
-        closestRobo = getClosestToTeamGoal();
-        notClosestRobo = getNotClosestToTeamGoal();
         Position receivingPos(0.8 * -side, 0.6);
-        t_target = Position(0.8 * -side, 0.4);
+        t_target2 = Position(0.8 * -side, 0.4);
         if (ball.GetPos().GetY() < 0.0) {
             receivingPos.SetY(-0.6);
-            t_target.SetY(-0.4);
+            t_target2.SetY(-0.4);
         }
-        send(Command(ACTION_GOTO, receivingPos, 2.5, true), notClosestRobo);
-        send(Command(ACTION_KICK, t_target, 3, 2.5), closestRobo);
+        send(Command(ACTION_GOTO, receivingPos, 2.5, true), notClosest);
+        send(Command(ACTION_KICK, t_target2, 5.0, 2.0), closest);
         printStrategy("throughPass: STEP1 DONE");
         t_state2 = STEP2;
         break;
     }
     case STEP2:
-        if (!player[closestRobo].isBusy()) {
+        if (!player[closest].isBusy()) {
             printStrategy("throughPass: STEP2 DONE");
             t_state2 = STEP3;
         }
         break;
     case STEP3: {
-        bool kickDone = kickAtGoal(notClosestRobo);
+        bool kickDone = kickAtGoal(notClosest);
         if (kickDone) {
             printStrategy("throughPass: DONE");
             return true;
@@ -319,3 +317,20 @@ bool Master::throughPass() {
     }
     return false;
 }
+
+bool Master::block(int playerNum) {
+    switch(t_state2) {
+    case STEP1:
+        send(Command(ACTION_BLOCK_BALL, 3), playerNum);
+        break;
+    case STEP2:
+        if (!player[playerNum].isBusy() && ball.isStopped()) {
+            return true;
+        }
+    default:
+        cout << "No case for this state in block tactic" << endl;
+        break;
+    }
+    return false;
+}
+

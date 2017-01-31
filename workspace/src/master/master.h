@@ -119,8 +119,9 @@ private:
     bool crossPassAndShoot();
     bool tactic_nearpenaltyarea(double threshold, int playerNum = -1);
     bool tactic_ballchasing();
-    bool throughPass();
+    bool throughPass(int closest, int notClosest);
     bool kickAtGoal(int playerNum = -1, bool is_penalty = false);
+    bool block(int playerNum);
 
     /** SHARED TACTIC VARIABLES */
     T_State t_state;
@@ -129,6 +130,7 @@ private:
     int notClosestRobo;
     double maxDistance;
     Position t_target;
+    Position t_target2;
 
 
     // crossPassAndShoot-variables
