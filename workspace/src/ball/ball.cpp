@@ -7,9 +7,7 @@ Ball::Ball(RTDBConn &DBC): RawBall(DBC), ballTimer(), refreshTimer()
     for(int sample = 0; sample < NUM_SAMPLES; sample++) {
         posSamples.push_back(RawBall::GetPos());
         velocitySamples.push_back(RawBall::GetVelocity());
-        if (sample < 5) {
-            phiSamples.push_back(RawBall::GetPhi());
-        }
+        phiSamples.push_back(RawBall::GetPhi());
     }
 }
 
@@ -44,7 +42,7 @@ Position Ball::GetPos() {
     for (auto& pos : newSamples) {
         distanceFromAvgPos.push_back(pos.DistanceTo(avgPos));
     }
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 2; i++) {
         double maxRadius = 0;
         double index = 0;
         for (int j = 0; j < (int)distanceFromAvgPos.size(); j++) {
@@ -83,14 +81,12 @@ double Ball::GetVelocity() {
     */
     std::sort(samples.begin(), samples.end());
     samples.pop_back();
-    samples.pop_back();
-    samples.erase(samples.begin());
     samples.erase(samples.begin());
     double total = 0;
     for (auto& n : samples) {
         total += n;
     }
-    return total / 6;
+    return total / samples.size();
 }
 
 Angle Ball::GetPhi() {
@@ -118,7 +114,7 @@ Angle Ball::GetPhi() {
     for (auto& n : samples) {
         total += n.Get();
     }
-    total /= 3;
+    total /= samples.size();
     Angle newAngle(total);
     prevAngle = newAngle;
     return newAngle;
@@ -168,4 +164,29 @@ bool Ball::isStopped() {
     } else {
         return false;
     }
+}
+
+bool Ball::onSideOfField() {
+    return fabs(GetPos().GetY()) > 0.4;
+}
+
+bool Ball::closeToTeamGoal(int side) {
+    return ((side == 1 && GetPos().GetX() > 0.8) || (side == -1 && GetPos().GetX() < -0.8));
+}
+
+bool Ball::inEnemyGoalArea(int side) {
+    return inGoalArea(-side);
+}
+
+bool Ball::inTeamGoalArea(int side) {
+    return inGoalArea(side);
+}
+
+bool Ball::movingTowardsTeamGoal(int side) {
+    return fabs(predictInY(1.4 * side).GetY()) < 0.3 && !isStopped() &&
+           ((side == 1 && fabs(GetPhi().Deg()) < 90) || (side == -1 && fabs(GetPhi().Deg()) > 90));
+}
+
+bool Ball::onTeamSide(int side) {
+    return (GetPos().GetX() < 0 && side == -1) || (GetPos().GetX() > 0 && side == 1);
 }

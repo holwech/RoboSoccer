@@ -70,14 +70,7 @@ void Player::run() {
                done(); }
            break;
        case BLOCK_BALL:
-           //temporary test
-
-            while(true){
-                Position tempPos = robo.GetPos();
-                cout << "Position " << tempPos << " translated to " << robo.movePosInBounce(tempPos) << endl << endl;
-                sleep(1);
-            }
-           isDone = blockBall(command.pos1.GetX());
+           isDone = block_ball(command.speed);
            if (isDone){ done(); }
            break;
        case DEFEND:
@@ -114,7 +107,6 @@ void Player::readCommand() {
         playerPrint("Received command " + action_names[command.action]);
     }
     */
-    playerPrint("Received command " + action_names[command.action]);
 
     switch(command.action) {
     case ACTION_GOTO:
@@ -228,6 +220,7 @@ void Player::done() {
     kick_state = A_STEP1;
     pass_state = A_STEP1;
     state_before_kick = STEP1;
+    block_state = A_STEP1;
 }
 
 /** Checks if the player is busy performing an action */

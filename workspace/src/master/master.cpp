@@ -208,7 +208,8 @@ void Master::strategies() {
             strategy_offensive2();
             break;
         case 8: {
-            send(Command(ACTION_GOTO, ball.predictInY(0.0), 1.5), 0);
+            send(Command(ACTION_GOTO, Position(0.8 * -side, 0.6), 2.5, true), 1);
+            send(Command(ACTION_GOTO, Position(0.8 * -side, -0.6), 2.5, true), 2);
             break;
         }
         case 9:
@@ -224,6 +225,12 @@ void Master::strategies() {
             strategy_best();
             usleep(10);
             break;
+        case 12:
+            if (!ball.isStopped() && ball.GetPos().GetX() < 0) {
+                send(Command(ACTION_BLOCK_BALL, 3), 1);
+                answer = -1;
+            }
+            break;
         default:
             cout << "Select one of the following strategies/tactics: "<<endl;
             cout << "	1. Cross and Pass" << endl;
@@ -237,6 +244,7 @@ void Master::strategies() {
             cout << "	9. bounce forward" << endl;
             cout << "	10. test closest robo" << endl;
             cout << "	11. Strategy best" << endl;
+            cout << "	12. block ball tactic" << endl;
             resetTVariables();
             cin >> answer;
             break;
@@ -266,6 +274,7 @@ void Master::manual() {
         cout << "	9. TEST POS_TO_BOUNCE" << endl;
         cout << " 10.Test of before penalty" << endl;
          cout << " 11.Test of shoot penalty" << endl;
+         cout << "	12. Test random stuff" << endl;
 
         cin >> answer;
         cout << "Which robot? (0-2)" << endl;
@@ -328,6 +337,10 @@ void Master::manual() {
         case 11:
             ActDuringPenalty();
             break;
+        case 12:
+            send(Command(ACTION_GOTO, Position(0.8 * side, 0.6), 2.5, true), 1);
+            send(Command(ACTION_GOTO, Position(0.8 * side, -0.6), 2.5, true), 2);
+            break;
         default:
             cout << "No action created for this choice yet in master.manual" << endl;
             break;
@@ -386,9 +399,9 @@ void Master::resetTVariables() {
 
 // Gives the number of the closest robot
 int Master::getClosest(bool withKeeper) {
-    if (withKeeper && (player[0].getPos().DistanceTo(ball.GetPos()) < player[1].getPos().DistanceTo(ball.GetPos()))) {
+    if (withKeeper && (player[0].getPos().DistanceTo(ball.RawBall::GetPos()) < player[1].getPos().DistanceTo(ball.RawBall::GetPos()))) {
       return 0;
-    } else if (player[1].getPos().DistanceTo(ball.GetPos()) < player[2].getPos().DistanceTo(ball.GetPos())) {
+    } else if (player[1].getPos().DistanceTo(ball.RawBall::GetPos()) < player[2].getPos().DistanceTo(ball.RawBall::GetPos())) {
       return 1;
     } else {
       return 2;
@@ -397,7 +410,7 @@ int Master::getClosest(bool withKeeper) {
 
 // Gets the player further away
 int Master::getNotClosest() {
-    if (player[1].getPos().DistanceTo(ball.GetPos()) > player[2].getPos().DistanceTo(ball.GetPos())) {
+    if (player[1].getPos().DistanceTo(ball.RawBall::GetPos()) > player[2].getPos().DistanceTo(ball.RawBall::GetPos())) {
       return 1;
     } else {
       return 2;
@@ -482,13 +495,11 @@ void Master::before_kick_off(){
     if (referee.GetSide()==0) {
         //we kick the ball at left, so we take a attack position at left
         if (side == LEFT){
-            send(Command(ACTION_GOTO, Position(-1.36, 0), 1.0, true), 0);
             send(Command(ACTION_GOTO, Position(-0.2, -0.2), 1.0, true), 1);
             send(Command(ACTION_GOTO, Position(-0.1, 0.3), 1.0, true), 2);
         }
         //enemy kick the ball at left, so we take a defend position at right
         else {
-            send(Command(ACTION_GOTO, Position(1.36, 0), 1.0, true), 0);
             send(Command(ACTION_GOTO, Position(0.2, 0), 1.0, true), 1);
             send(Command(ACTION_GOTO, Position(0.6, 0), 1.0, true), 2);
         }
@@ -498,13 +509,11 @@ void Master::before_kick_off(){
     else {
         //we kick the ball at right, so we take a attack position at right
         if (side == RIGHT){
-            send(Command(ACTION_GOTO, Position(1.36, 0), 1.0, true), 0);
             send(Command(ACTION_GOTO, Position(0.2, -0.2), 1.0, true), 1);
             send(Command(ACTION_GOTO, Position(0.1, 0.3), 1.0, true), 2);
         }
         //enemy kick the ball at right, so we take a defend position at left
         else {
-            send(Command(ACTION_GOTO, Position(-1.36, 0), 1.0, true), 0);
             send(Command(ACTION_GOTO, Position(-0.2, 0), 1.0, true), 1);
             send(Command(ACTION_GOTO, Position(-0.6, 0), 1.0, true), 2);
         }
