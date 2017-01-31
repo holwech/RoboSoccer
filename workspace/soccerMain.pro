@@ -18,23 +18,33 @@ CONFIG +=  debug
 
 
 # Input
-HEADERS += \ 
-    src/robo.h \
-    src/master.h \
-    src/timer.h \
-    src/collision_avoidance.h \
-    src/test.h \
-    src/pidController.h \
-    src/channel.h \
-    src/channel
 SOURCES += src/soccerMain.cpp \
-    src/robo.cpp \
-    src/master.cpp \
+    src/master/master.h \
+    src/master/master.cpp \
+    src/robo/robo.h \
+    src/robo/robo.cpp \
+    src/control/collision_avoidance.h \
+    src/control/collision_avoidance.cpp \
+    src/control/pidController.h \
+    src/control/pidController.cpp \
+    src/timer.h \
     src/timer.cpp \
-    src/collision_avoidance.cpp \
+    src/test.h \
     src/test.cpp \
-    src/pidController.cpp
-		
+    src/config.cpp \
+    src/player/player.h \
+    src/player/player.cpp \
+    src/player/goalkeeper_actions.cpp \
+    src/player/general_actions.cpp \
+    src/player/attacker_actions.cpp \
+    src/master/tactics.cpp \
+    src/master/strategies.cpp \
+    src/ball/ball.cpp \
+    src/ball/ball.h \
+    src/ball/test_ball.h \
+    src/ball/test_ball.cpp
+
+
 		
 ##############
 ## Documentation
@@ -46,15 +56,3 @@ dox.depends = FORCE
 
 # somewhere else in the *.pro file
 QMAKE_EXTRA_TARGETS += dox
-<<<<<<< HEAD
-=======
-
-
-
-
-
-
-
-
-
->>>>>>> 7e9e4a33251ff61baf6e1be364d52d6b85d49aca
