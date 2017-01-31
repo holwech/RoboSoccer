@@ -100,7 +100,7 @@ void Master::GoToBeforePenaltyPosition(){
     resetTVariables();
     if(side== LEFT){ // We are goal keeper during penalty shooting
 
-        send(Command(ACTION_GOTO, Position(-1.19, 0), 1.5, bool(1)), 0);
+        send(Command(ACTION_GOTO, Position(-1.40, 0), 1.5, bool(1)), 0);
         send(Command(ACTION_GOTO, Position(0.8, 0.3), 1.5, bool(1)), 1);
         send(Command(ACTION_GOTO, Position(0.8, -0.3), 1.5, bool(1)), 2);
 

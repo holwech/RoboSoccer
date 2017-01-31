@@ -208,6 +208,8 @@ Position Master::trackBall() {
     }
 }
 
+
+
 void Master::strategy_best() {
     switch(s_case) {
     case INIT:
