@@ -79,6 +79,7 @@ void Player::defend(){
         goalypos_x = 1.40;
     }
     //get position and angle of the ball
+
     ballangle = ball.GetPhi().Deg()+ballangle;
     Position ballPos = ball.GetPos();
     ballx = ballPos.GetX(); //------change
@@ -96,7 +97,9 @@ void Player::defend(){
         if(robo.GetPos().DistanceTo(pos) < 0.03){
             robo.stop();
         }else{
+
             robo.GotoPos(pos, GOALKEEPER_SPEED);
+
         }
         break;
     case BLOCK_NOT_WINDOW:
@@ -109,7 +112,9 @@ void Player::defend(){
         if(robo.GetPos().DistanceTo(pos) < 0.03){
             robo.stop();
         }else{
+
             robo.GotoPos(pos, GOALKEEPER_SPEED);
+
         }
         break;
     case GOALKEEPER_STOP:
@@ -148,7 +153,9 @@ void Player::defend(){
         }
         pos.SetX(goalypos_x);
         pos.SetY(goalypos_y);
+
         robo.GotoPos(pos, GOALKEEPER_SPEED);
+
         break;
     case GOALKEEPER_KICK:
         pos.SetX(ballx);
@@ -156,7 +163,6 @@ void Player::defend(){
         robo.GotoPos(pos, GOALKEEPER_SPEED);
         break;
     default:
-
         break;
     }
 }
