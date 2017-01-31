@@ -188,12 +188,24 @@ void Master::strategy_offensive()
 }
 
 Position Master::trackBall() {
+    int program = 1;
     Position ballPos = ball.GetPos();
-    double xLine = ballPos.GetX() + 0.6 * side;
-    if (fabs(xLine) > 1.2) {
-        xLine = 1.2 * side;
+    if (ball.GetPos().GetX() * side < 0) {
+        program = 2;
     }
-    return ball.predictInY(xLine);
+    if (program == 1) {
+        double xLine = ballPos.GetX() + 0.6 * side;
+        if (fabs(xLine) > 1.1) {
+            xLine = 1.1 * side;
+        }
+        return ball.predictInY(xLine);
+    } else {
+        double yPos = 0.5;
+        if (ballPos.GetY() > 0) {
+           yPos = -0.5;
+        }
+        return Position(ballPos.GetX(), yPos);
+    }
 }
 
 void Master::strategy_best() {
@@ -224,9 +236,9 @@ void Master::strategy_best() {
     case BLOCK:
       {
         bool blockDone = block(getClosest());
-        Position trackPos = ball.GetPos();
-        trackPos.SetX(0.3 * -side);
-        send(Command(ACTION_GOTO, trackPos, 2.5, true), getNotClosest());
+        //Position trackPos = ball.GetPos();
+        //trackPos.SetX(0.3 * -side);
+        //send(Command(ACTION_GOTO, trackPos, 2.5, true), getNotClosest());
         nextMove(blockDone);
         break;
       }
@@ -270,7 +282,6 @@ void Master::nextMove(bool moveDone) {
             nextState = WAIT;
         }
     } else if (ballTowardsTeamGoal && ballOnTeamSide) {
-        cout << "ballTowardsTeamGoal: " << ballTowardsTeamGoal << " ballOnTeamSide: " << ballOnTeamSide << endl;
         nextState = BLOCK;
         if (moveDone && s_case == BLOCK) {
             resetTVariables();

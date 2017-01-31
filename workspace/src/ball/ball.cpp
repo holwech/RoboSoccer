@@ -171,7 +171,7 @@ bool Ball::onSideOfField() {
 }
 
 bool Ball::closeToTeamGoal(int side) {
-    return ((side == 1 && GetPos().GetX() > 0.8) || (side == -1 && GetPos().GetX() < -0.8));
+    return ((side == 1 && GetPos().GetX() > 0.6) || (side == -1 && GetPos().GetX() < -0.6));
 }
 
 bool Ball::inEnemyGoalArea(int side) {
@@ -183,7 +183,7 @@ bool Ball::inTeamGoalArea(int side) {
 }
 
 bool Ball::movingTowardsTeamGoal(int side) {
-    return fabs(predictInY(1.4 * side).GetY()) < 0.3 && !isStopped() &&
+    return fabs(predictInY(1.4 * side).GetY()) < 0.4 && !isStopped() &&
            ((side == 1 && fabs(GetPhi().Deg()) < 90) || (side == -1 && fabs(GetPhi().Deg()) > 90));
 }
 

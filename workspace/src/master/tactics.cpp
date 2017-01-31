@@ -260,7 +260,7 @@ bool Master::kickAtGoal(int playerNum, bool is_penalty) {
         if(is_penalty){
             send(Command(ACTION_KICK, t_target, 5.0, 2.0), closestRobo);
         }else{
-            send(Command(ACTION_KICK, t_target, 4.0, 2.5), closestRobo);
+            send(Command(ACTION_KICK, t_target, 5.0, 2.5), closestRobo);
         }
         masterPrint("kickAtGoal: STEP2 DONE");
         t_state = STEP3;
@@ -291,6 +291,7 @@ bool Master::throughPass(int closest, int notClosest) {
             receivingPos.SetY(-0.6);
             t_target2.SetY(-0.4);
         }
+        closestRobo = closest;
         send(Command(ACTION_GOTO, receivingPos, 2.5, true), notClosest);
         send(Command(ACTION_KICK, t_target2, 5.0, 2.0), closest);
         printStrategy("throughPass: STEP1 DONE");
@@ -304,10 +305,15 @@ bool Master::throughPass(int closest, int notClosest) {
         }
         break;
     case STEP3: {
-        bool kickDone = kickAtGoal(notClosest);
-        if (kickDone) {
-            printStrategy("throughPass: DONE");
-            return true;
+        // Robo probably missed, try again
+        if (notClosest != getClosest()) {
+            t_state2 = STEP1;
+        } else {
+            bool kickDone = kickAtGoal(notClosest);
+            if (kickDone) {
+                printStrategy("throughPass: DONE");
+                return true;
+            }
         }
         break;
     }
@@ -318,13 +324,23 @@ bool Master::throughPass(int closest, int notClosest) {
     return false;
 }
 
-bool Master::block(int playerNum) {
+bool Master::block(int playerNum, int playerNum2) {
     switch(t_state2) {
     case STEP1:
         send(Command(ACTION_BLOCK_BALL, 3), playerNum);
+        if (playerNum2 != -1) {
+            send(Command(ACTION_BLOCK_BALL, 3), playerNum2);
+            t_state2 = STEP3;
+        } else {
+            t_state2 = STEP2;
+        }
         break;
     case STEP2:
         if (!player[playerNum].isBusy() && ball.isStopped()) {
+            return true;
+        }
+    case STEP3:
+        if (!player[playerNum].isBusy() && !player[playerNum2].isBusy() && ball.isStopped()) {
             return true;
         }
     default:

@@ -11,6 +11,7 @@ void test_ball::test(int side) {
     cout << "6. updateSamples" << endl;
     cout << "7. check refresh rate" << endl;
     cout << "8. GetPhi" << endl;
+    cout << "9. Test boolean functions" << endl;
     int answer;
     cin >> answer;
     double prevVelocity = 0;
@@ -63,6 +64,17 @@ void test_ball::test(int side) {
             if (ball.refreshTimer.getTime() > std::chrono::duration<double, std::milli>(1000)){
                 cout << "Old phi: " << ball.RawBall::GetPhi() << endl;
                 cout << "New phi: " << ball.GetPhi() << endl;
+                ball.refreshTimer.reset();
+            }
+            break;
+        case 9:
+            ball.updateSample();
+            if (ball.refreshTimer.getTime() > std::chrono::duration<double, std::milli>(500)){
+                cout << "onSideOfField: " << ball.onSideOfField() << endl;
+                cout << "closeToTeamGoal: " << ball.closeToTeamGoal(1) << endl;
+                cout << "inEnemyGoalArea: " << ball.inEnemyGoalArea(1) << endl;
+                cout << "inTeamGoalArea: " << ball.inTeamGoalArea(1) << endl;
+                cout << "movingTowardsTeamGoal: " << ball.movingTowardsTeamGoal(1) << endl;
                 ball.refreshTimer.reset();
             }
             break;
