@@ -225,7 +225,7 @@ void Master::strategy_best() {
     }
     case SHOOT_AT_GOAL:
       {
-        bool kickAtGoalDone = kickAtGoal(getClosest());
+        bool kickAtGoalDone = kickAtGoal();
         send(Command(ACTION_GOTO, Position(trackBall()), 2.5, true), getNotClosest());
         nextMove(kickAtGoalDone);
         break;
@@ -326,7 +326,7 @@ void Master::strategy_defensive() {
         break;
     case SHOOT_AT_GOAL:
       {
-        bool kickAtGoalDone = kickAtGoal();
+        bool kickAtGoalDone = kickAtGoal(getClosest());
         if (kickAtGoalDone)
         {
           resetTVariables();

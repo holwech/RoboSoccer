@@ -301,9 +301,10 @@ bool Master::throughPass(int closest, int notClosest) {
     case STEP2:
         if (!player[closest].isBusy()) {
             printStrategy("throughPass: STEP2 DONE");
-            t_state2 = STEP3;
+            return true;
         }
         break;
+        /*
     case STEP3: {
         // Robo probably missed, try again
         if (notClosest != getClosest()) {
@@ -317,6 +318,7 @@ bool Master::throughPass(int closest, int notClosest) {
         }
         break;
     }
+        */
     default:
         cout << "No case in throughPass" << endl;
         break;
@@ -339,10 +341,12 @@ bool Master::block(int playerNum, int playerNum2) {
         if (!player[playerNum].isBusy() && ball.isStopped()) {
             return true;
         }
+        break;
     case STEP3:
         if (!player[playerNum].isBusy() && !player[playerNum2].isBusy() && ball.isStopped()) {
             return true;
         }
+        break;
     default:
         cout << "No case for this state in block tactic" << endl;
         break;

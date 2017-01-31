@@ -45,6 +45,7 @@ void Master::run() {
     thread threadRobo0(&Player::run, std::ref(player[0]));
     thread threadRobo1(&Player::run, std::ref(player[1]));
     thread threadRobo2(&Player::run, std::ref(player[2]));
+    int tempClosest = 0;
     usleep(10000);
     string answer;
     cout << "Enter manual/strategy/normal mode? (m/s/any key) ";
@@ -61,6 +62,11 @@ void Master::run() {
     while(1) {
         update();
         state = referee.GetPlayMode();
+        if (tempClosest != getClosest()) {
+            cout << "New closest robot is: " << getClosest() << endl;
+            tempClosest = getClosest();
+            ticker.reset();
+        }
         switch(state) {
         case REFEREE_INIT:
             break;
@@ -171,14 +177,15 @@ void Master::masterPrint(string str) {
 /** Add your strategies or tactics here. (Yes, I know, misleading function name) */
 void Master::strategies() {
     int answer = -1;
-    closestRobo = 0;
+    int tempClosest = 0;
 
     while(1) {
         update();
-       if (ticker.getTime() > std::chrono::duration<double, std::milli>(5000)) {
-           cout << "Master alive!" << endl;
+        if (tempClosest != getClosest()) {
+            cout << "New closest robot is: " << getClosest() << endl;
+            tempClosest = getClosest();
             ticker.reset();
-       }
+        }
         switch(answer) {
         case 1:
             tacticDone = crossPassAndShoot();
@@ -200,7 +207,7 @@ void Master::strategies() {
             strategy_offensive();
             break;
         case 6:
-            tacticDone = kickAtGoal(1);
+            tacticDone = kickAtGoal();
             if (tacticDone) {
                 resetTVariables(); }
             break;   
