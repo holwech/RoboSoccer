@@ -89,7 +89,7 @@ void Master::run() {
             cout << "No case for this state in master.run" << state << endl;
             break;
         }
-        usleep(30000);
+        usleep(3000);
     }
     threadRobo0.join();
     threadRobo1.join();
@@ -217,9 +217,8 @@ void Master::strategies() {
             if (tacticDone) { answer = -1; }
             break;
         case 10:
-            closestRobo = setClosest(closestRobo, true, true);
+            closestRobo = getClosest();
             cout << "Closest robo is: " << closestRobo << endl;
-            sleep(1);
             break;
         case 11:
             strategy_best();

@@ -121,7 +121,7 @@ private:
     bool tactic_ballchasing();
     bool throughPass(int closest, int notClosest);
     bool kickAtGoal(int playerNum = -1, bool is_penalty = false);
-    bool block(int playerNum);
+    bool block(int playerNum, int playerNum2 = -1);
 
     /** SHARED TACTIC VARIABLES */
     T_State t_state;
