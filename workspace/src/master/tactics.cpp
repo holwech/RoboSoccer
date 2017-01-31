@@ -258,7 +258,7 @@ bool Master::kickAtGoal(int playerNum, bool is_penalty) {
             t_target.SetY(keeperPos.GetY() + modifier);
         }
         if(is_penalty){
-            send(Command(ACTION_KICK, t_target, 5.0, 2.0), closestRobo);
+            send(Command(ACTION_KICK, t_target, 4.0, 1.0), closestRobo);
         }else{
             send(Command(ACTION_KICK, t_target, 4.0, 2.5), closestRobo);
         }

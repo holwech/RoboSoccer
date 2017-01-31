@@ -196,6 +196,8 @@ Position Master::trackBall() {
     return ball.predictInY(xLine);
 }
 
+
+
 void Master::strategy_best() {
     switch(s_case) {
     case INIT:

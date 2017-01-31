@@ -39,10 +39,15 @@ void Player::getNextGoalkeeperState(){
     case BLOCK_NOT_WINDOW:
     case DYNAMIC_DEFEND:
     case GOALKEEPER_STOP:
+    case GOALKEEPER_KICK:
         // check if ball in corners towards window
         if(ball.inGoalArea() && abs(ballpos.GetX()) > 1.4){
             Gstate = GOALKEEPER_STOP;
         }
+        else if(ball.isStopped() && ball.inGoalArea(side) && (fabs(robo.GetPos().GetX())-fabs(ballx))>0.05){
+            Gstate = GOALKEEPER_KICK;
+        }
+
         else if(ballpos.GetX()*side > 1.4-abs(ballpos.GetY()) ){
             if(ballpos.GetY() < 0){
                 Gstate = BLOCK_WINDOW;
@@ -54,8 +59,6 @@ void Player::getNextGoalkeeperState(){
         else{
             Gstate = DYNAMIC_DEFEND;
         }
-    case GOALKEEPER_KICK:
-        break;
     default:
         break;
     }
@@ -75,7 +78,7 @@ void Player::defend(){
     else{
         goalypos_x = 1.40;
     }
-        //get position and angle of the ball
+    //get position and angle of the ball
     ballangle = ball.GetPhi().Deg()+ballangle;
     Position ballPos = ball.GetPos();
     ballx = ballPos.GetX(); //------change
@@ -121,7 +124,7 @@ void Player::defend(){
         }
         // towards our goal
         if(side == LEFT){
-            if (!(ball.GetPhi().Deg()<90 && ball.GetPhi().Deg()>-90)){
+            if (!(ball.GetPhi().Deg()<90 && ball.GetPhi().Deg()>-90 && abs(ballx) < 1.30)){
                 goalypos_y = tan(ballangle*M_PI/180)*((goalypos_x-0.047*side)-ballx)+bally;
             }
             else{
@@ -129,7 +132,7 @@ void Player::defend(){
             }
         }
         else if(side == RIGHT){
-            if(ball.GetPhi().Deg()<90 && ball.GetPhi().Deg()>-90){
+            if(ball.GetPhi().Deg()<90 && ball.GetPhi().Deg()>-90 && abs(ballx) <1.30){
                 goalypos_y = tan(ballangle*M_PI/180)*((goalypos_x-0.047*side)-ballx)+bally;
             }
             else{
@@ -141,13 +144,16 @@ void Player::defend(){
             goalypos_y = 0.19;
         }
         else if (goalypos_y < -0.19){
-            goalypos_y = 0.19;
+            goalypos_y = -0.19;
         }
         pos.SetX(goalypos_x);
         pos.SetY(goalypos_y);
         robo.GotoPos(pos, GOALKEEPER_SPEED);
         break;
     case GOALKEEPER_KICK:
+        pos.SetX(ballx);
+        pos.SetY(bally);
+        robo.GotoPos(pos, GOALKEEPER_SPEED);
         break;
     default:
 
