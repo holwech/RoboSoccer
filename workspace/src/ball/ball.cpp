@@ -121,8 +121,8 @@ Angle Ball::GetPhi() {
 }
 
 bool Ball::inGoalArea(int side) {
-    if (fabs(RawBall::GetPos().GetY()) < 0.350 &&
-        fabs(RawBall::GetPos().GetX()) > 1.15) {
+    if (fabs(RawBall::GetPos().GetY()) < 0.290/* 0.350*/ &&
+        fabs(RawBall::GetPos().GetX()) > 1.24/*1.15*/) {
         if (side == 0 || (side == 1 && RawBall::GetPos().GetX() > 0) || (side == -1 && RawBall::GetPos().GetX() < 0)) {
             return true;
         }

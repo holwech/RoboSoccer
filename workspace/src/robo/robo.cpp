@@ -289,8 +289,8 @@ void Robo::driveWithCA() {
             cout << "rightwheel: " << rightWheel << endl;
         }
         this->MoveMs(leftWheel,rightWheel, 100, 10);
-        //out << endl <<robo1.GetPos().AngleOfLineToPos(ball.GetPos())-robo1.GetPhi() << endl;
-        //robo1.TurnAbs(robo1.GetPos().AngleOfLineToPos(ball.GetPos())-robo1.GetPhi());
+        //out << endl <<robo1.GetPos().AngleOfLineToPos(ball.RawBall::GetPos())-robo1.GetPhi() << endl;
+        //robo1.TurnAbs(robo1.GetPos().AngleOfLineToPos(ball.RawBall::GetPos())-robo1.GetPhi());
     }
 }
 
@@ -346,11 +346,11 @@ double Robo::getReferenceAngleErrRad(Position targetPos, bool ca = true){
     //get the error
     Position myPos = this->GetPos();
     double ref_deg;
-    if (ca){
-        ref_deg = getRefAngleWithCA(this->ca.getTotalPull(myPos, targetPos, posTeam, posOtherTeam, false), targetPos);
+    if(avoidBall){
+        ref_deg = getRefAngleWithCA(this->ca.getBallPull(myPos, targetPos, ball.RawBall::GetPos()), targetPos);
     }
-    else if(avoidBall){
-        ref_deg = getRefAngleWithCA(this->ca.getBallPull(myPos, targetPos, ball.GetPos()), targetPos);
+    else if (ca){
+        ref_deg = getRefAngleWithCA(this->ca.getTotalPull(myPos, ball.RawBall::GetPos(), targetPos, posTeam, posOtherTeam, false), targetPos);
     }else{
         ref_deg = getRefAngleWithoutCA(targetPos);
     }

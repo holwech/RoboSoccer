@@ -25,7 +25,7 @@ class CA {
 public:
     CA();
     Force getPull(Position& basePos, Position& target, Position& obstacle);
-    Force getTotalPull(Position basePos, Position target, vector<Position>& team, vector<Position>& otherTeam, bool gravity);
+    Force getTotalPull(Position basePos, Position ballPos, Position target, vector<Position>& team, vector<Position>& otherTeam, bool gravity);
     Force getBallPull(Position basePos, Position target, Position ballPos);
 private:
     void normalize(Force& force);

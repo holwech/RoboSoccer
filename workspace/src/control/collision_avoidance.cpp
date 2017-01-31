@@ -194,7 +194,7 @@ Force CA::getWallPull(Position& basePos, Position& target, double scale = 0.1) {
     return boundaryForce;
 }
 
-Force CA::getTotalPull(Position basePos, Position target, vector<Position>& team, vector<Position>& otherTeam, bool gravity = false) {
+Force CA::getTotalPull(Position basePos, Position ballPos, Position target, vector<Position>& team, vector<Position>& otherTeam, bool gravity = false) {
     Force totalForce = {0.0, 0.0, 0.0, 0.0, 0.0};
     Force temp;
     for (Position &obstacle : team) {
@@ -207,6 +207,13 @@ Force CA::getTotalPull(Position basePos, Position target, vector<Position>& team
         totalForce.X += temp.X;
         totalForce.Y += temp.Y;
     }
+    //Ball avoidance
+    temp = getPull(basePos, target,  ballPos);
+    temp.X *= 0.5;
+    temp.Y *= 0.5;
+    totalForce.X += temp.X;
+    totalForce.Y += temp.Y;
+
   //  Force wallPull = getWallPull(basePos, target);
     Force wallPull = {0,0,0,0,0};
     totalForce.X += wallPull.X;
