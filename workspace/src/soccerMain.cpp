@@ -22,6 +22,12 @@ int main(void) {
      *	connections to the RTDB.
      *
      */
+    cout << "============================================" << endl;
+    cout << "= This is the RoboSoccer program of team C =" << endl;
+    cout << "= created in winter semester of 2016/2017. =" << endl;
+    cout << "= Find the source code at:                 =" << endl;
+    cout << "= https://github.com/holwech/RoboSoccer    =" << endl;
+    cout << "============================================" << endl;
 
     int client_nr;
 
