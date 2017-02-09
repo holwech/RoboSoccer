@@ -32,12 +32,12 @@ const vector<string> action_names({"ILDE", "STOP", "BEFORE_PASS", "PASS", "GOTO"
  *
  */
 struct Command {
-    Action action; /**< TODO */
-    Position pos1; /**< TODO */
-    Position pos2; /**< TODO */
-    double speed; /**< TODO */
-    double approach_speed; /**< TODO */
-    bool ca; /**< TODO */
+    Action action;
+    Position pos1;
+    Position pos2;
+    double speed;
+    double approach_speed;
+    bool ca;
 /**
  * @brief Contructor for the command
  *
@@ -229,9 +229,9 @@ struct Channel {
     }
 
 private:
-    mutable std::mutex mutex; /**< TODO */
-    Command command; /**< TODO */
-    atomic<bool> seen; /**< TODO */
+    mutable std::mutex mutex;
+    Command command;
+    atomic<bool> seen;
 };
 
 
