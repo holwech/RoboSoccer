@@ -217,9 +217,9 @@ void Master::strategy_offensive()
 }
 
 /**
- * @brief Tracking the trajectory of the ball including prediction.
+ * @brief Tracks the ball estimates the position of the non-active robot.
  *
- * @return Position a Position object giving prdiction of ball position.
+ * @return Position where the non-active robot should move.
  */
 Position Master::trackBall() {
     int program = 1;
@@ -305,7 +305,7 @@ void Master::strategy_best() {
 
 
 /**
- * @brief Necessary to update the state of strategy_best().
+ * @brief Updates the state of the strategy_best depending on the ball position and movement.
  *
  * @param moveDone a boolen variable.
  */

@@ -41,6 +41,10 @@ Master::Master(string& team, RTDBConn& DBC, vector<int>& rfNumber) :
 
 
 
+/**
+ * @brief
+ *
+ */
 void Master::run() {
     thread threadRobo0(&Player::run, std::ref(player[0]));
     thread threadRobo1(&Player::run, std::ref(player[1]));
@@ -105,7 +109,6 @@ void Master::run() {
  * @brief Sending before Penalty Position Commands to the Robos according to Side Draft.
  *
  */
-
 void Master::GoToBeforePenaltyPosition(){
     resetTVariables();
     if(side== LEFT){ // We are goal keeper during penalty shooting
@@ -146,6 +149,8 @@ void Master::ActDuringPenalty(){
 /**
  * @brief Sends a command to a given robot. Assumes robo 0 if number is out of bounds.
  *
+ * @param command A command to be sent to player
+ * @param roboNum Number of the receiving robot
  */
 void Master::send(Command command, int roboNum) {
     // If the prev command is the same as the current one,
@@ -170,6 +175,10 @@ void Master::send(Command command, int roboNum) {
     prevCommand[roboNum] = command;
 }
 
+/**
+ * @brief
+ *
+ */
 void Master::updatePositions() {
     for (int i = 0; i < 6; i++) {
         positions[i] = player[i].getPos();
@@ -180,13 +189,17 @@ void Master::updatePositions() {
 }
 
 
+/**
+ * @brief
+ *
+ * @param str A string
+ */
 void Master::masterPrint(string str) {
     cout << "\033[1;31m#MASTER: " << str << "\033[0m" << endl;
 }
 /**
  * @brief Master fpr the different Strategies.
  */
-/** Add your strategies or tactics here. (Yes, I know, misleading function name) */
 void Master::strategies() {
     int answer = -1;
     int tempClosest = 0;
@@ -275,6 +288,10 @@ void Master::strategies() {
  *
  */
 // Use this function for single actions only. No strategies or tactics. It won't work.
+/**
+ * @brief Runs a single action
+ *
+ */
 void Master::manual() {
     int answer;
     int robot;
@@ -371,7 +388,7 @@ void Master::manual() {
 }
 
 /**
- * @brief Function for printing Stats.
+ * @brief Function for printing Stats. 
  *
  */
 void Master::printRefereeStats(){
@@ -416,7 +433,7 @@ void Master::updateSide(){
     }
 }
 /**
- * @brief Function for reseting Variables.
+ * @brief Function for reseting Variables. 
  *
  */
 void Master::resetTVariables() {
@@ -432,9 +449,9 @@ void Master::resetTVariables() {
 /**
  * @brief Gets the robo, which is closest.
  *
+ * @param withKeeper Include the keeper in the calculation
  * @return int Returns the number of the robo.
  */
-// Gives the number of the closest robot
 int Master::getClosest(bool withKeeper) {
     if (withKeeper && (player[0].getPos().DistanceTo(ball.RawBall::GetPos()) < player[1].getPos().DistanceTo(ball.RawBall::GetPos()))) {
       return 0;
@@ -449,7 +466,6 @@ int Master::getClosest(bool withKeeper) {
  *
  * @return int Returns the number of the robo.
  */
-// Gets the player further away
 int Master::getNotClosest() {
     if (player[1].getPos().DistanceTo(ball.RawBall::GetPos()) > player[2].getPos().DistanceTo(ball.RawBall::GetPos())) {
       return 1;
@@ -485,9 +501,11 @@ int Master::getNotClosestToTeamGoal() {
 /**
  * @brief Returns the number of the closest robo and also stops what hes doing. Resets Tactic if neccesarry.
  *
+ * @param currClosest The current closest robot
+ * @param resetTactic Set whether to reset the tactic variables
+ * @param withKeeper Include goalkeeper in the calculation
  * @return int Returns the number of the closest robo.
  */
-
 int Master::setClosest(int currClosest, bool resetTactic, bool withKeeper) {
     int newClosest = getClosest(withKeeper);
     if (currClosest != newClosest && currClosest != -1) {
@@ -501,6 +519,12 @@ int Master::setClosest(int currClosest, bool resetTactic, bool withKeeper) {
 }
 
 // Checks wether it is closest or not. If it has change, the tactic will reset
+/**
+ * @brief Returns the number of the closest robot and resets tactic variables and states
+ *
+ * @param currClosest The current closest robot
+ * @param withKeeper Include goalkeeper in the calculation
+ */
 void Master::checkClosest(int currClosest, bool withKeeper) {
     setClosest(currClosest, true, withKeeper);
 }
@@ -525,7 +549,6 @@ Position Master::getOtherKeeperPos() {
  *
  * @return bool Return 1 if keeper in goal area. 0 if no keeper in goal area. -1 if multiple players were registered in the goal area.
  */
-
 int Master::otherKeeperInGoalArea() {
     bool keeperInArea = false;
     for (int p = 3; p < 6; p++) {
@@ -551,7 +574,6 @@ int Master::otherKeeperInGoalArea() {
  * @brief Sends RoboCommands to Position accordingly before KickOFF.
  *
  */
-//send(Command(ACTION_GOTO, Position(x, y), 1.0), robonumber);
 void Master::before_kick_off(){
 
     if (referee.GetSide()==0) {
