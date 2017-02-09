@@ -11,7 +11,7 @@
 
 
 /**
- * @brief
+ * @brief Get next state for the goalkeeper state machine
  *
  */
 void Player::getNextGoalkeeperState(){// Define the goalkeeper's next state
@@ -48,7 +48,7 @@ void Player::getNextGoalkeeperState(){// Define the goalkeeper's next state
 }
 
 /**
- * @brief
+ * @brief Main state machine functionality for the goalkeeper. Calculate ball trajectory, and defend on calculated position
  *
  */
 void Player::defend(){
