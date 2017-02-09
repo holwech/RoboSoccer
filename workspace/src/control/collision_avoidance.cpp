@@ -21,12 +21,11 @@ CA::CA() {
     obstacleWeight = 1;
 }
 
-/** Return the force from an obstacle */
 /**
- * @brief
+ * @brief Return the force from an obstacle
  *
- * @param X
- * @param Y
+ * @param X my pos x
+ * @param Y my pos y
  * @param obstacleX
  * @param obstacleY
  * @return Force
@@ -52,7 +51,7 @@ Force CA::getForce(double X, double Y, double obstacleX, double obstacleY) {
       cout << "----- ----- ------" << endl;
     }
 
-    /** Change the sign since the values are opposite of what they
+    /* Change the sign since the values are opposite of what they
       * should be for some reason
       */
     force.X = -force.X;
@@ -60,9 +59,8 @@ Force CA::getForce(double X, double Y, double obstacleX, double obstacleY) {
     return force;
 }
 
-/** Normalizes a vector */
 /**
- * @brief
+ * @brief Normalizes a vector
  *
  * @param force
  */
@@ -72,12 +70,11 @@ void CA::normalize(Force& force) {
     force.Y = force.Y / length;
 }
 
-/** Calculates the total force on a object, based on multiple obstacles */
 /**
- * @brief
+ * @brief Calculates the total force on a object, based on multiple obstacles
  *
- * @param position
- * @param obstacles
+ * @param position my position
+ * @param obstacles obstacles positions
  * @return Force
  */
 Force CA::forceAtPoints(Position& position, vector<Position>& obstacles) {
@@ -95,12 +92,10 @@ Force CA::forceAtPoints(Position& position, vector<Position>& obstacles) {
     return force;
 }
 
-/** Checks to find shortest path to pass to reach its target.
+/** @brief Checks to find shortest path to pass to reach its target.
   * Negative value indicates that target is on the right side,
   * positive indicates that target is on the left side of the obstacle.
-  */
-/**
- * @brief
+ *
  *
  * @param basePos
  * @param target
@@ -145,13 +140,11 @@ void CA::toPerp(Force& force, double passSide) {
 }
 
 
-/** Calculates the pull from the force given by the obstacle.
+/** @brief Calculates the pull from the force given by the obstacle.
   * That is, a vector value that is perpendicular to the force from the obstacle
   * and pointing in the direction that is the shortest path around the obstacle
   * to the target.
-  */
-/**
- * @brief
+ *
  *
  * @param basePos
  * @param target
@@ -182,16 +175,12 @@ Force CA::getPull(Position& basePos, Position& target, Position& obstacle) {
     return force;
 }
 
-/** Field boundaries: {-1.383, 0.89}, {1.422, 0.876}, {1.465, -0.924}, {-1.466, -0.884}
+/** @brief Field boundaries: {-1.383, 0.89}, {1.422, 0.876}, {1.465, -0.924}, {-1.466, -0.884}
   * Goal area boundaries
   * Goal area (not by the door): {1.414, 0.338}, {1.191, 0.341}, {1.205, -0.354}, {1.430, -0.362}
   * Goal area (by the door): {-1.389, 0.369}, {-1.174, 0.360}, {-1.194, -0.332}, {-1.415, -0.325}
   * Goal ~ y = +/- 0.2;
-  */
-
-/** This program is just based on approx. boundaries, and probably needs some tuning*/
-/**
- * @brief
+ * This program is just based on approx. boundaries, and probably needs some tuning
  *
  * @param basePos
  * @param target
@@ -250,7 +239,7 @@ Force CA::getWallPull(Position& basePos, Position& target, double scale = 0.1) {
 }
 
 /**
- * @brief
+ * @brief takes all other robot position, ball, the wall and my pos, and calculate the total force on my position.
  *
  * @param basePos
  * @param ballPos
@@ -293,9 +282,9 @@ Force CA::getTotalPull(Position basePos, Position ballPos, Position target, vect
 }
 
 /**
- * @brief
+ * @brief gets the force if you only want to avoid the ball
  *
- * @param basePos
+ * @param basePos my position
  * @param target
  * @param ballPos
  * @return Force

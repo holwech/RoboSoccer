@@ -1,5 +1,9 @@
 #include "timer.h"
 
+/**
+ * @brief Constructor: init variables for time
+ *
+ */
 timer::timer() {
         resetted = true;
         running = false;
@@ -8,6 +12,10 @@ timer::timer() {
 }
 
 
+/**
+ * @brief set a starting point for timer
+ *
+ */
 void timer::start() {
         if(! running) {
                 if(resetted)
@@ -20,6 +28,10 @@ void timer::start() {
 }
 
 
+/**
+ * @brief stop timer
+ *
+ */
 void timer::stop() {
         if(running) {
                 end = std::chrono::system_clock::now();
@@ -28,6 +40,10 @@ void timer::stop() {
 }
 
 
+/**
+ * @brief Reset timer
+ *
+ */
 void timer::reset() {
         bool wereRunning = running;
         if(wereRunning)
@@ -40,11 +56,20 @@ void timer::reset() {
 }
 
 
+/**
+ * @brief Checks if timer is running
+ *
+ * @return bool
+ */
 bool timer::isRunning() {
         return running;
 }
 
-//Returns seconds, I think
+/**
+ * @brief return value from timer in ms
+ *
+ * @return std::chrono::duration<double, std::milli>
+ */
 std::chrono::duration<double, std::milli> timer::getTime() {
     if(running) {
         std::chrono::duration<double, std::milli> t_ms = std::chrono::system_clock::now() - beg;
@@ -56,10 +81,20 @@ std::chrono::duration<double, std::milli> timer::getTime() {
 }
 
 
+/**
+ * @brief set interval in timer
+ *
+ * @param newInterval
+ */
 void timer::setInterval(double newInterval) {
     interval = std::chrono::duration<double, std::milli>(newInterval);
 }
 
+/**
+ * @brief get time value from last set interval
+ *
+ * @return std::chrono::duration<double, std::milli>
+ */
 std::chrono::duration<double, std::milli> timer::getInterval() {
     return interval;
 }

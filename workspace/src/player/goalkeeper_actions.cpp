@@ -9,32 +9,11 @@
 #define GOALKEEPER_SPEED 1.5
 #define GOALKEEPER_KICK_SPEED 2
 
-void Player::defend_tom(){// One goalie function, not in use
-    double x = ball.GetX();
-    double y = ball.GetY();
-    Angle dir=ball.GetPhi();
 
-    if (y<-0.23 || y>0.23 || x>=1.35){
-        y = ball.GetY();
-        dir=ball.GetPhi();
-        cout << "dir:" << dir << endl;
-        cout << "staying" << endl;
-    }
-    else{
-        y = ball.GetY();
-        dir = ball.GetPhi();
-        if(dir > 0 ){
-            robo.GotoPos(1.35,ball.GetY()+0.1);
-        }
-        if(dir < 0){
-            robo.GotoPos(1.35,ball.GetY()-0.1);
-        }
-        else{
-            robo.GotoPos(1.35,ball.GetY());
-        }
-    }
-}
-
+/**
+ * @brief
+ *
+ */
 void Player::getNextGoalkeeperState(){// Define the goalkeeper's next state
     //Right close corner
     Position ballpos = ball.GetPos();
@@ -68,6 +47,10 @@ void Player::getNextGoalkeeperState(){// Define the goalkeeper's next state
     }
 }
 
+/**
+ * @brief
+ *
+ */
 void Player::defend(){
     double goalypos_x  = 0;
     double goalypos_y  = 0;
