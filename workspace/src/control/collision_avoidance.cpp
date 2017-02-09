@@ -1,6 +1,10 @@
 #include "collision_avoidance.h"
 #include "ball/ball.h"
 
+/**
+ * @brief Constructor for Collision avoidance class, sets goal area specifications
+ *
+ */
 CA::CA() {
     //Adding goalArea obstacle-Positions
     //GoalArea towards pc-s
@@ -18,6 +22,15 @@ CA::CA() {
 }
 
 /** Return the force from an obstacle */
+/**
+ * @brief
+ *
+ * @param X
+ * @param Y
+ * @param obstacleX
+ * @param obstacleY
+ * @return Force
+ */
 Force CA::getForce(double X, double Y, double obstacleX, double obstacleY) {
     bool debug = false;
     double magnitude = obstacleWeight / (pow(obstacleX - X, 2) + pow(obstacleY - Y, 2));
@@ -48,6 +61,11 @@ Force CA::getForce(double X, double Y, double obstacleX, double obstacleY) {
 }
 
 /** Normalizes a vector */
+/**
+ * @brief
+ *
+ * @param force
+ */
 void CA::normalize(Force& force) {
     double length = sqrt(pow(force.X, 2) + pow(force.Y, 2));
     force.X = force.X / length;
@@ -55,6 +73,13 @@ void CA::normalize(Force& force) {
 }
 
 /** Calculates the total force on a object, based on multiple obstacles */
+/**
+ * @brief
+ *
+ * @param position
+ * @param obstacles
+ * @return Force
+ */
 Force CA::forceAtPoints(Position& position, vector<Position>& obstacles) {
     Force force = {0, 0, 0, 0, 0};
     for (unsigned int obstacle = 0; obstacle < obstacles.size(); obstacle++) {
@@ -74,6 +99,14 @@ Force CA::forceAtPoints(Position& position, vector<Position>& obstacles) {
   * Negative value indicates that target is on the right side,
   * positive indicates that target is on the left side of the obstacle.
   */
+/**
+ * @brief
+ *
+ * @param basePos
+ * @param target
+ * @param obstacle
+ * @return double
+ */
 double CA::getPassSide(Position& basePos, Position& target, Position& obstacle) {
     bool debug = false;
     Angle baseToTarget = basePos.AngleOfLineToPos(target);
@@ -94,6 +127,12 @@ double CA::getPassSide(Position& basePos, Position& target, Position& obstacle) 
     return passSide;
 }
 
+/**
+ * @brief
+ *
+ * @param force
+ * @param passSide
+ */
 void CA::toPerp(Force& force, double passSide) {
     double tempX = force.X;
     if (passSide < 0) {
@@ -111,6 +150,14 @@ void CA::toPerp(Force& force, double passSide) {
   * and pointing in the direction that is the shortest path around the obstacle
   * to the target.
   */
+/**
+ * @brief
+ *
+ * @param basePos
+ * @param target
+ * @param obstacle
+ * @return Force
+ */
 Force CA::getPull(Position& basePos, Position& target, Position& obstacle) {
     double passSide = getPassSide(basePos, target, obstacle);
 
@@ -143,6 +190,14 @@ Force CA::getPull(Position& basePos, Position& target, Position& obstacle) {
   */
 
 /** This program is just based on approx. boundaries, and probably needs some tuning*/
+/**
+ * @brief
+ *
+ * @param basePos
+ * @param target
+ * @param scale
+ * @return Force
+ */
 Force CA::getWallPull(Position& basePos, Position& target, double scale = 0.1) {
     bool debug = false;
     Position leftPos(-1.383, basePos.GetY());
@@ -194,6 +249,17 @@ Force CA::getWallPull(Position& basePos, Position& target, double scale = 0.1) {
     return boundaryForce;
 }
 
+/**
+ * @brief
+ *
+ * @param basePos
+ * @param ballPos
+ * @param target
+ * @param team
+ * @param otherTeam
+ * @param gravity
+ * @return Force
+ */
 Force CA::getTotalPull(Position basePos, Position ballPos, Position target, vector<Position>& team, vector<Position>& otherTeam, bool gravity = false) {
     Force totalForce = {0.0, 0.0, 0.0, 0.0, 0.0};
     Force temp;
@@ -226,6 +292,14 @@ Force CA::getTotalPull(Position basePos, Position ballPos, Position target, vect
     return totalForce;
 }
 
+/**
+ * @brief
+ *
+ * @param basePos
+ * @param target
+ * @param ballPos
+ * @return Force
+ */
 Force CA::getBallPull(Position basePos, Position target, Position ballPos){
     Force ballForce = getPull(basePos, target,  ballPos);
     ballForce.X *= 0.5;
