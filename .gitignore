@@ -63,3 +63,8 @@ Makefile*
 
 # QtCtreator CMake
 CMakeLists.txt.user*
+
+#Doxygen files
+latex/
+html/
+
