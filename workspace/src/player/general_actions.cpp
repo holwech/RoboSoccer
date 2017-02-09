@@ -1,5 +1,11 @@
 #include "player/player.h"
 #include "ball/ball.h"
+
+
+/**
+ * @brief Set robot to state idle.
+ *
+ */
 void Player::idle()
 {
   if (deviceNr == 4) {
@@ -8,10 +14,23 @@ void Player::idle()
   robo.idle();
 }
 
+/**
+ * @brief Function to stop the player.
+ *
+ * @return bool a boolean to tell if action has been finished.
+ */
 bool Player::stop() {
   return true;
 }
 
+/**
+ * @brief This send robot to target position with or without collisino avoidance at selected speed.
+ *
+ * @param target a Position to give target of movement.
+ * @param speed a double to select speed.
+ * @param ca a boolean to enable collision avoidance.
+ * @return bool a boolean to tell if action has been finished.
+ */
 bool Player::goTo(Position target, double speed, bool ca)
 {
   robo.GotoPos(target, speed, ca);
@@ -25,6 +44,12 @@ bool Player::goTo(Position target, double speed, bool ca)
   return false;
 }
 
+/**
+ * @brief Function to pass ball to target position.
+ *
+ * @param target a Position to send the ball to.
+ * @return bool a boolean to tell if action has been finished.
+ */
 bool Player::pass(Position target)
 {
   double distance = 0;
@@ -55,6 +80,14 @@ bool Player::pass(Position target)
   return false;
 }
 
+/**
+ * @brief The function to kick the ball to a target.
+ *
+ * @param target a Position to send the ball to.
+ * @param speed a double to select the force to kick.
+ * @param approach_speed a double to select speed to move before touching the ball.
+ * @return bool a boolean to tell if action has been finished.
+ */
 bool Player::kick(Position target, double speed, double approach_speed)
 {
   bool beforeKickDone = false;
@@ -102,6 +135,11 @@ bool Player::kick(Position target, double speed, double approach_speed)
   return false;
 }
 
+/**
+ * @brief Do not use. Kicking function - development not completed.
+ *
+ * @param target a Position as target of kick.
+ */
 void Player::drivingKick(Position target)
 {
   Position ballPos = ball.GetPos();
@@ -156,6 +194,14 @@ void Player::drivingKick(Position target)
 }
 
 
+/**
+ * @brief Function to drive to a position to start from to kick.
+ *
+ * @param kick_position a Position indicating ball position.
+ * @param target_of_kick a Position indicating target of kick.
+ * @param before_kick_speed a double to select the speed of the action.
+ * @return bool a boolean to tell if action has been finished.
+ */
 bool Player::before_kick_improved(Position kick_position, Position target_of_kick, double before_kick_speed){
 
     robo.setPrecise(false);
@@ -187,6 +233,13 @@ bool Player::before_kick_improved(Position kick_position, Position target_of_kic
     return done;
 }
 
+/**
+ * @brief Function to drive to a position to start from to kick as before kick, but with state machine.
+ *
+ * @param targetPos a Position indicating target of kick.
+ * @param speed a double to select the speed of the action.
+ * @return bool a boolean to tell if action has been finished.
+ */
 bool Player::angeled_behind_ball(Position targetPos, double speed){
     Position ballPos = ball.RawBall::GetPos();
     double pos_behind_ball_x;
@@ -248,6 +301,15 @@ bool Player::angeled_behind_ball(Position targetPos, double speed){
 }
 
 
+
+/**
+ * @brief Inferior, old version of Function to drive to a position to start from to kick.
+ *
+ * @param kick_position a Position indicating ball position.
+ * @param target_of_kick a Position indicating target of kick.
+ * @param before_kick_speed a double to select the speed of the action.
+ * @return bool a boolean to tell if action has been finished.
+ */
 bool Player::before_kick(Position kick_position, Position target_of_kick, double before_kick_speed)
 {
   delta = 0.2; // Before 0.2
@@ -542,6 +604,12 @@ bool Player::before_kick(Position kick_position, Position target_of_kick, double
 }
 
 
+/**
+ * @brief Do not us. Old function to pass ball.
+ *
+ * @param target a Position to pass to.
+ * @return bool a boolean to tell if action has been finished.
+ */
 bool Player::old_pass(Position target)
 {
 
@@ -584,6 +652,12 @@ bool Player::old_pass(Position target)
 
 }
 
+/**
+ * @brief Do not use. Old function to kick ball.
+ *
+ * @param target a Position as target of kick.
+ * @return bool a boolean to tell if action has been finished.
+ */
 bool Player::old_kick(Position target)
 {
 
@@ -616,6 +690,12 @@ bool Player::old_kick(Position target)
 }
 
 
+/**
+ * @brief A function to block a ball.
+ *
+ * @param speed a double to select speed of robot during blocking.
+ * @return bool a boolean to tell if action has been finished.
+ */
 bool Player::block_ball(double speed) {
     robo.setAvoidBall(true);
     switch(block_state) {

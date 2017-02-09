@@ -5,6 +5,10 @@
 #define KICK_SPEED 3.0
 #define APPROACH_SPEED 2.0
 
+/**
+ * @brief Used for internal debugging.
+ *
+ */
 void Master::debugContinue() {
     if (0) {
         cout << ">> STRATEGY STATE: " << strategyStateNames[s_case] << endl;
@@ -14,6 +18,11 @@ void Master::debugContinue() {
     }
 }
 
+/**
+ * @brief Print current strategy.
+ *
+ * @param current_case a S_case naming current strategy.
+ */
 void Master::statePrint(S_Case current_case) {
     if (current_case != s_case_prev) {
         cout << ">> STRATEGY STATE: " << strategyStateNames[current_case] << endl;
@@ -21,6 +30,12 @@ void Master::statePrint(S_Case current_case) {
     s_case_prev = current_case;
 }
 
+/**
+ * @brief An offensive strategy.
+ *
+ * Goalkeeper stays always in own goal. 2 attackers are in default in front of enemy goal.
+ * Attacker next to ball always tries to kick towards enemy goal.
+ */
 void Master::strategy_offensive3(){
     switch(s_case){
     case INIT:
@@ -54,6 +69,10 @@ void Master::strategy_offensive3(){
     offensiveNextMove();
 }
 
+/**
+ * @brief Part of strategy_offensive3() to update its states.
+ *
+ */
 void Master::offensiveNextMove(){
     switch(s_case){
     case INIT:
@@ -86,6 +105,11 @@ void Master::offensiveNextMove(){
     }
 }
 
+/**
+ * @brief Another offensive strategy.
+ *
+ * It is more or less a non-state machien implementation of strategy_offensive3().
+ */
 void Master::strategy_offensive2()
 {
     //////////////// 2 robots always push the ball towards the enemy goal, last one in goal
@@ -139,6 +163,11 @@ void Master::strategy_offensive2()
   send(Command(ACTION_DEFEND), 2);
 }
 
+/**
+ * @brief An offensive strategy.
+ *
+ *  Attackers always try to kick towards enemy goal. They interact via the pass function.
+ */
 void Master::strategy_offensive()
 {
     double x = ball.GetPos().DistanceTo(Position(1.38,0));
@@ -187,6 +216,11 @@ void Master::strategy_offensive()
     }
 }
 
+/**
+ * @brief Tracking the trajectory of the ball including prediction.
+ *
+ * @return Position a Position object giving prdiction of ball position.
+ */
 Position Master::trackBall() {
     int program = 1;
     Position ballPos = ball.GetPos();
@@ -210,6 +244,13 @@ Position Master::trackBall() {
 
 
 
+/**
+ * @brief Strategy used during championship.
+ *
+ * Division of field and selecting tactics according to ball position. Goalkeeper stays in own goal.
+ * If ball is next to enemy goal, kick. If it is commind towards own goal block. If ball is next to own goal, attacker passes
+ * the ball towards second attacker in front of enemy goal.
+ */
 void Master::strategy_best() {
     switch(s_case) {
     case INIT:
@@ -263,6 +304,11 @@ void Master::strategy_best() {
 }
 
 
+/**
+ * @brief Necessary to update the state of strategy_best().
+ *
+ * @param moveDone a boolen variable.
+ */
 void Master::nextMove(bool moveDone) {
     S_Case nextState = s_case;
     bool ballOnSideOfField = ball.onSideOfField();
@@ -308,6 +354,11 @@ void Master::nextMove(bool moveDone) {
 }
 
 // Player 1 is defender and player 2 is attacker
+/**
+ * @brief A defensive strategy.
+ *
+ * Goalkeeper stays always in own goal. The 2 other robost mainly stay in own half and just kick arriving balls towards enemy goal.
+ */
 void Master::strategy_defensive() {
     switch(s_case) {
     case INIT:
@@ -349,6 +400,10 @@ void Master::strategy_defensive() {
     }
 }
 
+/**
+ * @brief Necessary to update the state of strategy_deffensive().
+ *
+ */
 void Master::nextDefensiveMove() {
     S_Case nextState = s_case;
     if (ball.inGoalArea()) {
