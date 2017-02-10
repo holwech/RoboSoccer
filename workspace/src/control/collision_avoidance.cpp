@@ -146,10 +146,10 @@ void CA::toPerp(Force& force, double passSide) {
   * to the target.
  *
  *
- * @param basePos
- * @param target
- * @param obstacle
- * @return Force
+ * @param basePos base position
+ * @param target target position
+ * @param obstacle obstacle position
+ * @return Force force
  */
 Force CA::getPull(Position& basePos, Position& target, Position& obstacle) {
     double passSide = getPassSide(basePos, target, obstacle);
@@ -182,9 +182,9 @@ Force CA::getPull(Position& basePos, Position& target, Position& obstacle) {
   * Goal ~ y = +/- 0.2;
  * This program is just based on approx. boundaries, and probably needs some tuning
  *
- * @param basePos
- * @param target
- * @param scale
+ * @param basePos base position
+ * @param target target position
+ * @param scale scale of the force
  * @return Force
  */
 Force CA::getWallPull(Position& basePos, Position& target, double scale = 0.1) {
@@ -241,11 +241,11 @@ Force CA::getWallPull(Position& basePos, Position& target, double scale = 0.1) {
 /**
  * @brief takes all other robot position, ball, the wall and my pos, and calculate the total force on my position.
  *
- * @param basePos
- * @param ballPos
- * @param target
- * @param team
- * @param otherTeam
+ * @param basePos base position
+ * @param ballPos ball position
+ * @param target target position
+ * @param team team positions
+ * @param otherTeam enermy's position
  * @param gravity
  * @return Force
  */
@@ -285,8 +285,8 @@ Force CA::getTotalPull(Position basePos, Position ballPos, Position target, vect
  * @brief gets the force if you only want to avoid the ball
  *
  * @param basePos my position
- * @param target
- * @param ballPos
+ * @param target target position
+ * @param ballPos ball position
  * @return Force
  */
 Force CA::getBallPull(Position basePos, Position target, Position ballPos){

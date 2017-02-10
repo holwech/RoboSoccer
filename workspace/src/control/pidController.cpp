@@ -9,9 +9,9 @@
 /**
  * @brief Constructor, init constants and and error list
  *
- * @param input_Kp
- * @param input_Ki
- * @param input_Kd
+ * @param input_Kp input Kp
+ * @param input_Ki input Ki
+ * @param input_Kd input Kd
  */
 pidController::pidController(double input_Kp, double input_Ki, double input_Kd)
                             : Kp(input_Kp), Ki(input_Ki), Kd(input_Kd), error_sign(0){
@@ -31,9 +31,9 @@ pidController::pidController(double input_Kp, double input_Ki, double input_Kd)
 /**
  * @brief Change PID parameters
  *
- * @param newKp
- * @param newKi
- * @param newKd
+ * @param newKp change to the new Kp
+ * @param newKi change to the new Ki
+ * @param newKd change to the new Kd
  */
 void pidController::changeParams(double newKp, double newKi, double newKd){
     Kp = newKp;
@@ -44,7 +44,7 @@ void pidController::changeParams(double newKp, double newKi, double newKd){
 /**
  * @brief insert new reference error value in list
  *
- * @param diff
+ * @param diff reference error
  */
 void pidController::saveNewErr(double diff){
     if(error_sign == diff/fabs(diff) || error_sign == 0){
@@ -72,7 +72,7 @@ void pidController::saveNewErr(double diff){
 /**
  * @brief Get new input value for PID controller
  *
- * @param error
+ * @param error new input of the PID controller
  */
 void pidController::updateInput(double error){
     saveNewErr(error);
@@ -80,7 +80,7 @@ void pidController::updateInput(double error){
 /**
  * @brief save the new input value in list
  *
- * @param input
+ * @param input new input
  */
 void pidController::saveNewInput(double input){
     double tempInpA = input;
