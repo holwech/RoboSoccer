@@ -66,7 +66,6 @@ Position Ball::GetPos() {
     return Position(0,0);
 }
 
-
 Position Ball::predictInY(double xLine) {
     return Position(xLine, tan(GetPhi() * M_PI / 180) * (xLine - GetPos().GetY()) + GetPos().GetY());
 }
