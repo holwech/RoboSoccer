@@ -4,6 +4,10 @@
  *  All tactics should return true when they're DONE
  */
 
+/**
+ * @brief Step by step confirmation for debugging
+ *
+ */
 void Master::t_debugContinue() {
     if (DEBUG) {
         cout << ">> Continue (y)? " << endl;
@@ -12,10 +16,19 @@ void Master::t_debugContinue() {
     }
 }
 
+/**
+ * @brief Prints a text in a green color
+ *
+ * @param str String saying which tactic in the strategy is being run
+ */
 void printStrategy(string str) {
     cout << "\033[1;36m#STRATEGY: " << str << "\033[0m" << endl;
 }
 
+/**
+ * @brief An example tactic
+ *
+ */
 void Master::exampleTactic()
 {
   Position target = Position(1.0, 0.0);
@@ -33,9 +46,12 @@ void Master::exampleTactic()
   }
 }
 
-/** This function will place one robot at one corner of the field
+/**
+ * @brief This tactic will place one robot at one corner of the field
  *  and then the other robot will pass the ball to this player.
  *  The player will then try to kick at the goal.
+ *
+ * @return bool Return true if tactic is completed
  */
 bool Master::crossPassAndShoot()
 {
@@ -90,6 +106,12 @@ bool Master::crossPassAndShoot()
   return false;
 }
 
+/**
+ * @brief In this tactic one robot bounces the ball forward and into the wall to another robot.
+ * The second robot will catch the ball and shoot it at the goal.
+ *
+ * @return bool Returns true if tactic is completed
+ */
 bool Master::bounceForward() {
     switch(t_state2) {
     case STEP1: {
@@ -137,6 +159,14 @@ Can be improved, in my opinion
 3.If the ball is on the bottom border, the robot will stuck in the wall
 4.and so on
 */
+/**
+ * @brief If the ball is near the penalty area, the closest robot will try
+ * to kick the ball away from the team goal.
+ *
+ * @param threshold Threshold on the x-axis for when this tactic should be run
+ * @param playerNum Optional: Selects which robot should run the tactic
+ * @return bool Returns true if tactic is comleted
+ */
 bool Master::tactic_nearpenaltyarea(double threshold, int playerNum)
 {
   // if the ball is too close to our gate/ penalty area
@@ -210,6 +240,11 @@ Can be improved, in my opinion
 
 
  */
+/**
+ * @brief A robot follows the ball
+ *
+ * @return bool Returns true if tactic is completed
+ */
 bool Master::tactic_ballchasing()
 {
   send(Command(ACTION_BEFORE_KICK, ball.GetPos(), Position(-1.27, 0.0)), 2); // Position the receiving robot according to the ball
@@ -223,10 +258,14 @@ bool Master::tactic_ballchasing()
 }
 
 /**
- *	This tactic finds the closest robot to the ball and kicks the ball
- * 	towards the goal without hitting the goalkeeper.
- * 	Provide a player number to do the goal kick with a spesific player.
- * 	If a number is not provided, it will choose the closest one.
+ * @brief This tactic finds the closest robot to the ball and kicks the ball
+ * towards the goal without hitting the goalkeeper.
+ * Provide a player number to do the goal kick with a spesific player.
+ * If a number is not provided, it will choose the closest one.
+ *
+ * @param playerNum Optional: Selects which robot should run the tactic
+ * @param is_penalty Optional: Indicates if the tactic is used for penalty
+ * @return bool Returns true if the tactic is completed
  */
 bool Master::kickAtGoal(int playerNum, bool is_penalty) {
     switch(t_state) {
@@ -282,6 +321,15 @@ bool Master::kickAtGoal(int playerNum, bool is_penalty) {
     return false;
 }
 
+/**
+ * @brief A tactic where one robot moves up to the enemy team. Another robot
+ * will try to pass the ball up to this robot. The receiving robot will then
+ * try to shoot the ball at the goal.
+ *
+ * @param closest Number of closest robot
+ * @param notClosest Number of the not closests robot
+ * @return bool Returns true if tactic is complete
+ */
 bool Master::throughPass(int closest, int notClosest) {
     switch(t_state2) {
     case STEP1:{
@@ -326,6 +374,14 @@ bool Master::throughPass(int closest, int notClosest) {
     return false;
 }
 
+/**
+ * @brief Predicts the ball and tries to get in front of it to stop it from
+ * moving.
+ *
+ * @param playerNum Number of robot which should block the ball
+ * @param playerNum2 Optional: Number of the second robot which should block the ball
+ * @return bool Returns true if tactic is complete
+ */
 bool Master::block(int playerNum, int playerNum2) {
     switch(t_state2) {
     case STEP1:

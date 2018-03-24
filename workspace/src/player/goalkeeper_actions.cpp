@@ -1,46 +1,28 @@
-
+/*
+ * Goalkeeper functions
+ * Prevent the goal from oponent team
+ * A state machine
+*/
 #include "player/player.h"
 #include "cmath"
 
 #define GOALKEEPER_SPEED 1.5
 #define GOALKEEPER_KICK_SPEED 2
 
-void Player::defend_tom(){
-    //int x=ball.GetX();
-    double x = ball.GetX();
-    double y = ball.GetY();
-    Angle dir=ball.GetPhi();
 
-    if (y<-0.23 || y>0.23 || x>=1.35){
-        y = ball.GetY();
-        dir=ball.GetPhi();
-        cout << "dir:" << dir << endl;
-        cout << "staying" << endl;
-    }
-    else{
-        y = ball.GetY();
-        dir = ball.GetPhi();
-        if(dir > 0 ){
-            robo.GotoPos(1.35,ball.GetY()+0.1);
-        }
-        if(dir < 0){
-            robo.GotoPos(1.35,ball.GetY()-0.1);
-        }
-        else{
-            robo.GotoPos(1.35,ball.GetY());
-        }
-    }
-}
-
-void Player::getNextGoalkeeperState(){
+/**
+ * @brief Get next state for the goalkeeper state machine
+ *
+ */
+void Player::getNextGoalkeeperState(){// Define the goalkeeper's next state
     //Right close corner
     Position ballpos = ball.GetPos();
     switch(Gstate){
-    case BLOCK_WINDOW:
-    case BLOCK_NOT_WINDOW:
-    case DYNAMIC_DEFEND:
-    case GOALKEEPER_STOP:
-    case GOALKEEPER_KICK:
+    case BLOCK_WINDOW:      //block at window side
+    case BLOCK_NOT_WINDOW:  //block at not window side
+    case DYNAMIC_DEFEND:    //dynamic defend
+    case GOALKEEPER_STOP:   //stop action
+    case GOALKEEPER_KICK:   //kick the ball when in penalty area
         // check if ball in corners towards window
         if(ball.inGoalArea() && abs(ballpos.GetX()) > 1.4){
             Gstate = GOALKEEPER_STOP;
@@ -65,6 +47,10 @@ void Player::getNextGoalkeeperState(){
     }
 }
 
+/**
+ * @brief Main state machine functionality for the goalkeeper. Calculate ball trajectory, and defend on calculated position
+ *
+ */
 void Player::defend(){
     double goalypos_x  = 0;
     double goalypos_y  = 0;
@@ -83,11 +69,11 @@ void Player::defend(){
 
     ballangle = ball.GetPhi().Deg()+ballangle;
     Position ballPos = ball.GetPos();
-    ballx = ballPos.GetX(); //------change
-    bally = ballPos.GetY();//-------change
+    ballx = ballPos.GetX();
+    bally = ballPos.GetY();
 
     getNextGoalkeeperState();
-    switch(Gstate){
+    switch(Gstate){ //check the state and action
     case BLOCK_WINDOW:
         if(debug){
             cout << "In BLOCK_WINDOW" << endl;
@@ -167,93 +153,6 @@ void Player::defend(){
         break;
     }
 }
-
-
-    /*
-    int i= 0;
-    double ballangle = 0;
-    double ballx = 0;
-    double bally = 0;
-    //double delta;
-    Position POS(0,0);
-    double goalkeepery = 0;
-    Position Mid;
-    double goalkeeperx;
-
-    //initial goalkeeper position depending on which side
-    Mid = Position(1.4*side,0);
-    goalkeeperx = 1.4*side;
-
-    //get position and angle of the ball
-    for(i=0;i<10;i++)
-    {
-        ballangle = ball.GetPhi().Deg()+ballangle;
-    }
-    ballangle = ballangle/10;
-    for(i=0;i<10;i++)
-    {
-        ballx += ball.GetX();
-        bally += ball.GetY();
-    }
-    ballx = ballx/10;
-    bally = bally/10;
-
-    if(ball.isStopped() && ball.inGoalArea() && (fabs(goalkeeperx)-fabs(ballx))>0 && (fabs(goalkeeperx)-fabs(ballx))<0.2 )
-    {
-        robo.CruisetoXY(ballx,bally,200);
-    }
-
-    else if(ball.isStopped() && ball.inGoalArea() && (fabs(goalkeeperx)-fabs(ballx))<0 )
-    {
-        robo.StopAction();
-    }
-
-    else
-    {
-    // if the ball stops
-        if (ball.isStopped())
-        {
-            //goalkeepery = 0;
-        }
-
-    // if the ball is too near to our penalty area, goalkeepery = bally
-        if(ballx>1.1||ballx<-1.1)
-        {
-            goalkeepery = bally;
-        }
-
-    // if the ball is moving towards our gate, goalie moves. If the ball is moving far from gate, goalie goes to the initial position
-
-        if(ball.GetPhi().Deg()<90 && ball.GetPhi().Deg()>-90 && side)
-        {
-            goalkeepery = tan(ballangle*M_PI/180)*((goalkeeperx-0.047*side)-ballx)+bally;
-        }
-
-        else if(!(ball.GetPhi().Deg()<90 && ball.GetPhi().Deg()>-90) && !side)
-        {
-            goalkeepery = tan(ballangle*M_PI/180)*((goalkeeperx-0.047*side)-ballx)+bally;
-        }
-
-
-
-
-
-        if(goalkeepery>0.16)
-            goalkeepery = 0.16;
-        else if(goalkeepery<-0.18)
-            goalkeepery = -0.18;
-
-
-        POS.SetX(goalkeeperx);
-        POS.SetY(goalkeepery);
-
-    //        robo.GotoPos(POS, 0.9);
-        robo.CruisetoXY(goalkeeperx,goalkeepery,140);
-
-
-
-    }
-    */
 
 
 

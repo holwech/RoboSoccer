@@ -3,6 +3,15 @@
 #include "player/general_actions.cpp"
 #include "player/attacker_actions.cpp"
 
+
+
+/**
+ * @brief Constructor of the player class.
+ *
+ * @param channel a Channel pointer.
+ * @param DBC an RTDB reference.
+ * @param deviceNr a constant integer.
+ */
 Player::Player(Channel* channel, RTDBConn &DBC, const int deviceNr) :
                 state_before_kick(STEP1),
                 DBC(DBC),
@@ -28,6 +37,14 @@ Player::Player(Channel* channel, RTDBConn &DBC, const int deviceNr) :
     done();
 }
 
+
+/**
+ * @brief Function which is necessary to run player behavior during game.
+ *
+ * This function is run during game and includes the state machine of the player.
+ * It makes it possible to call the function to read commands and to call the respective actions
+ * according to commands.
+ */
 void Player::run() {
    cout << "Player " << deviceNr << " started" << endl;
    bool isDone = true;
@@ -95,7 +112,13 @@ void Player::run() {
    }
 }
 
-/** Reads commands sent through the channel, and sets state accordingly */
+
+/**
+ * @brief Reads commands sent through the channel, and sets state accordingly.
+ *
+ * This function reads commands sent through the channel, and sets state accordingly.
+ * It is called during run().
+ */
 void Player::readCommand() {
     std::lock_guard<std::mutex> lock(mutex);
     if (channel->isRead()) {
@@ -151,6 +174,12 @@ void Player::readCommand() {
     }
 }
 
+
+/**
+ * @brief Print the state of player in color.
+ *
+ * @param message a string.
+ */
 void Player::playerPrintState(string message) {
     string color = "\033[1;31m";
     if (deviceNr == 0 || deviceNr == 3) {
@@ -165,6 +194,12 @@ void Player::playerPrintState(string message) {
     }
 }
 
+
+/**
+ * @brief Print information on player in color given by input string.
+ *
+ * @param message a string.
+ */
 void Player::playerPrint(string message) {
     string color = "\033[1;31m";
     if (deviceNr == 0) {
@@ -177,36 +212,68 @@ void Player::playerPrint(string message) {
     cout << color << "#P" << deviceNr << ": " << message << "\033[0m" << endl;
 }
 
-/** Updates the positions of other robos */
+
+/**
+ * @brief Updates the positions of other robos.
+ *
+ * @param pos a vector of type Position.
+ */
 void Player::update(vector<Position> pos) {
     std::lock_guard<std::mutex> lock(mutex);
     positions = pos;
 
 }
 
-/** Because of risk of race conditions, this function is preferred over
- *  getting the positions directly from the positions variable
+/**
+ * @brief Getting the position (object) of a robot.
+ *
+ * Because of risk of race conditions, this function is preferred over
+ * getting the positions directly from the positions variable
+ *
+ * @param robot an integer argument.
+ * @return Position a Position object.
  */
 Position Player::position(int robot) {
     std::lock_guard<std::mutex> lock(mutex);
     return positions[robot];
 }
 
-/** Used by master to get the current position of the robot */
+
+/**
+ * @brief Used by master to get the current position of the robot
+ *
+ * @return Position a Position object.
+ */
 Position Player::getPos() {
     std::lock_guard<std::mutex> lock(mutex);
     return robo.GetPos();
 }
+
+/**
+ * @brief Get x-coordinate of robot.
+ *
+ * @return double x-coordinate of robot in field.
+ */
 double Player::getX() {
     std::lock_guard<std::mutex> lock(mutex);
     return robo.GetX();
 }
+/**
+ * @brief Get y-coordinate of robot.
+ *
+ * @return double y-coordinate of robot in field.
+ */
 double Player::getY() {
     std::lock_guard<std::mutex> lock(mutex);
     return robo.GetY();
 }
 
-/** Updates the robo functions */
+
+/**
+ * @brief Updates the robo functions.
+ *
+ * @param isGoalkeeper a bool variable saying if robot is goalkeeper.
+ */
 void Player::updateRobo(bool isGoalkeeper) {
     ball.updateSample();
     robo.updatePositions(positions);
@@ -214,6 +281,9 @@ void Player::updateRobo(bool isGoalkeeper) {
 }
 
 
+/**
+ * @brief States if robot has completed action like kicking and resets corresponding variables.
+ */
 void Player::done() {
     setState(IDLE);
     setBusy(false);
@@ -223,12 +293,22 @@ void Player::done() {
     block_state = A_STEP1;
 }
 
-/** Checks if the player is busy performing an action */
+
+/**
+ * @brief Checks if the player is busy, performing an action.
+ *
+ * @return bool a boolean variable to answer if the player is busy, performing an action.
+ */
 bool Player::isBusy() {
     return busy.load();
 }
 
-/** Sets the player to busy when an action is started */
+
+/**
+ * @brief Sets the player to busy when an action is started.
+ *
+ * @param flag a bloolean variable.
+ */
 void Player::setBusy(bool flag) {
    busy.store(flag);
    if (busy.load() && deviceNr == 4) {
@@ -239,21 +319,39 @@ void Player::setBusy(bool flag) {
 }
 
 
-/** Gets the current state of the player */
+/**
+ * @brief Gets the current state of the player.
+ *
+ * @return PState a PState variable giving state of player -> see state machine.
+ */
 PState Player::getState() {
     return state.load();
 }
 
-/** Gets the previous state of the player */
+
+/**
+ * @brief Gets the previous state of the player.
+ *
+ * @return PState a PState variable giving the previous state of player -> see state machine.
+ */
 PState Player::getPrevState() {
     return prevState.load();
 }
 
+/**
+ * @brief Gets the previous state of the player.
+ *
+ * @return PState a PState variable giving the previous state of player -> see state machine.
+ */
 PState Player::getPrevPrevState() {
     return prevPrevState;
 }
 
-/** Sets the state of the player */
+/**
+ * @brief Sets the state of the player.
+ *
+ * @param newState a Psate to give new state.
+ */
 void Player::setState(PState newState) {
     prevPrevState = prevState.load();
     prevState.store(state.load());
@@ -262,6 +360,11 @@ void Player::setState(PState newState) {
 
 // These do not actually work, do not copy player. The result would not be good...
 // Only purpose is so that the program compiles.
+/**
+ * @brief Copy constructor for player class.
+ *
+ * @param other a player reference.
+ */
 Player::Player(Player&& other) : DBC(other.DBC), ball(other.DBC), robo(other.DBC, other.deviceNr) {
     std::lock_guard<std::mutex> lock(other.mutex);
     positions = std::move(other.positions);
@@ -274,6 +377,11 @@ Player::Player(Player&& other) : DBC(other.DBC), ball(other.DBC), robo(other.DBC
     busy.store(std::move(busy.load()));
 }
 
+/**
+ * @brief Copy constructor for player class.
+ *
+ * @param other a constant player refernce.
+ */
 Player::Player(const Player& other) : DBC(other.DBC), ball(other.DBC), robo(other.DBC, other.deviceNr) {
     std::lock_guard<std::mutex> lock(other.mutex);
     positions = other.positions;
@@ -286,6 +394,12 @@ Player::Player(const Player& other) : DBC(other.DBC), ball(other.DBC), robo(othe
     busy.store(busy.load());
 }
 
+/**
+ * @brief Overloading assignment operator.
+ *
+ * @param other a player reference.
+ * @return Player && Player::operator
+ */
 Player& Player::operator = (Player&& other) {
     std::lock(mutex, other.mutex);
     std::lock_guard<std::mutex> self_lock(mutex, std::adopt_lock);
@@ -303,6 +417,12 @@ Player& Player::operator = (Player&& other) {
     return *this;
 }
 
+/**
+ * @brief Overloading assignment operator.
+ *
+ * @param other a constant player reference.
+ * @return Player && Player::operator
+ */
 Player& Player::operator = (const Player& other) {
     std::lock(mutex, other.mutex);
     std::lock_guard<std::mutex> self_lock(mutex, std::adopt_lock);
